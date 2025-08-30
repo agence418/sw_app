@@ -81,7 +81,7 @@ export const db = {
         try {
             const { rows } = await pool.query(
                 'INSERT INTO participants (name, email, password, phone, skills) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-                [data.name, data.email, data.password, data.phone || null, data.skills || []]
+                [data.name, data.email, data.password || 'temp2025', data.phone || null, data.skills || []]
             );
             return rows[0];
         } catch (error) {
@@ -132,8 +132,8 @@ export const db = {
     async createCoach(data: Omit<DbCoach, 'id'>): Promise<DbCoach> {
         try {
             const { rows } = await pool.query(
-                'INSERT INTO coaches (name, email, password, expertise) VALUES ($1, $2, $3, $4) RETURNING *',
-                [data.name, data.email, data.password, data.expertise]
+                'INSERT INTO coaches (name, email, expertise) VALUES ($1, $2, $3) RETURNING *',
+                [data.name, data.email, data.expertise]
             );
             return rows[0];
         } catch (error) {
@@ -237,6 +237,40 @@ export const db = {
             return rows;
         } catch (error) {
             console.error('Erreur getAdministrators:', error);
+            return [];
+        }
+    },
+
+    // Équipes
+    async getTeams(): Promise<any[]> {
+        try {
+            const { rows } = await pool.query(`
+                SELECT 
+                    t.id,
+                    t.name,
+                    t.idea_description,
+                    t.created_at,
+                    p.name as leader_name,
+                    p.email as leader_email,
+                    COALESCE(
+                        (SELECT json_agg(json_build_object(
+                            'id', tm_p.id,
+                            'name', tm_p.name,
+                            'email', tm_p.email,
+                            'role', tm.role
+                        ))
+                        FROM team_members tm
+                        JOIN participants tm_p ON tm.participant_id = tm_p.id
+                        WHERE tm.team_id = t.id),
+                        '[]'
+                    ) as members
+                FROM teams t
+                LEFT JOIN participants p ON t.leader_id = p.id
+                ORDER BY t.name
+            `);
+            return rows;
+        } catch (error) {
+            console.error('Erreur getTeams:', error);
             return [];
         }
     },

@@ -11,22 +11,29 @@ interface Coach {
 }
 
 export const ListCoachesView = () => {
-    const [coaches, setCoaches] = useState<Coach[]>([
-        { 
-            id: '2', 
-            name: 'Marie Dubois', 
-            email: 'coach1@startupweekend.com', 
-            expertise: 'Marketing Digital',
-        },
-        { 
-            id: '3', 
-            name: 'Jean Martin', 
-            email: 'coach2@startupweekend.com', 
-            expertise: 'Développement Tech',
-        },
-    ]);
+    const [coaches, setCoaches] = useState<Coach[]>([]);
 
     const [showAddForm, setShowAddForm] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    const fetchCoaches = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch('/api/coaches');
+            if (response.ok) {
+                const data = await response.json();
+                setCoaches(data);
+            }
+        } catch (error) {
+            console.error('Erreur lors du chargement des coachs:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchCoaches();
+    }, []);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         name: '',
@@ -34,19 +41,39 @@ export const ListCoachesView = () => {
         expertise: '',
     });
 
-    const handleAdd = () => {
+    const handleAdd = async () => {
         if (!formData.name || !formData.email || !formData.expertise) return;
         
-        const newCoach: Coach = {
-            id: Date.now().toString(),
-            name: formData.name,
-            email: formData.email,
-            expertise: formData.expertise,
-        };
+        console.log('Attempting to create coach:', formData);
         
-        setCoaches([...coaches, newCoach]);
-        setFormData({ name: '', email: '', expertise: '' });
-        setShowAddForm(false);
+        try {
+            const response = await fetch('/api/coaches', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: formData.name,
+                    email: formData.email,
+                    expertise: formData.expertise,
+                }),
+            });
+            
+            console.log('Response status:', response.status);
+            const responseData = await response.json();
+            console.log('Response data:', responseData);
+            
+            if (response.ok) {
+                console.log('Coach created successfully');
+                await fetchCoaches();
+                setFormData({ name: '', email: '', expertise: '' });
+                setShowAddForm(false);
+            } else {
+                console.error('Failed to create coach:', responseData);
+            }
+        } catch (error) {
+            console.error('Erreur lors de la création du coach:', error);
+        }
     };
 
     const handleDelete = (id: string) => {
@@ -148,6 +175,11 @@ export const ListCoachesView = () => {
                 )}
 
                 <div className="p-4">
+                    {loading ? (
+                        <div className="text-center py-8">
+                            <div className="text-gray-500">Chargement des coachs...</div>
+                        </div>
+                    ) : (
                     <div className="space-y-3">
                         {coaches.map((coach) => (
                             <div key={coach.id} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
@@ -229,6 +261,7 @@ export const ListCoachesView = () => {
                             </div>
                         ))}
                     </div>
+                    )}
                 </div>
             </div>
         </div>

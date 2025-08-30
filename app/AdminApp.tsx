@@ -84,7 +84,6 @@ export const StartupWeekendAdminApp = () => {
                         {id: 'coaches', icon: UserCog, label: 'Coachs'},
                         {id: 'votes', icon: BarChart3, label: 'Votes'},
                         {id: 'calendrier', icon: Calendar, label: 'Calendrier'},
-                        {id: 'outils', icon: Link, label: 'Outils'}
                     ].map(({id, icon: Icon, label}) => (
                         <button
                             key={id}
