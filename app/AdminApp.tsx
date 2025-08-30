@@ -6,12 +6,10 @@ import {CalendarView} from "./modules/calendar/ui/calendar.view";
 import {getCurrentEvent} from "./modules/calendar/_actions/get-current-event.action";
 import {VoteView} from "./modules/votes/ui/vote.view";
 import {NowView} from "./modules/calendar/ui/now.view";
-import {SendFileComp} from "./modules/powerpoint/ui/send-file.comp";
-import {ChooseCoachView} from "./modules/coach/ui/choose-coach.view";
-import {ToolsView} from "./modules/tools/ui/tools.view";
 import {ListParticipantsView} from "./modules/teams/ui/list-participants.view";
 import {ListCoachesView} from "./modules/coach/ui/list-coaches.view";
 import {VoteResultsView} from "./modules/admin/ui/vote-results.view";
+import {TeamCreationView} from "./modules/teams/ui/team-creation.view";
 
 export const StartupWeekendAdminApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
@@ -60,7 +58,7 @@ export const StartupWeekendAdminApp = () => {
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
             <header className="bg-green-600 text-white p-4 shadow-lg">
-                <h1 className="text-xl font-bold text-center">Startup Weekend - Administration</h1>
+                <h1 className="text-xl font-bold text-center">Startup Weekend</h1>
                 <div className="mt-2">
                     <div className="flex justify-between items-center text-sm mb-1">
                         <span>Progression</span>
@@ -104,7 +102,7 @@ export const StartupWeekendAdminApp = () => {
                 {/* Page d'accueil */}
                 {activeTab === 'accueil' && (
                     <>
-                        {getCurrentEvent()?.title === 'vote' ? <VoteView/> :
+                        {getCurrentEvent()?.title !== 'Présentation des idées (60 secondes/idée)' ? <TeamCreationView /> :
                             <>
                                 <NowView/>
                             </>

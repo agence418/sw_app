@@ -8,7 +8,7 @@ export const SendFileComp = () => {
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <h2 className="text-lg font-semibold mb-4 flex items-center">
                 <Upload className="w-5 h-5 mr-2 text-blue-600"/>
-                Envoi de présentation - Jeudi
+                Envoi de présentation
             </h2>
             <p className="text-gray-600 mb-6 text-sm">
                 Envoyez votre présentation PowerPoint avant la deadline du jeudi soir.

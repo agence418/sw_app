@@ -102,7 +102,7 @@ const StartupWeekendApp = () => {
                 {/* Page d'accueil */}
                 {activeTab === 'accueil' && (
                     <>
-                        {getCurrentEvent()?.title === 'vote' ? <VoteView/> :
+                        {getCurrentEvent()?.title !== 'Votes' ? <VoteView/> :
                             <>
                                 <NowView/>
                                 {currentTime.getDay() == 4 && (

@@ -32,8 +32,8 @@ export const LoginView = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="bg-green-400 p-8 rounded shadow-md w-full h-screen items-center justify-center flex flex-col max-w-md">
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 h-screen">
+            <div className="bg-green-400 p-8 rounded shadow-md w-full h-screen items-center justify-center flex flex-col">
                 <h2 className="text-2xl font-bold mb-6 text-center">Login to Your Account</h2>
                 {error && (
                     <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">

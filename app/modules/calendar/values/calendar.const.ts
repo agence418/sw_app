@@ -18,8 +18,9 @@ export const CALENDAR = {
     ],
     vendredi: [
         {time: '22:00', title: 'Fin J1', duration: 0},
-        {time: '21:00', title: 'Votes et formation des équipes', duration: 60},
-        {time: '19:00', title: 'Présentation des idées (60 secondes/idée)', duration: 120},
+        {time: '21:00', title: 'Formation des équipes', duration: 60},
+        {time: '20:00', title: 'Votes', duration: 60},
+        {time: '19:00', title: 'Présentation des idées (60 secondes/idée)', duration: 60},
         {time: '18:00', title: 'Accueil et networking', duration: 60}
     ]
 }
