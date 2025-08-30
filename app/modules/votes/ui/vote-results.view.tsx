@@ -12,16 +12,28 @@ interface VoteResult {
 
 export const VoteResultsView = () => {
     const [voteResults, setVoteResults] = useState<VoteResult[]>([]);
+    const [participantsCount, setParticipantsCount] = useState<number>(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const loadVoteResults = async () => {
         try {
             setLoading(true);
-            const response = await fetch('/api/votes/results');
-            if (!response.ok) throw new Error('Erreur lors du chargement');
-            const data = await response.json();
-            setVoteResults(data);
+            // Charger les résultats des votes et le nombre de participants
+            const [voteResponse, participantsResponse] = await Promise.all([
+                fetch('/api/votes/results'),
+                fetch('/api/participants')
+            ]);
+            
+            if (!voteResponse.ok || !participantsResponse.ok) {
+                throw new Error('Erreur lors du chargement');
+            }
+            
+            const voteData = await voteResponse.json();
+            const participantsData = await participantsResponse.json();
+            
+            setVoteResults(voteData);
+            setParticipantsCount(participantsData.length);
             setError(null);
         } catch (err) {
             setError('Erreur lors du chargement des résultats');
@@ -35,6 +47,7 @@ export const VoteResultsView = () => {
     }, []);
 
     const totalVotes = voteResults.reduce((sum, result) => sum + result.votes, 0);
+    const maxPossibleVotes = participantsCount * 3; // Chaque participant a 3 votes
     const maxVotes = Math.max(...voteResults.map(r => r.votes), 1);
 
     return (
@@ -45,7 +58,8 @@ export const VoteResultsView = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs text-gray-600">Total votes</p>
-                            <p className="text-lg font-bold text-gray-800">{totalVotes}/{maxVotes}</p>
+                            <p className="text-lg font-bold text-gray-800">{totalVotes}/{maxPossibleVotes}
+                            <span className="text-xs text-gray-500 ps-3">({participantsCount} participants × 3 votes)</span></p>
                         </div>
                         <BarChart3 className="w-6 h-6 text-blue-500" />
                     </div>
