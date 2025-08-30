@@ -3,7 +3,7 @@
 import React, {useState} from 'react';
 import {Award, Clock} from 'lucide-react';
 import {getCurrentEvent} from "./modules/calendar/_actions/get-current-event.action";
-import {TeamsView} from "./modules/teams/ui/teams.view";
+import {ListTeamsView} from "./modules/teams/ui/list-teams.view";
 
 export const StartupWeekendCoachApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
@@ -67,32 +67,10 @@ export const StartupWeekendCoachApp = () => {
                 </div>
             </header>
 
-            {/* Navigation */}
-            <nav className="bg-white border-b border-gray-200 px-4">
-                <div className="flex overflow-x-auto justify-between space-x-1 py-2">
-                    {[
-                        {id: 'accueil', icon: Clock, label: 'Accueil'},
-                    ].map(({id, icon: Icon, label}) => (
-                        <button
-                            key={id}
-                            onClick={() => setActiveTab(id)}
-                            className={`flex flex-col items-center p-2 rounded-lg min-w-0 flex-shrink-0 ${
-                                activeTab === id ? 'bg-blue-100 text-blue-600' : 'text-gray-600'
-                            }`}
-                        >
-                            <Icon className="w-5 h-5 mb-1"/>
-                            <span className="text-xs font-medium">{label}</span>
-                        </button>
-                    ))}
-                </div>
-            </nav>
-
             {/* Contenu principal */}
             <main className="p-4">
                 {/* Page d'accueil */}
-                {activeTab === 'accueil' && (
-                    <TeamsView/>
-                )}
+                <ListTeamsView/>
             </main>
 
             {/* Status bar en bas */}

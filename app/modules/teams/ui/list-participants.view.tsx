@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { UserPlus, Trash2, Edit2, Save, X, RefreshCw } from 'lucide-react';
+import React, {useEffect, useState} from 'react';
+import {Edit2, RefreshCw, Save, Trash2, UserPlus, X} from 'lucide-react';
 
 interface Participant {
     id: number;
@@ -46,11 +46,11 @@ export const ListParticipantsView = () => {
 
     const handleAdd = async () => {
         if (!formData.name || !formData.email) return;
-        
+
         try {
             const response = await fetch('/api/participants', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     name: formData.name,
                     email: formData.email,
@@ -66,7 +66,7 @@ export const ListParticipantsView = () => {
             }
 
             await loadParticipants();
-            setFormData({ name: '', email: '', phone: '', skills: '' });
+            setFormData({name: '', email: '', phone: '', skills: ''});
             setShowAddForm(false);
         } catch (err) {
             alert('Erreur lors de l\'ajout du participant');
@@ -75,7 +75,7 @@ export const ListParticipantsView = () => {
 
     const handleDelete = async (id: number) => {
         if (!confirm('Êtes-vous sûr de vouloir supprimer ce participant ?')) return;
-        
+
         try {
             const response = await fetch(`/api/participants/${id}`, {
                 method: 'DELETE'
@@ -102,7 +102,7 @@ export const ListParticipantsView = () => {
         try {
             const response = await fetch(`/api/participants/${editingId}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     name: formData.name,
                     email: formData.email,
@@ -112,10 +112,10 @@ export const ListParticipantsView = () => {
             });
 
             if (!response.ok) throw new Error('Erreur lors de la mise à jour');
-            
+
             await loadParticipants();
             setEditingId(null);
-            setFormData({ name: '', email: '', phone: '', skills: '' });
+            setFormData({name: '', email: '', phone: '', skills: ''});
         } catch (err) {
             alert('Erreur lors de la mise à jour');
         }
@@ -132,14 +132,14 @@ export const ListParticipantsView = () => {
                             className="flex items-center justify-center gap-2 bg-gray-600 text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
                             disabled={loading}
                         >
-                            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`}/>
                             Rafraîchir
                         </button>
                         <button
                             onClick={() => setShowAddForm(true)}
                             className="flex items-center justify-center gap-2 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm"
                         >
-                            <UserPlus className="w-4 h-4" />
+                            <UserPlus className="w-4 h-4"/>
                             Ajouter
                         </button>
                     </div>
@@ -182,17 +182,17 @@ export const ListParticipantsView = () => {
                                 onClick={handleAdd}
                                 className="flex items-center justify-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm"
                             >
-                                <Save className="w-4 h-4" />
+                                <Save className="w-4 h-4"/>
                                 Enregistrer
                             </button>
                             <button
                                 onClick={() => {
                                     setShowAddForm(false);
-                                    setFormData({ name: '', email: '', phone: '', skills: '' });
+                                    setFormData({name: '', email: '', phone: '', skills: ''});
                                 }}
                                 className="flex items-center justify-center gap-2 bg-gray-600 text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
                             >
-                                <X className="w-4 h-4" />
+                                <X className="w-4 h-4"/>
                                 Annuler
                             </button>
                         </div>
@@ -248,17 +248,17 @@ export const ListParticipantsView = () => {
                                                     onClick={handleSaveEdit}
                                                     className="flex items-center justify-center gap-1 bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700 transition-colors flex-1 text-xs"
                                                 >
-                                                    <Save className="w-3 h-3" />
+                                                    <Save className="w-3 h-3"/>
                                                     Sauver
                                                 </button>
                                                 <button
                                                     onClick={() => {
                                                         setEditingId(null);
-                                                        setFormData({ name: '', email: '', phone: '', skills: '' });
+                                                        setFormData({name: '', email: '', phone: '', skills: ''});
                                                     }}
                                                     className="flex items-center justify-center gap-1 bg-gray-600 text-white px-2 py-1 rounded hover:bg-gray-700 transition-colors flex-1 text-xs"
                                                 >
-                                                    <X className="w-3 h-3" />
+                                                    <X className="w-3 h-3"/>
                                                     Annuler
                                                 </button>
                                             </div>
@@ -278,20 +278,21 @@ export const ListParticipantsView = () => {
                                                         onClick={() => handleEdit(participant)}
                                                         className="p-1 text-blue-600 hover:bg-blue-100 rounded"
                                                     >
-                                                        <Edit2 className="w-4 h-4" />
+                                                        <Edit2 className="w-4 h-4"/>
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(participant.id)}
                                                         className="p-1 text-red-600 hover:bg-red-100 rounded"
                                                     >
-                                                        <Trash2 className="w-4 h-4" />
+                                                        <Trash2 className="w-4 h-4"/>
                                                     </button>
                                                 </div>
                                             </div>
                                             {participant.skills && participant.skills.length > 0 && (
                                                 <div className="flex flex-wrap gap-1">
                                                     {participant.skills.map((skill, idx) => (
-                                                        <span key={idx} className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">
+                                                        <span key={idx}
+                                                              className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">
                                                             {skill}
                                                         </span>
                                                     ))}
