@@ -9,6 +9,7 @@ import {ListParticipantsView} from "./modules/teams/ui/list-participants.view";
 import {ListCoachesView} from "./modules/coach/ui/list-coaches.view";
 import {VoteResultsView} from "./modules/votes/ui/vote-results.view";
 import {TeamCreationView} from "./modules/teams/ui/team-creation.view";
+import {ListTeamsView} from "./modules/teams/ui/list-teams.view";
 
 export const StartupWeekendAdminApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
@@ -79,6 +80,7 @@ export const StartupWeekendAdminApp = () => {
                         {id: 'accueil', icon: Clock, label: 'Accueil'},
                         {id: 'participants', icon: Users, label: 'Participants'},
                         {id: 'coaches', icon: UserCog, label: 'Coachs'},
+                        {id: 'teams', icon: Users, label: 'Teams'},
                         {id: 'votes', icon: BarChart3, label: 'Votes'},
                         {id: 'calendrier', icon: Calendar, label: 'Calendrier'},
                     ].map(({id, icon: Icon, label}) => (
@@ -102,7 +104,7 @@ export const StartupWeekendAdminApp = () => {
                 {activeTab === 'accueil' && (
                     <>
                         {getCurrentEvent()?.title === 'Présentation des idées (60 secondes/idée)' ? <TeamCreationView /> :
-                        getCurrentEvent()?.title !== 'Votes' ? <VoteResultsView /> :
+                        getCurrentEvent()?.title === 'Votes' ? <VoteResultsView /> :
                             <>
                                 <NowView/>
                             </>
@@ -118,6 +120,11 @@ export const StartupWeekendAdminApp = () => {
                 {/* Gestion des coachs */}
                 {activeTab === 'coaches' && (
                     <ListCoachesView/>
+                )}
+
+                {/* Gestion des participants */}
+                {activeTab === 'teams' && (
+                    <ListTeamsView />
                 )}
 
                 {/* Résultats des votes */}

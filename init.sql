@@ -82,16 +82,6 @@ CREATE TABLE presentations
     uploaded_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Table des préférences de coaching
-CREATE TABLE coach_preferences
-(
-    id              SERIAL PRIMARY KEY,
-    participant_id  INTEGER REFERENCES participants (id),
-    coach_name      VARCHAR(100) NOT NULL,
-    preference_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (participant_id, coach_name)
-);
-
 -- Table des équipes formées
 CREATE TABLE teams
 (
@@ -100,6 +90,16 @@ CREATE TABLE teams
     idea_description TEXT,
     leader_id        INTEGER REFERENCES participants (id),
     created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table des préférences de coaching
+CREATE TABLE coach_preferences
+(
+    id              SERIAL PRIMARY KEY,
+    team_id         INTEGER REFERENCES teams (id),
+    coach_name      VARCHAR(100) NOT NULL,
+    preference_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (team_id, coach_name)
 );
 
 -- Table des membres d'équipe
@@ -129,7 +129,7 @@ VALUES ('Marie Dubois', 'coach1@startupweekend.com', 'coach2025', 'Marketing Dig
 -- Index pour optimiser les performances
 CREATE INDEX idx_votes_participant ON votes (participant_id);
 CREATE INDEX idx_presentations_participant ON presentations (participant_id);
-CREATE INDEX idx_coach_preferences_participant ON coach_preferences (participant_id);
+CREATE INDEX idx_coach_preferences_team ON coach_preferences (team_id);
 CREATE INDEX idx_team_members_team ON team_members (team_id);
 CREATE INDEX idx_team_members_participant ON team_members (participant_id);
 

@@ -1,10 +1,20 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { db } from '../../../lib/db';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
-        const teams = await db.getTeams();
-        return NextResponse.json(teams);
+        const url = new URL(request.url);
+        const leaderId = url.searchParams.get('leaderId');
+
+        if (leaderId) {
+            // Si leaderId est fourni, chercher l'équipe de ce leader
+            const team = await db.getTeamByLeaderId(parseInt(leaderId));
+            return NextResponse.json(team ? [team] : []);
+        } else {
+            // Sinon, retourner toutes les équipes
+            const teams = await db.getTeams();
+            return NextResponse.json(teams);
+        }
     } catch (error) {
         return NextResponse.json(
             { error: 'Erreur lors de la récupération des équipes' },
