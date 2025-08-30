@@ -1,14 +1,9 @@
 'use client';
 
 import React, {useState} from 'react';
-import {Award, Calendar, Clock, Link, MessageSquare} from 'lucide-react';
-import {CalendarView} from "./modules/calendar/ui/calendar.view";
+import {Award, Clock} from 'lucide-react';
 import {getCurrentEvent} from "./modules/calendar/_actions/get-current-event.action";
-import {VoteView} from "./modules/votes/ui/vote.view";
-import {NowView} from "./modules/calendar/ui/now.view";
-import {SendFileComp} from "./modules/powerpoint/ui/send-file.comp";
-import {ChooseCoachView} from "./modules/coach/ui/choose-coach.view";
-import {ToolsView} from "./modules/tools/ui/tools.view";
+import {TeamsView} from "./modules/teams/ui/teams.view";
 
 export const StartupWeekendCoachApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
@@ -77,9 +72,6 @@ export const StartupWeekendCoachApp = () => {
                 <div className="flex overflow-x-auto justify-between space-x-1 py-2">
                     {[
                         {id: 'accueil', icon: Clock, label: 'Accueil'},
-                        {id: 'calendrier', icon: Calendar, label: 'Calendrier'},
-                        {id: 'coach', icon: MessageSquare, label: 'Coach'},
-                        {id: 'outils', icon: Link, label: 'Outils'}
                     ].map(({id, icon: Icon, label}) => (
                         <button
                             key={id}
@@ -99,31 +91,7 @@ export const StartupWeekendCoachApp = () => {
             <main className="p-4">
                 {/* Page d'accueil */}
                 {activeTab === 'accueil' && (
-                    <>
-                        {getCurrentEvent()?.title === 'vote' ? <VoteView/> :
-                            <>
-                                <NowView/>
-                                {currentTime.getDay() == 4 && (
-                                    <SendFileComp/>
-                                )}
-                            </>
-                        }
-                    </>
-                )}
-
-                {/* Calendrier */}
-                {activeTab === 'calendrier' && (
-                    <CalendarView/>
-                )}
-
-                {/* Formulaire coach */}
-                {activeTab === 'coach' && (
-                    <ChooseCoachView/>
-                )}
-
-                {/* Outils pratiques */}
-                {activeTab === 'outils' && (
-                    <ToolsView />
+                    <TeamsView/>
                 )}
             </main>
 

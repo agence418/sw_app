@@ -77,11 +77,14 @@ export const LoginView = () => {
                     </button>
                 </form>
                 <div className="mt-4 text-sm text-gray-600 text-center">
-                    <p>Comptes de test:</p>
-                    <p className="font-mono">participant@startupweekend.com</p>
-                    <p className="font-mono">admin@startupweekend.com</p>
-                    <p className="font-mono">coach@startupweekend.com</p>
-                    <p>Mot de passe: <span className="font-mono">startup2025</span></p>
+                    <div className="bg-gray-50 p-3 rounded">
+                        <p className="mb-2"><strong>Admin:</strong></p>
+                        <p className="font-mono text-xs">admin@startupweekend.com / admin2025</p>
+                        
+                        <p className="mt-3 mb-2"><strong>Coachs:</strong></p>
+                        <p className="font-mono text-xs">coach1@startupweekend.com / coach2025</p>
+                        <p className="font-mono text-xs">coach2@startupweekend.com / coach2025</p>
+                    </div>
                 </div>
             </div>
         </div>

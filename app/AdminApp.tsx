@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useState} from 'react';
-import {Award, Calendar, Clock, Link, MessageSquare} from 'lucide-react';
+import {Award, Calendar, Clock, Link, MessageSquare, Users, BarChart3, UserCog} from 'lucide-react';
 import {CalendarView} from "./modules/calendar/ui/calendar.view";
 import {getCurrentEvent} from "./modules/calendar/_actions/get-current-event.action";
 import {VoteView} from "./modules/votes/ui/vote.view";
@@ -9,6 +9,9 @@ import {NowView} from "./modules/calendar/ui/now.view";
 import {SendFileComp} from "./modules/powerpoint/ui/send-file.comp";
 import {ChooseCoachView} from "./modules/coach/ui/choose-coach.view";
 import {ToolsView} from "./modules/tools/ui/tools.view";
+import {ListParticipantsView} from "./modules/teams/ui/list-participants.view";
+import {ListCoachesView} from "./modules/coach/ui/list-coaches.view";
+import {VoteResultsView} from "./modules/admin/ui/vote-results.view";
 
 export const StartupWeekendAdminApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
@@ -57,7 +60,7 @@ export const StartupWeekendAdminApp = () => {
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
             <header className="bg-green-600 text-white p-4 shadow-lg">
-                <h1 className="text-xl font-bold text-center">Startup Weekend</h1>
+                <h1 className="text-xl font-bold text-center">Startup Weekend - Administration</h1>
                 <div className="mt-2">
                     <div className="flex justify-between items-center text-sm mb-1">
                         <span>Progression</span>
@@ -77,8 +80,10 @@ export const StartupWeekendAdminApp = () => {
                 <div className="flex overflow-x-auto justify-between space-x-1 py-2">
                     {[
                         {id: 'accueil', icon: Clock, label: 'Accueil'},
+                        {id: 'participants', icon: Users, label: 'Participants'},
+                        {id: 'coaches', icon: UserCog, label: 'Coachs'},
+                        {id: 'votes', icon: BarChart3, label: 'Votes'},
                         {id: 'calendrier', icon: Calendar, label: 'Calendrier'},
-                        {id: 'coach', icon: MessageSquare, label: 'Coach'},
                         {id: 'outils', icon: Link, label: 'Outils'}
                     ].map(({id, icon: Icon, label}) => (
                         <button
@@ -103,27 +108,29 @@ export const StartupWeekendAdminApp = () => {
                         {getCurrentEvent()?.title === 'vote' ? <VoteView/> :
                             <>
                                 <NowView/>
-                                {currentTime.getDay() == 4 && (
-                                    <SendFileComp/>
-                                )}
                             </>
                         }
                     </>
                 )}
 
+                {/* Gestion des participants */}
+                {activeTab === 'participants' && (
+                    <ListParticipantsView/>
+                )}
+
+                {/* Gestion des coachs */}
+                {activeTab === 'coaches' && (
+                    <ListCoachesView/>
+                )}
+
+                {/* Résultats des votes */}
+                {activeTab === 'votes' && (
+                    <VoteResultsView/>
+                )}
+
                 {/* Calendrier */}
                 {activeTab === 'calendrier' && (
                     <CalendarView/>
-                )}
-
-                {/* Formulaire coach */}
-                {activeTab === 'coach' && (
-                    <ChooseCoachView/>
-                )}
-
-                {/* Outils pratiques */}
-                {activeTab === 'outils' && (
-                    <ToolsView />
                 )}
             </main>
 
