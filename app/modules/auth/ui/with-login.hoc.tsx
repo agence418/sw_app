@@ -6,6 +6,7 @@ import {LoginView} from './login.view';
 import {StartupWeekendAdminApp} from '../../../AdminApp';
 import {StartupWeekendCoachApp} from '../../../CoachApp';
 import {logoutAction} from "../_actions/logout.action";
+import {LogOutIcon} from "lucide-react";
 
 export const withLogin = <P extends Record<string, any>>(
     Component: React.ComponentType<P>
@@ -34,9 +35,9 @@ export const withLogin = <P extends Record<string, any>>(
                 {session && (
                     <button
                         onClick={handleLogout}
-                        className="fixed top-4 right-4 z-50 bg-red-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-red-600 transition-colors text-sm"
+                        className="fixed top-2 right-2 z-50 text-white bg-transparent p-2 rounded-full transition-colors text-sm"
                     >
-                        Déconnexion
+                        <LogOutIcon size={18}/>
                     </button>
                 )}
                 <StartupWeekendAdminApp/>
@@ -48,9 +49,9 @@ export const withLogin = <P extends Record<string, any>>(
                 {session && (
                     <button
                         onClick={handleLogout}
-                        className="fixed top-4 right-4 z-50 bg-red-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-red-600 transition-colors text-sm"
+                        className="fixed top-4 right-4 z-50 text-white bg-transparent px-4 py-2 rounded-full transition-colors text-sm"
                     >
-                        Déconnexion
+                        <LogOutIcon size={18}/>
                     </button>
                 )}
                 <StartupWeekendCoachApp/>
@@ -58,6 +59,14 @@ export const withLogin = <P extends Record<string, any>>(
         }
 
         return <>
+            {session && (
+                <button
+                    onClick={handleLogout}
+                    className="fixed top-4 right-4 z-50 text-white bg-transparent px-4 py-2 rounded-full transition-colors text-sm"
+                >
+                    <LogOutIcon size={18}/>
+                </button>
+            )}
             <Component {...props} />
         </>;
     };
