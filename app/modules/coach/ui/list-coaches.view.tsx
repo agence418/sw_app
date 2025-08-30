@@ -1,0 +1,236 @@
+'use client';
+
+import React, {useEffect, useState} from 'react';
+import { UserPlus, Trash2, Edit2, Save, X, Award } from 'lucide-react';
+
+interface Coach {
+    id: string;
+    name: string;
+    email: string;
+    expertise: string;
+}
+
+export const ListCoachesView = () => {
+    const [coaches, setCoaches] = useState<Coach[]>([
+        { 
+            id: '2', 
+            name: 'Marie Dubois', 
+            email: 'coach1@startupweekend.com', 
+            expertise: 'Marketing Digital',
+        },
+        { 
+            id: '3', 
+            name: 'Jean Martin', 
+            email: 'coach2@startupweekend.com', 
+            expertise: 'Développement Tech',
+        },
+    ]);
+
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        expertise: '',
+    });
+
+    const handleAdd = () => {
+        if (!formData.name || !formData.email || !formData.expertise) return;
+        
+        const newCoach: Coach = {
+            id: Date.now().toString(),
+            name: formData.name,
+            email: formData.email,
+            expertise: formData.expertise,
+        };
+        
+        setCoaches([...coaches, newCoach]);
+        setFormData({ name: '', email: '', expertise: '' });
+        setShowAddForm(false);
+    };
+
+    const handleDelete = (id: string) => {
+        setCoaches(coaches.filter(c => c.id !== id));
+    };
+
+    const handleEdit = (coach: Coach) => {
+        setEditingId(coach.id);
+        setFormData({
+            name: coach.name,
+            email: coach.email,
+            expertise: coach.expertise,
+        });
+    };
+
+    const handleSaveEdit = () => {
+        setCoaches(coaches.map(c => 
+            c.id === editingId 
+                ? {
+                    ...c,
+                    name: formData.name,
+                    email: formData.email,
+                    expertise: formData.expertise,
+                }
+                : c
+        ));
+        setEditingId(null);
+        setFormData({ name: '', email: '', expertise: '' });
+    };
+
+    const toggleAvailability = (day: string) => {
+        setFormData(prev => ({
+            ...prev
+        }));
+    };
+
+    return (
+        <div className="w-full px-2 md:px-4">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+                <div className="p-4 border-b border-gray-200">
+                    <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-3">
+                        <Award className="w-4 h-4 text-yellow-500" />
+                        Gestion des Coachs
+                    </h2>
+                    <button
+                        onClick={() => setShowAddForm(true)}
+                        className="w-full flex items-center justify-center gap-2 bg-purple-600 text-white px-3 py-2 rounded-lg hover:bg-purple-700 transition-colors text-sm"
+                    >
+                        <UserPlus className="w-4 h-4" />
+                        Ajouter un coach
+                    </button>
+                </div>
+
+                {showAddForm && (
+                    <div className="p-4 bg-purple-50 border-b border-purple-200">
+                        <div className="space-y-3">
+                            <input
+                                type="text"
+                                placeholder="Nom"
+                                value={formData.name}
+                                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                            />
+                            <input
+                                type="email"
+                                placeholder="Email"
+                                value={formData.email}
+                                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Expertise"
+                                value={formData.expertise}
+                                onChange={(e) => setFormData({...formData, expertise: e.target.value})}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                            />
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-2 mt-4">
+                            <button
+                                onClick={handleAdd}
+                                className="flex items-center justify-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm"
+                            >
+                                <Save className="w-4 h-4" />
+                                Enregistrer
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowAddForm(false);
+                                    setFormData({ name: '', email: '', expertise: '' });
+                                }}
+                                className="flex items-center justify-center gap-2 bg-gray-600 text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
+                            >
+                                <X className="w-4 h-4" />
+                                Annuler
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                <div className="p-4">
+                    <div className="space-y-3">
+                        {coaches.map((coach) => (
+                            <div key={coach.id} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                                {editingId === coach.id ? (
+                                    <div className="space-y-2">
+                                        <input
+                                            type="text"
+                                            value={formData.name}
+                                            onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                                            placeholder="Nom"
+                                        />
+                                        <input
+                                            type="email"
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                                            placeholder="Email"
+                                        />
+                                        <input
+                                            type="text"
+                                            value={formData.expertise}
+                                            onChange={(e) => setFormData({...formData, expertise: e.target.value})}
+                                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                                            placeholder="Expertise"
+                                        />
+                                        <div className="flex gap-2 mt-2">
+                                            <button
+                                                onClick={handleSaveEdit}
+                                                className="flex items-center justify-center gap-1 bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700 transition-colors flex-1 text-xs"
+                                            >
+                                                <Save className="w-3 h-3" />
+                                                Sauver
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    setEditingId(null);
+                                                    setFormData({ name: '', email: '', expertise: '' });
+                                                }}
+                                                className="flex items-center justify-center gap-1 bg-gray-600 text-white px-2 py-1 rounded hover:bg-gray-700 transition-colors flex-1 text-xs"
+                                            >
+                                                <X className="w-3 h-3" />
+                                                Annuler
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <Award className="w-4 h-4 text-yellow-500 flex-shrink-0" />
+                                                    <h3 className="font-semibold text-gray-800 text-sm truncate">{coach.name}</h3>
+                                                </div>
+                                                <p className="text-gray-600 text-xs truncate">{coach.email}</p>
+                                                <div className="mt-1">
+                                                    <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs">
+                                                        {coach.expertise}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-1 ml-2">
+                                                <button
+                                                    onClick={() => handleEdit(coach)}
+                                                    className="p-1 text-blue-600 hover:bg-blue-100 rounded"
+                                                >
+                                                    <Edit2 className="w-4 h-4" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(coach.id)}
+                                                    className="p-1 text-red-600 hover:bg-red-100 rounded"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};

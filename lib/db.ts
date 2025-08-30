@@ -1,0 +1,364 @@
+// Configuration de la base de données PostgreSQL
+
+import { Pool } from 'pg';
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
+
+interface DbParticipant {
+    id: number;
+    name: string;
+    email: string;
+    password?: string;
+    phone?: string;
+    skills?: string[];
+    created_at?: Date;
+}
+
+interface DbVote {
+    id: number;
+    participant_id: number;
+    idea_name: string;
+    vote_time: Date;
+}
+
+interface DbCoach {
+    id: number;
+    name: string;
+    email: string;
+    password?: string;
+    expertise?: string;
+    created_at?: Date;
+}
+
+interface DbAdmin {
+    id: number;
+    name: string;
+    email: string;
+    password?: string;
+    created_at?: Date;
+}
+
+interface DbProject {
+    id: number;
+    name: string;
+    description?: string;
+    status: string;
+    leader_id?: number;
+    created_at?: Date;
+}
+
+// Fonctions de base de données avec vraies requêtes SQL
+export const db = {
+    // Participants
+    async getParticipants(): Promise<DbParticipant[]> {
+        try {
+            const { rows } = await pool.query(
+                'SELECT * FROM participants ORDER BY name'
+            );
+            return rows;
+        } catch (error) {
+            console.error('Erreur getParticipants:', error);
+            return [];
+        }
+    },
+
+    async getParticipantByEmail(email: string): Promise<DbParticipant | null> {
+        try {
+            const { rows } = await pool.query(
+                'SELECT * FROM participants WHERE email = $1',
+                [email]
+            );
+            return rows[0] || null;
+        } catch (error) {
+            console.error('Erreur getParticipantByEmail:', error);
+            return null;
+        }
+    },
+
+    async createParticipant(data: Omit<DbParticipant, 'id'>): Promise<DbParticipant> {
+        try {
+            const { rows } = await pool.query(
+                'INSERT INTO participants (name, email, password, phone, skills) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+                [data.name, data.email, data.password, data.phone || null, data.skills || []]
+            );
+            return rows[0];
+        } catch (error) {
+            console.error('Erreur createParticipant:', error);
+            throw error;
+        }
+    },
+
+    async updateParticipant(id: number, data: Partial<DbParticipant>): Promise<DbParticipant | null> {
+        try {
+            const { rows } = await pool.query(
+                'UPDATE participants SET name = COALESCE($2, name), email = COALESCE($3, email), password = COALESCE($4, password), phone = COALESCE($5, phone), skills = COALESCE($6, skills) WHERE id = $1 RETURNING *',
+                [id, data.name, data.email, data.password, data.phone, data.skills]
+            );
+            return rows[0] || null;
+        } catch (error) {
+            console.error('Erreur updateParticipant:', error);
+            return null;
+        }
+    },
+
+    async deleteParticipant(id: number): Promise<boolean> {
+        try {
+            const result = await pool.query(
+                'DELETE FROM participants WHERE id = $1',
+                [id]
+            );
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Erreur deleteParticipant:', error);
+            return false;
+        }
+    },
+
+    // Coaches
+    async getCoaches(): Promise<DbCoach[]> {
+        try {
+            const { rows } = await pool.query(
+                'SELECT * FROM coaches ORDER BY name'
+            );
+            return rows;
+        } catch (error) {
+            console.error('Erreur getCoaches:', error);
+            return [];
+        }
+    },
+
+    async createCoach(data: Omit<DbCoach, 'id'>): Promise<DbCoach> {
+        try {
+            const { rows } = await pool.query(
+                'INSERT INTO coaches (name, email, password, expertise) VALUES ($1, $2, $3, $4) RETURNING *',
+                [data.name, data.email, data.password, data.expertise]
+            );
+            return rows[0];
+        } catch (error) {
+            console.error('Erreur createCoach:', error);
+            throw error;
+        }
+    },
+
+    async updateCoach(id: number, data: Partial<DbCoach>): Promise<DbCoach | null> {
+        try {
+            const { rows } = await pool.query(
+                'UPDATE coaches SET name = COALESCE($2, name), email = COALESCE($3, email), password = COALESCE($4, password), expertise = COALESCE($5, expertise) WHERE id = $1 RETURNING *',
+                [id, data.name, data.email, data.password, data.expertise]
+            );
+            return rows[0] || null;
+        } catch (error) {
+            console.error('Erreur updateCoach:', error);
+            return null;
+        }
+    },
+
+    async deleteCoach(id: number): Promise<boolean> {
+        try {
+            const result = await pool.query(
+                'DELETE FROM coaches WHERE id = $1',
+                [id]
+            );
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Erreur deleteCoach:', error);
+            return false;
+        }
+    },
+
+    // Votes
+    async getVotes(): Promise<DbVote[]> {
+        try {
+            const { rows } = await pool.query(
+                'SELECT * FROM votes ORDER BY vote_time DESC'
+            );
+            return rows;
+        } catch (error) {
+            console.error('Erreur getVotes:', error);
+            return [];
+        }
+    },
+
+    async getVoteResults(): Promise<any[]> {
+        try {
+            const { rows } = await pool.query(`
+                SELECT 
+                    v.idea_name as "ideaName",
+                    COUNT(*)::int as votes,
+                    CASE 
+                        WHEN (SELECT COUNT(*) FROM votes) > 0 
+                        THEN ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM votes)), 0)::int
+                        ELSE 0
+                    END as percentage,
+                    ARRAY_AGG(p.name ORDER BY p.name) as voters
+                FROM votes v
+                JOIN participants p ON v.participant_id = p.id
+                GROUP BY v.idea_name
+                ORDER BY votes DESC
+            `);
+            return rows;
+        } catch (error) {
+            console.error('Erreur getVoteResults:', error);
+            return [];
+        }
+    },
+
+    async createVote(participantId: number, ideaName: string): Promise<DbVote> {
+        try {
+            // D'abord vérifier si le participant a déjà voté pour cette idée
+            const existing = await pool.query(
+                'SELECT * FROM votes WHERE participant_id = $1 AND idea_name = $2',
+                [participantId, ideaName]
+            );
+            
+            if (existing.rows.length > 0) {
+                throw new Error('Ce participant a déjà voté pour cette idée');
+            }
+
+            const { rows } = await pool.query(
+                'INSERT INTO votes (participant_id, idea_name, vote_time) VALUES ($1, $2, NOW()) RETURNING *',
+                [participantId, ideaName]
+            );
+            return rows[0];
+        } catch (error) {
+            console.error('Erreur createVote:', error);
+            throw error;
+        }
+    },
+
+    // Administrateurs
+    async getAdministrators(): Promise<DbAdmin[]> {
+        try {
+            const { rows } = await pool.query(
+                'SELECT * FROM administrators ORDER BY name'
+            );
+            return rows;
+        } catch (error) {
+            console.error('Erreur getAdministrators:', error);
+            return [];
+        }
+    },
+
+    // Projets
+    async getProjects(): Promise<DbProject[]> {
+        try {
+            const { rows } = await pool.query(
+                'SELECT * FROM projects ORDER BY name'
+            );
+            return rows;
+        } catch (error) {
+            console.error('Erreur getProjects:', error);
+            return [];
+        }
+    },
+
+    async createProject(data: Omit<DbProject, 'id'>): Promise<DbProject> {
+        try {
+            const { rows } = await pool.query(
+                'INSERT INTO projects (name, description, status, leader_id) VALUES ($1, $2, $3, $4) RETURNING *',
+                [data.name, data.description, data.status || 'active', data.leader_id]
+            );
+            return rows[0];
+        } catch (error) {
+            console.error('Erreur createProject:', error);
+            throw error;
+        }
+    },
+
+    async updateProject(id: number, data: Partial<DbProject>): Promise<DbProject | null> {
+        try {
+            const { rows } = await pool.query(
+                'UPDATE projects SET name = COALESCE($2, name), description = COALESCE($3, description), status = COALESCE($4, status), leader_id = COALESCE($5, leader_id) WHERE id = $1 RETURNING *',
+                [id, data.name, data.description, data.status, data.leader_id]
+            );
+            return rows[0] || null;
+        } catch (error) {
+            console.error('Erreur updateProject:', error);
+            return null;
+        }
+    },
+
+    async deleteProject(id: number): Promise<boolean> {
+        try {
+            const result = await pool.query(
+                'DELETE FROM projects WHERE id = $1',
+                [id]
+            );
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Erreur deleteProject:', error);
+            return false;
+        }
+    },
+
+    // Authentification
+    async authenticateUser(email: string, password: string): Promise<any | null> {
+        try {
+            // Vérifier admin
+            const adminResult = await pool.query(
+                'SELECT * FROM administrators WHERE email = $1 AND password = $2',
+                [email, password]
+            );
+            if (adminResult.rows[0]) {
+                return {
+                    id: adminResult.rows[0].id.toString(),
+                    email: adminResult.rows[0].email,
+                    name: adminResult.rows[0].name,
+                    role: 'admin'
+                };
+            }
+
+            // Vérifier coaches
+            const coachResult = await pool.query(
+                'SELECT * FROM coaches WHERE email = $1 AND password = $2',
+                [email, password]
+            );
+            if (coachResult.rows[0]) {
+                return {
+                    id: coachResult.rows[0].id.toString(),
+                    email: coachResult.rows[0].email,
+                    name: coachResult.rows[0].name,
+                    role: 'coach'
+                };
+            }
+
+            // Vérifier participants
+            const participantResult = await pool.query(
+                'SELECT * FROM participants WHERE email = $1 AND password = $2',
+                [email, password]
+            );
+            if (participantResult.rows[0]) {
+                return {
+                    id: participantResult.rows[0].id.toString(),
+                    email: participantResult.rows[0].email,
+                    name: participantResult.rows[0].name,
+                    role: 'participant'
+                };
+            }
+
+            return null;
+        } catch (error) {
+            console.error('Erreur authenticateUser:', error);
+            return null;
+        }
+    },
+
+    // Fonction utilitaire pour tester la connexion
+    async testConnection(): Promise<boolean> {
+        try {
+            const { rows } = await pool.query('SELECT NOW()');
+            console.log('Connexion à la base de données réussie:', rows[0].now);
+            return true;
+        } catch (error) {
+            console.error('Erreur de connexion à la base de données:', error);
+            return false;
+        }
+    }
+};
+
+// Tester la connexion au démarrage (seulement en développement)
+if (process.env.NODE_ENV !== 'production') {
+    db.testConnection();
+}

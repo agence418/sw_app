@@ -1,18 +1,22 @@
 'use client';
 
 import React from 'react';
-import { useSession } from 'next-auth/react';
-import { LoginView } from './login.view';
-import {StartupWeekendAdminApp} from '../../../../app/AdminApp';
-import {StartupWeekendCoachApp} from "../../../CoachApp";
+import {useSession} from 'next-auth/react';
+import {LoginView} from './login.view';
+import {StartupWeekendAdminApp} from '../../../AdminApp';
+import {StartupWeekendCoachApp} from '../../../CoachApp';
+import {logoutAction} from "../_actions/logout.action";
 
 export const withLogin = <P extends Record<string, any>>(
     Component: React.ComponentType<P>
 ) => {
     const LoginComponent = (props: P) => {
-        const { data: session, status } = useSession();
+        const {data: session, status} = useSession();
 
-        // Afficher un loader pendant la vérification
+        const handleLogout = () => {
+            logoutAction();
+        };
+
         if (status === 'loading') {
             return (
                 <div className="flex items-center justify-center min-h-screen">
@@ -22,19 +26,40 @@ export const withLogin = <P extends Record<string, any>>(
         }
 
         if (status === 'unauthenticated' || !session) {
-            return <LoginView />;
+            return <LoginView/>;
         }
 
         if (session?.user.role === 'admin') {
-            return <StartupWeekendAdminApp />;
+            return <>
+                {session && (
+                    <button
+                        onClick={handleLogout}
+                        className="fixed top-4 right-4 z-50 bg-red-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-red-600 transition-colors text-sm"
+                    >
+                        Déconnexion
+                    </button>
+                )}
+                <StartupWeekendAdminApp/>
+            </>;
         }
-
 
         if (session?.user.role === 'coach') {
-            return <StartupWeekendCoachApp />;
+            return <>
+                {session && (
+                    <button
+                        onClick={handleLogout}
+                        className="fixed top-4 right-4 z-50 bg-red-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-red-600 transition-colors text-sm"
+                    >
+                        Déconnexion
+                    </button>
+                )}
+                <StartupWeekendCoachApp/>
+            </>;
         }
 
-        return <Component {...props} />;
+        return <>
+            <Component {...props} />
+        </>;
     };
 
     LoginComponent.displayName = `withLogin(${Component.displayName || Component.name || 'Component'})`;
