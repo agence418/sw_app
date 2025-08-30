@@ -275,7 +275,13 @@ export const db = {
                         JOIN participants tm_p ON tm.participant_id = tm_p.id
                         WHERE tm.team_id = t.id),
                         '[]'
-                    ) as members
+                    ) as members,
+                    COALESCE(
+                        (SELECT json_agg(cp.coach_name ORDER BY cp.preference_time)
+                        FROM coach_preferences cp
+                        WHERE cp.team_id = t.id),
+                        '[]'
+                    ) as coach_requests
                 FROM teams t
                 LEFT JOIN participants p ON t.leader_id = p.id
                 ORDER BY t.name
@@ -298,6 +304,74 @@ export const db = {
         } catch (error) {
             console.error('Erreur createTeam:', error);
             throw error;
+        }
+    },
+
+    // Préférences de coaching
+    async getCoachPreferences(teamId: number): Promise<any[]> {
+        try {
+            const { rows } = await pool.query(`
+                SELECT * FROM coach_preferences 
+                WHERE team_id = $1 
+                ORDER BY preference_time
+            `, [teamId]);
+            return rows;
+        } catch (error) {
+            console.error('Erreur getCoachPreferences:', error);
+            return [];
+        }
+    },
+
+    async createCoachPreference(teamId: number, coachName: string): Promise<any> {
+        try {
+            const { rows } = await pool.query(`
+                INSERT INTO coach_preferences (team_id, coach_name) 
+                VALUES ($1, $2) 
+                RETURNING *
+            `, [teamId, coachName]);
+            return rows[0];
+        } catch (error) {
+            console.error('Erreur createCoachPreference:', error);
+            throw error;
+        }
+    },
+
+    async deleteCoachPreference(teamId: number, coachName: string): Promise<boolean> {
+        try {
+            const result = await pool.query(`
+                DELETE FROM coach_preferences 
+                WHERE team_id = $1 AND coach_name = $2
+            `, [teamId, coachName]);
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Erreur deleteCoachPreference:', error);
+            return false;
+        }
+    },
+
+    async getCoachDemandCount(coachName: string): Promise<number> {
+        try {
+            const { rows } = await pool.query(`
+                SELECT COUNT(*) as count 
+                FROM coach_preferences 
+                WHERE coach_name = $1
+            `, [coachName]);
+            return parseInt(rows[0].count);
+        } catch (error) {
+            console.error('Erreur getCoachDemandCount:', error);
+            return 0;
+        }
+    },
+
+    async getTeamByLeaderId(leaderId: number): Promise<any | null> {
+        try {
+            const { rows } = await pool.query(`
+                SELECT * FROM teams WHERE leader_id = $1
+            `, [leaderId]);
+            return rows[0] || null;
+        } catch (error) {
+            console.error('Erreur getTeamByLeaderId:', error);
+            return null;
         }
     },
 
