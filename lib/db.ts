@@ -205,21 +205,33 @@ export const db = {
         }
     },
 
-    async createVote(participantId: number, ideaName: string): Promise<DbVote> {
+    async createVote(data: any): Promise<DbVote> {
         try {
-            // D'abord vérifier si le participant a déjà voté pour cette idée
+            // Récupérer le nom du projet depuis l'ID
+            const projectResult = await pool.query(
+                'SELECT name FROM projects WHERE id = $1',
+                [parseInt(data.projectId)]
+            );
+            
+            if (projectResult.rows.length === 0) {
+                throw new Error('Projet non trouvé');
+            }
+            
+            const projectName = projectResult.rows[0].name;
+            
+            // Vérifier si le participant a déjà voté pour ce projet
             const existing = await pool.query(
                 'SELECT * FROM votes WHERE participant_id = $1 AND idea_name = $2',
-                [participantId, ideaName]
+                [data.participantId, projectName]
             );
             
             if (existing.rows.length > 0) {
-                throw new Error('Ce participant a déjà voté pour cette idée');
+                throw new Error('Ce participant a déjà voté pour ce projet');
             }
 
             const { rows } = await pool.query(
                 'INSERT INTO votes (participant_id, idea_name, vote_time) VALUES ($1, $2, NOW()) RETURNING *',
-                [participantId, ideaName]
+                [data.participantId, projectName]
             );
             return rows[0];
         } catch (error) {
@@ -276,11 +288,20 @@ export const db = {
     },
 
     // Projets
-    async getProjects(): Promise<DbProject[]> {
+    async getProjects(): Promise<any[]> {
         try {
-            const { rows } = await pool.query(
-                'SELECT * FROM projects ORDER BY name'
-            );
+            const { rows } = await pool.query(`
+                SELECT 
+                    p.id::text, 
+                    p.name, 
+                    p.description, 
+                    p.leader_id::text as "participantId",
+                    par.name as "participantName",
+                    p.created_at as "createdAt" 
+                FROM projects p
+                LEFT JOIN participants par ON p.leader_id = par.id
+                ORDER BY p.created_at DESC
+            `);
             return rows;
         } catch (error) {
             console.error('Erreur getProjects:', error);
@@ -288,13 +309,28 @@ export const db = {
         }
     },
 
-    async createProject(data: Omit<DbProject, 'id'>): Promise<DbProject> {
+    async createProject(data: any): Promise<any> {
         try {
-            const { rows } = await pool.query(
-                'INSERT INTO projects (name, description, status, leader_id) VALUES ($1, $2, $3, $4) RETURNING *',
-                [data.name, data.description, data.status || 'active', data.leader_id]
-            );
-            return rows[0];
+            // Vérifier si participantId est vide ou invalide
+            const leaderId = data.participantId ? parseInt(data.participantId) : null;
+            
+            const { rows } = await pool.query(`
+                INSERT INTO projects (name, description, leader_id, status) 
+                VALUES ($1, $2, $3, $4) 
+                RETURNING 
+                    id::text, 
+                    name, 
+                    description, 
+                    leader_id::text as "participantId",
+                    created_at as "createdAt"
+            `, [data.name, data.description, leaderId, 'active']);
+            
+            // Récupérer le nom du participant pour le retour
+            const projectWithParticipant = {
+                ...rows[0],
+                participantName: data.participantName || null
+            };
+            return projectWithParticipant;
         } catch (error) {
             console.error('Erreur createProject:', error);
             throw error;

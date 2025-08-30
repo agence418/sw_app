@@ -1,0 +1,49 @@
+import { NextResponse } from 'next/server';
+import { db } from '../../../lib/db';
+
+export async function GET() {
+    try {
+        const projects = await db.getProjects();
+        return NextResponse.json(projects);
+    } catch (error) {
+        return NextResponse.json(
+            { error: 'Erreur lors de la récupération des projets' },
+            { status: 500 }
+        );
+    }
+}
+
+export async function POST(request: Request) {
+    try {
+        const body = await request.json();
+        const { name, description, participantId } = body;
+
+        console.log('Données reçues:', { name, description, participantId });
+
+        if (!name || !description || !participantId) {
+            console.log('Champs manquants:', { 
+                name: !!name, 
+                description: !!description, 
+                participantId: !!participantId
+            });
+            return NextResponse.json(
+                { error: 'Tous les champs sont requis' },
+                { status: 400 }
+            );
+        }
+
+        const project = await db.createProject({
+            name,
+            description,
+            participantId
+        });
+
+        return NextResponse.json(project);
+    } catch (error) {
+        console.error('Erreur lors de la création du projet:', error);
+        return NextResponse.json(
+            { error: 'Erreur lors de la création du projet' },
+            { status: 500 }
+        );
+    }
+}

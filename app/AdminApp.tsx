@@ -4,11 +4,10 @@ import React, {useState} from 'react';
 import {Award, Calendar, Clock, Link, MessageSquare, Users, BarChart3, UserCog} from 'lucide-react';
 import {CalendarView} from "./modules/calendar/ui/calendar.view";
 import {getCurrentEvent} from "./modules/calendar/_actions/get-current-event.action";
-import {VoteView} from "./modules/votes/ui/vote.view";
 import {NowView} from "./modules/calendar/ui/now.view";
 import {ListParticipantsView} from "./modules/teams/ui/list-participants.view";
 import {ListCoachesView} from "./modules/coach/ui/list-coaches.view";
-import {VoteResultsView} from "./modules/admin/ui/vote-results.view";
+import {VoteResultsView} from "./modules/votes/ui/vote-results.view";
 import {TeamCreationView} from "./modules/teams/ui/team-creation.view";
 
 export const StartupWeekendAdminApp = () => {
@@ -102,7 +101,7 @@ export const StartupWeekendAdminApp = () => {
                 {/* Page d'accueil */}
                 {activeTab === 'accueil' && (
                     <>
-                        {getCurrentEvent()?.title !== 'Présentation des idées (60 secondes/idée)' ? <TeamCreationView /> :
+                        {getCurrentEvent()?.title === 'Présentation des idées (60 secondes/idée)' ? <TeamCreationView /> :
                             <>
                                 <NowView/>
                             </>
