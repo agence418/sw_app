@@ -287,6 +287,20 @@ export const db = {
         }
     },
 
+    async createTeam(data: any): Promise<any> {
+        try {
+            const { rows } = await pool.query(`
+                INSERT INTO teams (name, idea_description, leader_id) 
+                VALUES ($1, $2, $3) 
+                RETURNING *
+            `, [data.name, data.idea_description, data.leader_id]);
+            return rows[0];
+        } catch (error) {
+            console.error('Erreur createTeam:', error);
+            throw error;
+        }
+    },
+
     // Projets
     async getProjects(): Promise<any[]> {
         try {
@@ -305,6 +319,27 @@ export const db = {
             return rows;
         } catch (error) {
             console.error('Erreur getProjects:', error);
+            return [];
+        }
+    },
+
+    async getProjectsByName(name: string): Promise<any[]> {
+        try {
+            const { rows } = await pool.query(`
+                SELECT 
+                    p.id::text, 
+                    p.name, 
+                    p.description, 
+                    p.leader_id::text as "participantId",
+                    par.name as "participantName",
+                    p.created_at as "createdAt" 
+                FROM projects p
+                LEFT JOIN participants par ON p.leader_id = par.id
+                WHERE p.name = $1
+            `, [name]);
+            return rows;
+        } catch (error) {
+            console.error('Erreur getProjectsByName:', error);
             return [];
         }
     },

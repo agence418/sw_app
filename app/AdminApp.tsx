@@ -102,6 +102,7 @@ export const StartupWeekendAdminApp = () => {
                 {activeTab === 'accueil' && (
                     <>
                         {getCurrentEvent()?.title === 'Présentation des idées (60 secondes/idée)' ? <TeamCreationView /> :
+                        getCurrentEvent()?.title !== 'Votes' ? <VoteResultsView /> :
                             <>
                                 <NowView/>
                             </>

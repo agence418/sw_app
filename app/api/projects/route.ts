@@ -1,10 +1,20 @@
 import { NextResponse } from 'next/server';
 import { db } from '../../../lib/db';
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
-        const projects = await db.getProjects();
-        return NextResponse.json(projects);
+        const { searchParams } = new URL(request.url);
+        const name = searchParams.get('name');
+        
+        if (name) {
+            // Recherche par nom
+            const projects = await db.getProjectsByName(name);
+            return NextResponse.json(projects);
+        } else {
+            // Récupérer tous les projets
+            const projects = await db.getProjects();
+            return NextResponse.json(projects);
+        }
     } catch (error) {
         return NextResponse.json(
             { error: 'Erreur lors de la récupération des projets' },
