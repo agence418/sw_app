@@ -525,6 +525,111 @@ export const db = {
     },
 
     // Fonction utilitaire pour tester la connexion
+    // Méthodes pour l'authentification et la réinitialisation de mot de passe
+    async getAdminByEmail(email: string): Promise<DbAdmin | null> {
+        try {
+            const { rows } = await pool.query(
+                'SELECT * FROM administrators WHERE email = $1',
+                [email]
+            );
+            return rows[0] || null;
+        } catch (error) {
+            console.error('Erreur getAdminByEmail:', error);
+            return null;
+        }
+    },
+
+    async getCoachByEmail(email: string): Promise<DbCoach | null> {
+        try {
+            const { rows } = await pool.query(
+                'SELECT * FROM coaches WHERE email = $1',
+                [email]
+            );
+            return rows[0] || null;
+        } catch (error) {
+            console.error('Erreur getCoachByEmail:', error);
+            return null;
+        }
+    },
+
+    async updateAdminPassword(id: number, password: string): Promise<boolean> {
+        try {
+            const result = await pool.query(
+                'UPDATE administrators SET password = $1 WHERE id = $2',
+                [password, id]
+            );
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Erreur updateAdminPassword:', error);
+            return false;
+        }
+    },
+
+    async updateCoachPassword(id: number, password: string): Promise<boolean> {
+        try {
+            const result = await pool.query(
+                'UPDATE coaches SET password = $1 WHERE id = $2',
+                [password, id]
+            );
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Erreur updateCoachPassword:', error);
+            return false;
+        }
+    },
+
+    async updateParticipantPassword(id: number, password: string): Promise<boolean> {
+        try {
+            const result = await pool.query(
+                'UPDATE participants SET password = $1 WHERE id = $2',
+                [password, id]
+            );
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Erreur updateParticipantPassword:', error);
+            return false;
+        }
+    },
+
+    async authenticateUser(email: string, password: string): Promise<any | null> {
+        try {
+            // Vérifier dans la table administrators
+            const adminResult = await pool.query(
+                'SELECT id, name, email, \'admin\' as role FROM administrators WHERE email = $1 AND password = $2',
+                [email.toLowerCase(), password]
+            );
+            
+            if (adminResult.rows.length > 0) {
+                return adminResult.rows[0];
+            }
+            
+            // Vérifier dans la table coaches
+            const coachResult = await pool.query(
+                'SELECT id, name, email, \'coach\' as role FROM coaches WHERE email = $1 AND password = $2',
+                [email.toLowerCase(), password]
+            );
+            
+            if (coachResult.rows.length > 0) {
+                return coachResult.rows[0];
+            }
+            
+            // Vérifier dans la table participants
+            const participantResult = await pool.query(
+                'SELECT id, name, email, \'participant\' as role FROM participants WHERE email = $1 AND password = $2',
+                [email.toLowerCase(), password]
+            );
+            
+            if (participantResult.rows.length > 0) {
+                return participantResult.rows[0];
+            }
+            
+            return null;
+        } catch (error) {
+            console.error('Erreur authenticateUser:', error);
+            return null;
+        }
+    },
+
     async testConnection(): Promise<boolean> {
         try {
             const { rows } = await pool.query('SELECT NOW()');
