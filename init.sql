@@ -115,16 +115,7 @@ CREATE TABLE team_members
 
 -- Données de base pour l'administrateur
 INSERT INTO administrators (name, email, password)
-VALUES ('Administrator', 'admin@startupweekend.com', 'admin2025');
-
--- Données de base pour les coaches
-INSERT INTO coaches (name, email, password, expertise)
-VALUES ('Marie Dubois', 'coach1@startupweekend.com', 'coach2025', 'Marketing Digital'),
-       ('Jean Martin', 'coach2@startupweekend.com', 'coach2025', 'Développement Tech'),
-       ('Sophie Laurent', 'coach3@startupweekend.com', 'coach2025', 'Business Model'),
-       ('Pierre Durand', 'coach4@startupweekend.com', 'coach2025', 'Design UX/UI'),
-       ('Claire Moreau', 'coach5@startupweekend.com', 'coach2025', 'Financement'),
-       ('Thomas Bernard', 'coach6@startupweekend.com', 'coach2025', 'Stratégie');
+VALUES ('${ADMIN_NAME}', '${ADMIN_EMAIL}', 'TO_RESET');
 
 -- Index pour optimiser les performances
 CREATE INDEX idx_votes_participant ON votes (participant_id);
