@@ -9,7 +9,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://startup_user:startup_password@db:5432/startup_weekend
+      - DATABASE_URL=postgresql://startup_user:startup_password@db:5432/startup_weekend?ssldisabled=1
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
       - NEXTAUTH_URL=${NEXTAUTH_URL}
       - SMTP_HOST=${SMTP_HOST}
