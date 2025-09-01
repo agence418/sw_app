@@ -92,7 +92,7 @@ function ResetPasswordComponent() {
                 
                 // Redirection vers la page de connexion après 3 secondes
                 setTimeout(() => {
-                    router.push('/login');
+                    router.push('/');
                 }, 3000);
             } else {
                 setMessage({ type: 'error', text: data.error || 'Une erreur est survenue' });
@@ -118,7 +118,7 @@ function ResetPasswordComponent() {
                             Ce lien de réinitialisation est invalide ou a expiré. Veuillez faire une nouvelle demande.
                         </p>
                         <button
-                            onClick={() => router.push('/login')}
+                            onClick={() => router.push('/')}
                             className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-400 transition-colors"
                         >
                             Retour à la connexion
