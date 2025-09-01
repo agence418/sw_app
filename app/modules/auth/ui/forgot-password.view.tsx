@@ -58,8 +58,8 @@ export const ForgotPasswordView: React.FC<ForgotPasswordViewProps> = ({ onBack }
 
     if (emailSent) {
         return (
-            <div className="min-h-screen bg-white flex items-center justify-center p-4">
-                <div className="max-w-md w-full bg-white p-8">
+            <div className="flex items-center justify-center bg-white h-screen">
+                <div className="p-8 w-full h-screen items-center justify-center flex flex-col">
                     <div className="text-center">
                         <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
                             <CheckCircle className="h-6 w-6 text-green-600" />
@@ -85,18 +85,18 @@ export const ForgotPasswordView: React.FC<ForgotPasswordViewProps> = ({ onBack }
     }
 
     return (
-        <div className="h-screen bg-white flex items-center justify-center">
+        <div className="flex items-center justify-center bg-white h-screen">
             <div className="p-8 w-full h-screen items-center justify-center flex flex-col">
                 <div className="text-center mb-8">
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">Générer un nouveau mot de passe</h1>
-                    <p className="text-gray-600 text-sm">
+                    <h1 className="text-2xl font-bold mb-2">Générer un nouveau mot de passe</h1>
+                    <p className="text-sm">
                         Saisissez votre adresse email et nous vous enverrons un lien pour créer/réinitialiser votre mot de passe.
                     </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="email" className="block text-sm font-medium mb-2">
                             Adresse email
                         </label>
                         <input
@@ -104,49 +104,44 @@ export const ForgotPasswordView: React.FC<ForgotPasswordViewProps> = ({ onBack }
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-green-600"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600"
                             placeholder="votre@email.com"
                             required
                         />
                     </div>
 
                     {message && (
-                        <div className={`p-4 rounded-lg flex items-start gap-3 ${
+                        <div className={`p-3 rounded flex items-start gap-3 ${
                             message.type === 'success' 
-                                ? 'bg-green-50 border border-green-200' 
-                                : 'bg-red-50 border border-red-200'
+                                ? 'bg-green-100 border border-green-400 text-green-700' 
+                                : 'bg-red-100 border border-red-400 text-red-700'
                         }`}>
                             {message.type === 'success' ? (
                                 <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                             ) : (
                                 <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                             )}
-                            <p className={`text-sm ${
-                                message.type === 'success' ? 'text-green-800' : 'text-red-800'
-                            }`}>
+                            <p className="text-sm">
                                 {message.text}
                             </p>
                         </div>
                     )}
 
-                    <div className="space-y-4">
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                        >
-                            {loading ? 'Envoi en cours...' : 'Envoyer le lien de réinitialisation'}
-                        </button>
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {loading ? 'Envoi en cours...' : 'Envoyer le lien de réinitialisation'}
+                    </button>
 
-                        <button
-                            type="button"
-                            onClick={onBack}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            Retour à la connexion
-                        </button>
-                    </div>
+                    <button
+                        type="button"
+                        onClick={onBack}
+                        className="w-full text-center text-sm text-gray-700 hover:text-gray-900 transition-colors mt-2"
+                    >
+                        Retour à la connexion
+                    </button>
                 </form>
             </div>
         </div>

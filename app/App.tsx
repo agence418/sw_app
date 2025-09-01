@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useState} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import {Award, Calendar, Clock, Link, MessageSquare} from 'lucide-react';
 import {CalendarView} from "./modules/calendar/ui/calendar.view";
 import {getCurrentEvent} from "./modules/calendar/_actions/get-current-event.action";
@@ -18,38 +18,41 @@ const StartupWeekendApp = () => {
     const [eventEnded, setEventEnded] = useState(false);
 
     // Calcul de la progression du weekend
-    const getWeekendProgress = () => {
+    const progress = useMemo(() => {
         const startTime = new Date('2025-08-29T18:00:00');
         const endTime = new Date('2025-08-31T15:00:00');
         const totalDuration = endTime.getTime() - startTime.getTime();
         const elapsed = currentTime.getTime() - startTime.getTime();
 
         if (elapsed < 0) return 0;
+        if (elapsed > totalDuration) return 100;
+        return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
+    }, [currentTime]);
+
+    // Vérifier si l'événement est terminé
+    useEffect(() => {
+        const startTime = new Date('2025-08-29T18:00:00');
+        const endTime = new Date('2025-08-31T15:00:00');
+        const elapsed = currentTime.getTime() - startTime.getTime();
+        const totalDuration = endTime.getTime() - startTime.getTime();
+        
         if (elapsed > totalDuration) {
             setEventEnded(true);
-            return 100;
         }
-        return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
-    };
+    }, [currentTime]);
 
     // Événement actuel
-    const progress = getWeekendProgress();
     const currentEvent = getCurrentEvent();
 
     if (eventEnded) {
         return (
             <div
-                className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-500 flex items-center justify-center p-4">
-                <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 max-w-md w-full text-center shadow-2xl">
-                    <Award className="w-16 h-16 mx-auto mb-6 text-yellow-500"/>
-                    <h1 className="text-3xl font-bold text-gray-800 mb-4">Merci !</h1>
-                    <p className="text-lg text-gray-600 mb-6">
-                        Le Startup Weekend est terminé. Merci pour votre participation et votre engagement !
-                        Nous espérons que cette expérience vous a inspiré.
+                className="min-h-screen text-white bg-green-600 to-cyan-500 flex items-center justify-center p-4">
+                <div className="backdrop-blur-sm rounded-3xl p-8 max-w-md w-full text-center">
+                    <h1 className="text-3xl font-bold mb-4">Merci !</h1>
+                    <p className="text-lg mb-6">
+                        Le Startup Weekend est terminé. Merci pour votre participation !
                     </p>
-                    <div className="text-sm text-gray-500">
-                        Restez connectés pour les prochains événements !
-                    </div>
                 </div>
             </div>
         );
@@ -102,7 +105,7 @@ const StartupWeekendApp = () => {
                 {/* Page d'accueil */}
                 {activeTab === 'accueil' && (
                     <>
-                        {getCurrentEvent()?.title === 'Votes' ? <VoteView/> :
+                        {currentEvent?.title === 'Votes' ? <VoteView/> :
                             <>
                                 <NowView/>
                                 {currentTime.getDay() == 4 && (

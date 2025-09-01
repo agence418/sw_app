@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Lock, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
+import '../global.css';
 
 export default function ResetPasswordPage() {
     const router = useRouter();
@@ -106,19 +107,19 @@ export default function ResetPasswordPage() {
     // Token invalide ou manquant
     if (tokenValid === false) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-                <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
+            <div className="flex items-center justify-center bg-white h-screen">
+                <div className="p-8 w-full h-screen items-center justify-center flex flex-col">
                     <div className="text-center">
                         <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
                             <AlertCircle className="h-6 w-6 text-red-600" />
                         </div>
-                        <h2 className="text-xl font-semibold text-gray-900 mb-2">Lien invalide</h2>
-                        <p className="text-gray-600 text-sm mb-6">
+                        <h2 className="text-xl font-semibold mb-2">Lien invalide</h2>
+                        <p className="text-sm mb-6">
                             Ce lien de réinitialisation est invalide ou a expiré. Veuillez faire une nouvelle demande.
                         </p>
                         <button
                             onClick={() => router.push('/login')}
-                            className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-400 transition-colors"
                         >
                             Retour à la connexion
                         </button>
@@ -131,11 +132,11 @@ export default function ResetPasswordPage() {
     // Vérification du token en cours
     if (tokenValid === null) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-                <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
+            <div className="flex items-center justify-center bg-white h-screen">
+                <div className="p-8 w-full h-screen items-center justify-center flex flex-col">
                     <div className="text-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                        <p className="text-gray-600">Vérification du lien...</p>
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
+                        <p>Vérification du lien...</p>
                     </div>
                 </div>
             </div>
@@ -143,21 +144,18 @@ export default function ResetPasswordPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-            <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
+        <div className="flex items-center justify-center bg-white h-screen">
+            <div className="p-8 w-full h-screen items-center justify-center flex flex-col">
                 <div className="text-center mb-8">
-                    <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
-                        <Lock className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">Nouveau mot de passe</h1>
-                    <p className="text-gray-600 text-sm">
+                    <h1 className="text-2xl font-bold mb-2">Nouveau mot de passe</h1>
+                    <p className="text-sm">
                         Choisissez un mot de passe sécurisé pour votre compte.
                     </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="password" className="block text-sm font-medium mb-2">
                             Nouveau mot de passe
                         </label>
                         <div className="relative">
@@ -166,8 +164,8 @@ export default function ResetPasswordPage() {
                                 id="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="Saisissez votre nouveau mot de passe"
+                                className="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600"
+                                placeholder="Nouveau mot de passe"
                                 required
                             />
                             <button
@@ -184,7 +182,7 @@ export default function ResetPasswordPage() {
                     </div>
 
                     <div>
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="confirmPassword" className="block text-sm font-medium mb-2">
                             Confirmer le mot de passe
                         </label>
                         <div className="relative">
@@ -193,8 +191,8 @@ export default function ResetPasswordPage() {
                                 id="confirmPassword"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="Confirmez votre nouveau mot de passe"
+                                className="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600"
+                                placeholder="Confirmer le mot de passe"
                                 required
                             />
                             <button
@@ -208,19 +206,17 @@ export default function ResetPasswordPage() {
                     </div>
 
                     {message && (
-                        <div className={`p-4 rounded-lg flex items-start gap-3 ${
+                        <div className={`p-3 rounded flex items-start gap-3 ${
                             message.type === 'success' 
-                                ? 'bg-green-50 border border-green-200' 
-                                : 'bg-red-50 border border-red-200'
+                                ? 'bg-green-100 border border-green-400 text-green-700' 
+                                : 'bg-red-100 border border-red-400 text-red-700'
                         }`}>
                             {message.type === 'success' ? (
                                 <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                             ) : (
                                 <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                             )}
-                            <p className={`text-sm ${
-                                message.type === 'success' ? 'text-green-800' : 'text-red-800'
-                            }`}>
+                            <p className="text-sm">
                                 {message.text}
                             </p>
                         </div>
@@ -229,7 +225,7 @@ export default function ResetPasswordPage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {loading ? 'Modification en cours...' : 'Modifier le mot de passe'}
                     </button>

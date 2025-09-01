@@ -5,16 +5,8 @@ import nodemailer from 'nodemailer';
 
 // Créer un transporteur email - À configurer avec vos paramètres SMTP
 const createTransporter = () => {
-    console.log('🔍 Vérification config SMTP:');
-    console.log('SMTP_HOST:', process.env.SMTP_HOST);
-    console.log('SMTP_USER:', process.env.SMTP_USER);
-    console.log('SMTP_PASS:', process.env.SMTP_PASS ? '***masqué***' : 'non défini');
-    console.log('SMTP_PORT:', process.env.SMTP_PORT);
-    console.log('SMTP_SECURE:', process.env.SMTP_SECURE);
-    
     // Si les variables d'environnement pour l'email sont configurées
     if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-        console.log('✅ Config SMTP trouvée, création du transporteur Gmail...');
         return nodemailer.createTransport({
             host: process.env.SMTP_HOST,
             port: parseInt(process.env.SMTP_PORT || '587'),
@@ -26,7 +18,6 @@ const createTransporter = () => {
         });
     }
     
-    console.log('❌ Config SMTP manquante, utilisation d\'Ethereal...');
     // Sinon, utiliser un compte de test Ethereal (pour le développement)
     return null;
 };

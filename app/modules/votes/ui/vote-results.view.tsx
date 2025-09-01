@@ -49,7 +49,7 @@ export const VoteResultsView = () => {
     const totalVotes = voteResults.reduce((sum, result) => sum + result.votes, 0);
     const maxPossibleVotes = participantsCount * 3; // Chaque participant a 3 votes
     const maxVotes = Math.max(...voteResults.map(r => r.votes), 1);
-    const projectsToCreate = Math.round(maxPossibleVotes/3/7) + 1; // 3 votes par participant, 7 participants par équipe
+    const projectsToCreate = Math.round(maxPossibleVotes/3/7); // 3 votes par participant, 7 participants par équipe
 
     const createTeams = async () => {
         try {
