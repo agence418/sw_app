@@ -40,7 +40,7 @@ export const LoginView = () => {
     return (
         <div className="flex items-center justify-center bg-white h-screen">
             <div className="p-8 w-full h-screen items-center justify-center flex flex-col">
-                <h2 className="text-2xl font-bold mb-6 text-center">Login to Your Account</h2>
+                <h2 className="text-2xl font-bold mb-6 text-center">Connexion</h2>
                 {error && (
                     <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
                         {error}
@@ -90,16 +90,6 @@ export const LoginView = () => {
                         Génerer un nouveau mot de passe
                     </button>
                 </form>
-                <div className="mt-4 text-sm text-gray-600 text-center">
-                    <div className="bg-gray-50 p-3 rounded">
-                        <p className="mb-2"><strong>Admin:</strong></p>
-                        <p className="font-mono text-xs">admin@startupweekend.com / admin2025</p>
-                        
-                        <p className="mt-3 mb-2"><strong>Coachs:</strong></p>
-                        <p className="font-mono text-xs">coach1@startupweekend.com / coach2025</p>
-                        <p className="font-mono text-xs">coach2@startupweekend.com / coach2025</p>
-                    </div>
-                </div>
             </div>
         </div>
     );
