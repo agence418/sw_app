@@ -17,8 +17,8 @@ export const StartupWeekendAdminApp = () => {
 
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
-        const startTime = new Date('2025-08-29T18:00:00');
-        const endTime = new Date('2025-08-31T15:00:00');
+        const startTime = new Date('2025-09-05T18:00:00');
+        const endTime = new Date('2025-09-07T15:00:00');
         const totalDuration = endTime.getTime() - startTime.getTime();
         const elapsed = currentTime.getTime() - startTime.getTime();
 
@@ -114,18 +114,19 @@ export const StartupWeekendAdminApp = () => {
                 )}
             </main>
 
-            {/* Status bar en bas */}
-            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
-                <div className="text-center text-sm text-gray-600">
-                    {currentEvent ? (
-                        <div>
-                            <span className="font-medium text-blue-600">En cours:</span> {currentEvent.title}
-                        </div>
-                    ) : (
-                        'Startup Weekend en cours...'
-                    )}
+            {progress > 0 && (
+                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+                    <div className="text-center text-sm text-gray-600">
+                        {currentEvent ? (
+                            <div>
+                                <span className="font-medium text-blue-600">En cours:</span> {currentEvent.title}
+                            </div>
+                        ) : (
+                            'Startup Weekend en cours...'
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Padding pour éviter que le contenu soit masqué par la status bar */}
             <div className="h-20"/>
