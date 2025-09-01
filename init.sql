@@ -113,9 +113,23 @@ CREATE TABLE team_members
     UNIQUE (team_id, participant_id)
 );
 
+-- Table pour l'état actuel des événements
+CREATE TABLE event_state
+(
+    id           SERIAL PRIMARY KEY,
+    day          VARCHAR(20) NOT NULL,  -- 'vendredi' ou 'dimanche'
+    current_step INTEGER NOT NULL DEFAULT 0,
+    updated_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (day)
+);
+
 -- Données de base pour l'administrateur
 INSERT INTO administrators (name, email, password)
 VALUES ('${ADMIN_NAME}', '${ADMIN_EMAIL}', 'TO_RESET');
+
+-- Initialisation des états des événements
+INSERT INTO event_state (day, current_step) VALUES ('vendredi', 0);
+INSERT INTO event_state (day, current_step) VALUES ('dimanche', 0);
 
 -- Index pour optimiser les performances
 CREATE INDEX idx_votes_participant ON votes (participant_id);

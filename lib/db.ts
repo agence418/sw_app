@@ -598,6 +598,46 @@ export const db = {
         }
     },
 
+    // Gestion des états des événements
+    async getCurrentEventState(day: 'vendredi' | 'dimanche'): Promise<number> {
+        try {
+            const { rows } = await pool.query(
+                'SELECT current_step FROM event_state WHERE day = $1',
+                [day]
+            );
+            return rows[0]?.current_step || 0;
+        } catch (error) {
+            console.error('Erreur getCurrentEventState:', error);
+            return 0;
+        }
+    },
+
+    async advanceEventStep(day: 'vendredi' | 'dimanche'): Promise<number> {
+        try {
+            const { rows } = await pool.query(
+                'UPDATE event_state SET current_step = current_step + 1, updated_at = CURRENT_TIMESTAMP WHERE day = $1 RETURNING current_step',
+                [day]
+            );
+            return rows[0]?.current_step || 0;
+        } catch (error) {
+            console.error('Erreur advanceEventStep:', error);
+            return 0;
+        }
+    },
+
+    async setEventStep(day: 'vendredi' | 'dimanche', step: number): Promise<boolean> {
+        try {
+            const result = await pool.query(
+                'UPDATE event_state SET current_step = $1, updated_at = CURRENT_TIMESTAMP WHERE day = $2',
+                [step, day]
+            );
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Erreur setEventStep:', error);
+            return false;
+        }
+    },
+
     async testConnection(): Promise<boolean> {
         try {
             const { rows } = await pool.query('SELECT NOW()');

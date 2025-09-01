@@ -14,6 +14,7 @@ import {ListTeamsView} from "./modules/teams/ui/list-teams.view";
 export const StartupWeekendAdminApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
     const [currentTime, setCurrentTime] = useState(new Date());
+    const [currentEvent, setCurrentEvent] = useState<any>(null);
 
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
@@ -27,8 +28,18 @@ export const StartupWeekendAdminApp = () => {
         return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
     }, [currentTime]);
 
-    // Événement actuel
-    const currentEvent = getCurrentEvent();
+    // Récupérer l'événement actuel
+    useEffect(() => {
+        const fetchCurrentEvent = async () => {
+            const event = await getCurrentEvent();
+            setCurrentEvent(event);
+        };
+        fetchCurrentEvent();
+        
+        // Rafraîchir toutes les minutes
+        const interval = setInterval(fetchCurrentEvent, 60000);
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-50">

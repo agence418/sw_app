@@ -1,7 +1,8 @@
 import {CALENDAR} from "../values/calendar.const";
+import {db} from "@/lib/db";
 
-// Version client - utilise l'API pour éviter d'importer db
-export const getCurrentEventClient = async () => {
+// Version serveur uniquement - ne jamais importer côté client !
+export const getCurrentEventServer = async () => {
     const currentTime = new Date();
     const currentDay = currentTime.toLocaleDateString('fr-FR', { weekday: 'long' }).toLowerCase();
     const currentTimeStr = currentTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
@@ -12,13 +13,9 @@ export const getCurrentEventClient = async () => {
     // Pour vendredi et dimanche, utiliser l'index depuis la base de données
     if (currentDay === 'vendredi' || currentDay === 'dimanche') {
         try {
-            // Appel API pour récupérer l'état actuel
-            const response = await fetch(`/api/events/advance?day=${currentDay}`);
-            if (response.ok) {
-                const data = await response.json();
-                const event = todayEvents.find(e => e.step === data.currentStep);
-                return event || null;
-            }
+            const currentStep = await db.getCurrentEventState(currentDay as 'vendredi' | 'dimanche');
+            const event = todayEvents.find(e => e.step === currentStep);
+            return event || null;
         } catch (error) {
             console.error('Erreur récupération état événement:', error);
             // Fallback sur le système basé sur l'heure
@@ -36,6 +33,3 @@ export const getCurrentEventClient = async () => {
     }
     return null;
 };
-
-// Export par défaut pour compatibilité
-export const getCurrentEvent = getCurrentEventClient;
