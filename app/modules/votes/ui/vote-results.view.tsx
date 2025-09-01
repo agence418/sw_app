@@ -217,17 +217,6 @@ export const VoteResultsView = () => {
                             </div>
                         )}
                     </div>
-
-                    <div className="p-4 bg-gray-50 border-t border-gray-200">
-                        <div className="text-xs text-gray-600">
-                            <p className="font-medium mb-1">Informations:</p>
-                            <ul className="space-y-1">
-                                <li>• Top 3 idées développées ce weekend</li>
-                                <li>• Équipes formées autour de ces projets</li>
-                                <li>• Vote vendredi soir après pitchs</li>
-                            </ul>
-                        </div>
-                    </div>
                 </div>
             </div>
         </>
