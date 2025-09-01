@@ -475,46 +475,34 @@ export const db = {
     // Authentification
     async authenticateUser(email: string, password: string): Promise<any | null> {
         try {
-            // Vérifier admin
+            // Vérifier dans la table administrators
             const adminResult = await pool.query(
-                'SELECT * FROM administrators WHERE email = $1 AND password = $2',
-                [email, password]
+                'SELECT id, name, email, \'admin\' as role FROM administrators WHERE email = $1 AND password = $2',
+                [email.toLowerCase(), password]
             );
-            if (adminResult.rows[0]) {
-                return {
-                    id: adminResult.rows[0].id.toString(),
-                    email: adminResult.rows[0].email,
-                    name: adminResult.rows[0].name,
-                    role: 'admin'
-                };
+
+            if (adminResult.rows.length > 0) {
+                return adminResult.rows[0];
             }
 
-            // Vérifier coaches
+            // Vérifier dans la table coaches
             const coachResult = await pool.query(
-                'SELECT * FROM coaches WHERE email = $1 AND password = $2',
-                [email, password]
+                'SELECT id, name, email, \'coach\' as role FROM coaches WHERE email = $1 AND password = $2',
+                [email.toLowerCase(), password]
             );
-            if (coachResult.rows[0]) {
-                return {
-                    id: coachResult.rows[0].id.toString(),
-                    email: coachResult.rows[0].email,
-                    name: coachResult.rows[0].name,
-                    role: 'coach'
-                };
+
+            if (coachResult.rows.length > 0) {
+                return coachResult.rows[0];
             }
 
-            // Vérifier participants
+            // Vérifier dans la table participants
             const participantResult = await pool.query(
-                'SELECT * FROM participants WHERE email = $1 AND password = $2',
-                [email, password]
+                'SELECT id, name, email, \'participant\' as role FROM participants WHERE email = $1 AND password = $2',
+                [email.toLowerCase(), password]
             );
-            if (participantResult.rows[0]) {
-                return {
-                    id: participantResult.rows[0].id.toString(),
-                    email: participantResult.rows[0].email,
-                    name: participantResult.rows[0].name,
-                    role: 'participant'
-                };
+
+            if (participantResult.rows.length > 0) {
+                return participantResult.rows[0];
             }
 
             return null;
@@ -588,45 +576,6 @@ export const db = {
         } catch (error) {
             console.error('Erreur updateParticipantPassword:', error);
             return false;
-        }
-    },
-
-    async authenticateUser(email: string, password: string): Promise<any | null> {
-        try {
-            // Vérifier dans la table administrators
-            const adminResult = await pool.query(
-                'SELECT id, name, email, \'admin\' as role FROM administrators WHERE email = $1 AND password = $2',
-                [email.toLowerCase(), password]
-            );
-            
-            if (adminResult.rows.length > 0) {
-                return adminResult.rows[0];
-            }
-            
-            // Vérifier dans la table coaches
-            const coachResult = await pool.query(
-                'SELECT id, name, email, \'coach\' as role FROM coaches WHERE email = $1 AND password = $2',
-                [email.toLowerCase(), password]
-            );
-            
-            if (coachResult.rows.length > 0) {
-                return coachResult.rows[0];
-            }
-            
-            // Vérifier dans la table participants
-            const participantResult = await pool.query(
-                'SELECT id, name, email, \'participant\' as role FROM participants WHERE email = $1 AND password = $2',
-                [email.toLowerCase(), password]
-            );
-            
-            if (participantResult.rows.length > 0) {
-                return participantResult.rows[0];
-            }
-            
-            return null;
-        } catch (error) {
-            console.error('Erreur authenticateUser:', error);
-            return null;
         }
     },
 
