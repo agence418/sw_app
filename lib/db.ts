@@ -1,6 +1,7 @@
 // Configuration de la base de données PostgreSQL
 
 import { Pool } from 'pg';
+import { verifyPassword, hashPassword } from './password';
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
@@ -79,9 +80,10 @@ export const db = {
 
     async createParticipant(data: Omit<DbParticipant, 'id'>): Promise<DbParticipant> {
         try {
+            const hashedPassword = await hashPassword(data.password || 'temp2025');
             const { rows } = await pool.query(
                 'INSERT INTO participants (name, email, password, phone, skills) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-                [data.name, data.email, data.password || 'temp2025', data.phone || null, data.skills || []]
+                [data.name, data.email, hashedPassword, data.phone || null, data.skills || []]
             );
             return rows[0];
         } catch (error) {
@@ -92,9 +94,10 @@ export const db = {
 
     async updateParticipant(id: number, data: Partial<DbParticipant>): Promise<DbParticipant | null> {
         try {
+            const hashedPassword = data.password ? await hashPassword(data.password) : undefined;
             const { rows } = await pool.query(
                 'UPDATE participants SET name = COALESCE($2, name), email = COALESCE($3, email), password = COALESCE($4, password), phone = COALESCE($5, phone), skills = COALESCE($6, skills) WHERE id = $1 RETURNING *',
-                [id, data.name, data.email, data.password, data.phone, data.skills]
+                [id, data.name, data.email, hashedPassword, data.phone, data.skills]
             );
             return rows[0] || null;
         } catch (error) {
@@ -144,9 +147,10 @@ export const db = {
 
     async updateCoach(id: number, data: Partial<DbCoach>): Promise<DbCoach | null> {
         try {
+            const hashedPassword = data.password ? await hashPassword(data.password) : undefined;
             const { rows } = await pool.query(
                 'UPDATE coaches SET name = COALESCE($2, name), email = COALESCE($3, email), password = COALESCE($4, password), expertise = COALESCE($5, expertise) WHERE id = $1 RETURNING *',
-                [id, data.name, data.email, data.password, data.expertise]
+                [id, data.name, data.email, hashedPassword, data.expertise]
             );
             return rows[0] || null;
         } catch (error) {
@@ -477,32 +481,44 @@ export const db = {
         try {
             // Vérifier dans la table administrators
             const adminResult = await pool.query(
-                'SELECT id, name, email, \'admin\' as role FROM administrators WHERE email = $1 AND password = $2',
-                [email.toLowerCase(), password]
+                'SELECT id, name, email, password, \'admin\' as role FROM administrators WHERE email = $1',
+                [email.toLowerCase()]
             );
 
-            if (adminResult.rows.length > 0) {
-                return adminResult.rows[0];
+            if (adminResult.rows.length > 0 && adminResult.rows[0].password) {
+                const isValid = await verifyPassword(password, adminResult.rows[0].password);
+                if (isValid) {
+                    const { password: _, ...user } = adminResult.rows[0];
+                    return user;
+                }
             }
 
             // Vérifier dans la table coaches
             const coachResult = await pool.query(
-                'SELECT id, name, email, \'coach\' as role FROM coaches WHERE email = $1 AND password = $2',
-                [email.toLowerCase(), password]
+                'SELECT id, name, email, password, \'coach\' as role FROM coaches WHERE email = $1',
+                [email.toLowerCase()]
             );
 
-            if (coachResult.rows.length > 0) {
-                return coachResult.rows[0];
+            if (coachResult.rows.length > 0 && coachResult.rows[0].password) {
+                const isValid = await verifyPassword(password, coachResult.rows[0].password);
+                if (isValid) {
+                    const { password: _, ...user } = coachResult.rows[0];
+                    return user;
+                }
             }
 
             // Vérifier dans la table participants
             const participantResult = await pool.query(
-                'SELECT id, name, email, \'participant\' as role FROM participants WHERE email = $1 AND password = $2',
-                [email.toLowerCase(), password]
+                'SELECT id, name, email, password, \'participant\' as role FROM participants WHERE email = $1',
+                [email.toLowerCase()]
             );
 
-            if (participantResult.rows.length > 0) {
-                return participantResult.rows[0];
+            if (participantResult.rows.length > 0 && participantResult.rows[0].password) {
+                const isValid = await verifyPassword(password, participantResult.rows[0].password);
+                if (isValid) {
+                    const { password: _, ...user } = participantResult.rows[0];
+                    return user;
+                }
             }
 
             return null;
@@ -542,9 +558,10 @@ export const db = {
 
     async updateAdminPassword(id: number, password: string): Promise<boolean> {
         try {
+            const hashedPassword = await hashPassword(password);
             const result = await pool.query(
                 'UPDATE administrators SET password = $1 WHERE id = $2',
-                [password, id]
+                [hashedPassword, id]
             );
             return result.rowCount > 0;
         } catch (error) {
@@ -555,9 +572,10 @@ export const db = {
 
     async updateCoachPassword(id: number, password: string): Promise<boolean> {
         try {
+            const hashedPassword = await hashPassword(password);
             const result = await pool.query(
                 'UPDATE coaches SET password = $1 WHERE id = $2',
-                [password, id]
+                [hashedPassword, id]
             );
             return result.rowCount > 0;
         } catch (error) {
@@ -568,9 +586,10 @@ export const db = {
 
     async updateParticipantPassword(id: number, password: string): Promise<boolean> {
         try {
+            const hashedPassword = await hashPassword(password);
             const result = await pool.query(
                 'UPDATE participants SET password = $1 WHERE id = $2',
-                [password, id]
+                [hashedPassword, id]
             );
             return result.rowCount > 0;
         } catch (error) {
