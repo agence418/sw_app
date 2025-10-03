@@ -7,6 +7,7 @@ import {StartupWeekendAdminApp} from '../../../AdminApp';
 import {StartupWeekendCoachApp} from '../../../CoachApp';
 import {logoutAction} from "../_actions/logout.action";
 import {LogOutIcon} from "lucide-react";
+import {VisitorApp} from "../../../VisitorApp";
 
 export const withLogin = <P extends Record<string, any>>(
     Component: React.ComponentType<P>
@@ -55,6 +56,20 @@ export const withLogin = <P extends Record<string, any>>(
                     </button>
                 )}
                 <StartupWeekendCoachApp/>
+            </>;
+        }
+
+        if (session?.user.role === 'visitor') {
+            return <>
+                {session && (
+                    <button
+                        onClick={handleLogout}
+                        className="fixed top-4 right-4 z-50 text-white bg-transparent px-4 py-2 rounded-full transition-colors text-sm"
+                    >
+                        <LogOutIcon size={18}/>
+                    </button>
+                )}
+                <VisitorApp/>
             </>;
         }
 

@@ -1,20 +1,21 @@
 'use client';
 
 import React, {useState, useMemo, useEffect} from 'react';
-import {Calendar, Clock, Users, BarChart3, UserCog} from 'lucide-react';
+import {Calendar, Clock, Link, MessageSquare} from 'lucide-react';
 import {CalendarView} from "./modules/calendar/ui/calendar.view";
 import {getCurrentEvent} from "./modules/calendar/_actions/get-current-event.action";
+import {VoteView} from "./modules/votes/ui/vote.view";
 import {NowView} from "./modules/calendar/ui/now.view";
-import {ListParticipantsView} from "./modules/teams/ui/list-participants.view";
-import {ListCoachesView} from "./modules/coach/ui/list-coaches.view";
-import {VoteResultsView} from "./modules/votes/ui/vote-results.view";
-import {TeamCreationView} from "./modules/teams/ui/team-creation.view";
-import {ListTeamsView} from "./modules/teams/ui/list-teams.view";
-import {ListVisitorsView} from "./modules/visitors/ui/list-visitors.view";
+import {SendFileComp} from "./modules/powerpoint/ui/send-file.comp";
+import {ChooseCoachView} from "./modules/coach/ui/choose-coach.view";
+import {withLogin} from "./modules/auth/ui/with-login.hoc";
+import {SessionProvider} from "next-auth/react";
+import {ToolsView} from "./modules/tools/ui/tools.view";
 
-export const StartupWeekendAdminApp = () => {
+export const VisitorApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
     const [currentTime, setCurrentTime] = useState(new Date());
+    const [eventEnded, setEventEnded] = useState(false);
     const [currentEvent, setCurrentEvent] = useState<any>(null);
 
     // Calcul de la progression du weekend
@@ -27,6 +28,18 @@ export const StartupWeekendAdminApp = () => {
         if (elapsed < 0) return 0;
         if (elapsed > totalDuration) return 100;
         return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
+    }, [currentTime]);
+
+    // Vérifier si l'événement est terminé
+    useEffect(() => {
+        const startTime = new Date('2025-09-05T18:00:00');
+        const endTime = new Date('2025-09-07T15:00:00');
+        const elapsed = currentTime.getTime() - startTime.getTime();
+        const totalDuration = endTime.getTime() - startTime.getTime();
+        
+        if (elapsed > totalDuration) {
+            setEventEnded(true);
+        }
     }, [currentTime]);
 
     // Récupérer l'événement actuel
@@ -42,10 +55,24 @@ export const StartupWeekendAdminApp = () => {
         return () => clearInterval(interval);
     }, []);
 
+    if (eventEnded) {
+        return (
+            <div
+                className="min-h-screen text-white bg-green-600 to-cyan-500 flex items-center justify-center p-4">
+                <div className="backdrop-blur-sm rounded-3xl p-8 max-w-md w-full text-center">
+                    <h1 className="text-3xl font-bold mb-4">Merci !</h1>
+                    <p className="text-lg mb-6">
+                        Le Startup Weekend est terminé. Merci pour votre participation !
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
-            <header className="bg-green-600 text-white p-4 shadow-lg">
+            <header className="bg-red-600 text-white p-4 shadow-lg">
                 <h1 className="text-xl font-bold text-center">Startup Weekend</h1>
                 <div className="mt-2">
                     <div className="flex justify-between items-center text-sm mb-1">
@@ -66,12 +93,9 @@ export const StartupWeekendAdminApp = () => {
                 <div className="flex overflow-x-auto justify-between space-x-1 py-2">
                     {[
                         {id: 'accueil', icon: Clock, label: 'Accueil'},
-                        {id: 'participants', icon: Users, label: 'Participants'},
-                        {id: 'visitors', icon: Users, label: 'Visiteurs'},
-                        {id: 'coaches', icon: UserCog, label: 'Coachs'},
-                        {id: 'teams', icon: Users, label: 'Teams'},
-                        {id: 'votes', icon: BarChart3, label: 'Votes'},
                         {id: 'calendrier', icon: Calendar, label: 'Calendrier'},
+                        {id: 'coach', icon: MessageSquare, label: 'Coach'},
+                        {id: 'outils', icon: Link, label: 'Outils'}
                     ].map(({id, icon: Icon, label}) => (
                         <button
                             key={id}
@@ -92,47 +116,34 @@ export const StartupWeekendAdminApp = () => {
                 {/* Page d'accueil */}
                 {activeTab === 'accueil' && (
                     <>
-                        {getCurrentEvent()?.title === 'Présentation des idées (60 secondes/idée)' ? <TeamCreationView /> :
-                        getCurrentEvent()?.title === 'Votes' ? <VoteResultsView /> :
+                        {currentEvent?.title === 'Votes' ? <VoteView/> :
                             <>
                                 <NowView/>
+                                {currentTime.getDay() == 4 && (
+                                    <SendFileComp/>
+                                )}
                             </>
                         }
                     </>
-                )}
-
-                {/* Gestion des participants */}
-                {activeTab === 'participants' && (
-                    <ListParticipantsView/>
-                )}
-
-
-                {/* Gestion des visitors */}
-                {activeTab === 'visitors' && (
-                    <ListVisitorsView/>
-                )}
-
-                {/* Gestion des coachs */}
-                {activeTab === 'coaches' && (
-                    <ListCoachesView/>
-                )}
-
-                {/* Gestion des participants */}
-                {activeTab === 'teams' && (
-                    <ListTeamsView />
-                )}
-
-                {/* Résultats des votes */}
-                {activeTab === 'votes' && (
-                    <VoteResultsView/>
                 )}
 
                 {/* Calendrier */}
                 {activeTab === 'calendrier' && (
                     <CalendarView/>
                 )}
+
+                {/* Formulaire coach */}
+                {activeTab === 'coach' && (
+                    <ChooseCoachView/>
+                )}
+
+                {/* Outils pratiques */}
+                {activeTab === 'outils' && (
+                    <ToolsView />
+                )}
             </main>
 
+            {/* Status bar en bas */}
             {progress > 0 && (
                 <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
                     <div className="text-center text-sm text-gray-600">
