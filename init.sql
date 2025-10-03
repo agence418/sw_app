@@ -10,12 +10,16 @@ DROP TABLE IF EXISTS projects CASCADE;
 DROP TABLE IF EXISTS coaches CASCADE;
 DROP TABLE IF EXISTS administrators CASCADE;
 DROP TABLE IF EXISTS participants CASCADE;
+DROP TABLE IF EXISTS visitors CASCADE;
 
 -- Supprimer les séquences existantes pour les recréer proprement
 DROP SEQUENCE IF EXISTS projects_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS participants_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS teams_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS votes_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS administrators_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS coaches_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS visitors_id_seq CASCADE;
 
 -- Table des administrateurs
 CREATE TABLE administrators
@@ -30,12 +34,12 @@ CREATE TABLE administrators
 -- Table des coachs
 CREATE TABLE coaches
 (
-    id           SERIAL PRIMARY KEY,
-    name         VARCHAR(100)        NOT NULL,
-    email        VARCHAR(100) UNIQUE NOT NULL,
-    password     VARCHAR(255),
-    expertise    VARCHAR(100),
-    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id         SERIAL PRIMARY KEY,
+    name       VARCHAR(100)        NOT NULL,
+    email      VARCHAR(100) UNIQUE NOT NULL,
+    password   VARCHAR(255),
+    expertise  VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Table des participants
@@ -50,6 +54,17 @@ CREATE TABLE participants
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Table des visitors
+CREATE TABLE visitors
+(
+    id         SERIAL PRIMARY KEY,
+    name       VARCHAR(100)        NOT NULL,
+    email      VARCHAR(100) UNIQUE NOT NULL,
+    password   VARCHAR(255)        NOT NULL,
+    phone      VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Table des projets
 CREATE TABLE projects
 (
@@ -58,7 +73,7 @@ CREATE TABLE projects
     description TEXT,
     status      VARCHAR(50) DEFAULT 'active',
     leader_id   INTEGER REFERENCES participants (id),
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at  TIMESTAMP   DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Table des votes du vendredi
@@ -117,9 +132,9 @@ CREATE TABLE team_members
 CREATE TABLE event_state
 (
     id           SERIAL PRIMARY KEY,
-    day          VARCHAR(20) NOT NULL,  -- 'vendredi' ou 'dimanche'
-    current_step INTEGER NOT NULL DEFAULT 0,
-    updated_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    day          VARCHAR(20) NOT NULL, -- 'vendredi' ou 'dimanche'
+    current_step INTEGER     NOT NULL DEFAULT 0,
+    updated_at   TIMESTAMP            DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (day)
 );
 
@@ -128,8 +143,10 @@ INSERT INTO administrators (name, email, password)
 VALUES ('${ADMIN_NAME}', '${ADMIN_EMAIL}', 'TO_RESET');
 
 -- Initialisation des états des événements
-INSERT INTO event_state (day, current_step) VALUES ('vendredi', 0);
-INSERT INTO event_state (day, current_step) VALUES ('dimanche', 0);
+INSERT INTO event_state (day, current_step)
+VALUES ('vendredi', 0);
+INSERT INTO event_state (day, current_step)
+VALUES ('dimanche', 0);
 
 -- Index pour optimiser les performances
 CREATE INDEX idx_votes_participant ON votes (participant_id);
@@ -143,3 +160,8 @@ SELECT setval('projects_id_seq', COALESCE((SELECT MAX(id) FROM projects), 0) + 1
 SELECT setval('participants_id_seq', COALESCE((SELECT MAX(id) FROM participants), 0) + 1, false);
 SELECT setval('teams_id_seq', COALESCE((SELECT MAX(id) FROM teams), 0) + 1, false);
 SELECT setval('votes_id_seq', COALESCE((SELECT MAX(id) FROM votes), 0) + 1, false);
+SELECT setval('administrators_id_seq', COALESCE((SELECT MAX(id) FROM administrators), 0) + 1, false);
+SELECT setval('coaches_id_seq', COALESCE((SELECT MAX(id)
+                                          FROM coaches), 0) + 1, false);
+SELECT setval('visitors_id_seq', COALESCE((SELECT MAX(id)
+                                           FROM visitors), 0) + 1, false);

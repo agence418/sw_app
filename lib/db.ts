@@ -33,6 +33,15 @@ interface DbCoach {
     created_at?: Date;
 }
 
+interface DbVisitor {
+    id: number;
+    name: string;
+    email: string;
+    phone?: string;
+    password?: string;
+    created_at?: Date;
+}
+
 interface DbAdmin {
     id: number;
     name: string;
@@ -168,6 +177,73 @@ export const db = {
             return result.rowCount > 0;
         } catch (error) {
             console.error('Erreur deleteCoach:', error);
+            return false;
+        }
+    },
+
+
+    // Visitors
+    async getVisitors(): Promise<DbVisitor[]> {
+        try {
+            const { rows } = await pool.query(
+                'SELECT * FROM visitors ORDER BY name'
+            );
+            return rows;
+        } catch (error) {
+            console.error('Erreur getVisitor:', error);
+            return [];
+        }
+    },
+
+    async getVisitorByEmail(email: string): Promise<DbVisitor | null> {
+        try {
+            const { rows } = await pool.query(
+                'SELECT * FROM visitors WHERE email = $1',
+                [email]
+            );
+            return rows[0] || null;
+        } catch (error) {
+            console.error('Erreur getVisitorByEmail:', error);
+            return null;
+        }
+    },
+
+    async createVisitor(data: Omit<DbVisitor, 'id'>): Promise<DbVisitor> {
+        try {
+            const { rows } = await pool.query(
+                'INSERT INTO visitors (name, email, password, phone) VALUES ($1, $2, $3, $4) RETURNING *',
+                [data.name, data.email, data.password = 'not_set', data.phone || null]
+            );
+            return rows[0];
+        } catch (error) {
+            console.error('Erreur createVisitor:', error);
+            throw error;
+        }
+    },
+
+    async updateVisitor(id: number, data: Partial<DbVisitor>): Promise<DbVisitor | null> {
+        try {
+            const hashedPassword = data.password ? await hashPassword(data.password) : undefined;
+            const { rows } = await pool.query(
+                'UPDATE visitors SET name = COALESCE($2, name), email = COALESCE($3, email), password = COALESCE($4, password) WHERE id = $1 RETURNING *',
+                [id, data.name, data.email, hashedPassword]
+            );
+            return rows[0] || null;
+        } catch (error) {
+            console.error('Erreur updateVisitor:', error);
+            return null;
+        }
+    },
+
+    async deleteVisitor(id: number): Promise<boolean> {
+        try {
+            const result = await pool.query(
+                'DELETE FROM visitors WHERE id = $1',
+                [id]
+            );
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Erreur deleteVisitor:', error);
             return false;
         }
     },
@@ -521,6 +597,21 @@ export const db = {
                 }
             }
 
+
+            // Vérifier dans la table visitors
+            const visitorResult = await pool.query(
+                'SELECT id, name, email, password, \'visitor\' as role FROM administrators WHERE email = $1',
+                [email.toLowerCase()]
+            );
+
+            if (visitorResult.rows.length > 0 && visitorResult.rows[0].password) {
+                const isValid = await verifyPassword(password, visitorResult.rows[0].password);
+                if (isValid) {
+                    const { password: _, ...user } = visitorResult.rows[0];
+                    return user;
+                }
+            }
+
             return null;
         } catch (error) {
             console.error('Erreur authenticateUser:', error);
@@ -641,7 +732,7 @@ export const db = {
     async testConnection(): Promise<boolean> {
         try {
             const { rows } = await pool.query('SELECT NOW()');
-            console.log('Connexion à la base de données réussie:', rows[0].now);
+            console.debug('Connexion à la base de données réussie:', rows[0].now);
             return true;
         } catch (error) {
             console.error('Erreur de connexion à la base de données:', error);

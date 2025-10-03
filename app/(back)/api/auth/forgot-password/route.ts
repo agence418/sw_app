@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import {NextRequest, NextResponse} from 'next/server';
+import {db} from '@/lib/db';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 
@@ -17,76 +17,81 @@ const createTransporter = () => {
             },
         });
     }
-    
+
     // Sinon, utiliser un compte de test Ethereal (pour le développement)
     return null;
 };
 
 export async function POST(request: NextRequest) {
     try {
-        const { email } = await request.json();
+        const {email} = await request.json();
 
         if (!email || !email.trim()) {
             return NextResponse.json(
-                { error: 'Email requis' },
-                { status: 400 }
+                {error: 'Email requis'},
+                {status: 400}
             );
         }
 
         // Vérifier si l'utilisateur existe dans une des tables
         let user = null;
         let userType = '';
-        
+
         // Vérifier dans la table administrators
         const admin = await db.getAdminByEmail(email.trim().toLowerCase());
-        
-        if (admin) {
-            user = admin;
-            userType = 'admin';
-        } else {
-            // Vérifier dans la table coaches
-            const coach = await db.getCoachByEmail(email.trim().toLowerCase());
-            
-            if (coach) {
+        const coach = await db.getCoachByEmail(email.trim().toLowerCase());
+        const participant = await db.getParticipantByEmail(email.trim().toLowerCase());
+        const visitor = await db.getVisitorByEmail(email.trim().toLowerCase());
+
+        switch (true) {
+            case !!admin:
+                user = admin;
+                userType = 'admin';
+                break;
+            case !!coach:
                 user = coach;
                 userType = 'coach';
-            } else {
-                // Vérifier dans la table participants
-                const participant = await db.getParticipantByEmail(email.trim().toLowerCase());
-                
-                if (participant) {
-                    user = participant;
-                    userType = 'participant';
-                }
-            }
+                break;
+            case !!participant:
+                user = participant;
+                userType = 'participant';
+                break;
+            case !!visitor:
+                user = visitor;
+                userType = 'visitor';
+                break;
+            default:
+                user = null;
+                userType = '';
         }
 
         // Même si l'utilisateur n'existe pas, on retourne un succès pour des raisons de sécurité
         if (!user) {
             return NextResponse.json(
-                { success: true, message: 'Si cette adresse existe, un email de réinitialisation a été envoyé' },
-                { status: 200 }
+                {success: true, message: 'Si cette adresse existe, un email de réinitialisation a été envoyé'},
+                {status: 200}
             );
         }
 
         // Générer un token JWT avec une expiration de 1 heure
         const resetToken = jwt.sign(
-            { 
-                userId: user.id, 
-                email: user.email, 
+            {
+                userId: user.id,
+                email: user.email,
                 userType: userType,
-                type: 'password_reset' 
+                type: 'password_reset'
             },
             process.env.NEXTAUTH_SECRET || 'your-secret-key',
-            { expiresIn: '1h' }
+            {expiresIn: '1h'}
         );
 
         const resetLink = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
-        
+        console.log({resetLink})
+
         // Créer le transporteur email
         let transporter = createTransporter();
         let testAccount = null;
-        
+
         // Si aucune config SMTP, utiliser Ethereal pour les tests
         if (!transporter) {
             try {
@@ -105,7 +110,7 @@ export async function POST(request: NextRequest) {
                 transporter = null;
             }
         }
-        
+
         if (transporter) {
             // Si un transporteur est disponible, envoyer l'email
             try {
@@ -163,11 +168,11 @@ export async function POST(request: NextRequest) {
                 };
 
                 const info = await transporter.sendMail(mailOptions);
-                
+
                 console.log('✅ Email envoyé avec succès !');
                 console.log('📧 Message ID:', info.messageId);
                 console.log('👤 Destinataire:', user.email);
-                
+
                 // Si c'est un compte de test Ethereal, afficher l'URL de prévisualisation
                 if (testAccount) {
                     console.log('🔗 Prévisualiser l\'email:', nodemailer.getTestMessageUrl(info));
@@ -189,20 +194,21 @@ export async function POST(request: NextRequest) {
         }
 
         return NextResponse.json(
-            { 
-                success: true, 
+            {
+                success: true,
                 message: 'Un email de réinitialisation a été envoyé',
                 // En développement uniquement, retourner le lien
                 resetLink: process.env.NODE_ENV === 'development' ? resetLink : undefined
             },
-            { status: 200 }
+            {status: 200}
         );
 
-    } catch (error) {
+    } catch
+        (error) {
         console.error('Erreur lors de la demande de reset:', error);
         return NextResponse.json(
-            { error: 'Erreur serveur' },
-            { status: 500 }
+            {error: 'Erreur serveur'},
+            {status: 500}
         );
     }
 }
