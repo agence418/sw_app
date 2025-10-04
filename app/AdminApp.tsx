@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useEffect, useMemo, useState} from 'react';
-import {BarChart3, Calendar, Clock, GraduationCap, HatGlasses, Users, HardHat} from 'lucide-react';
+import {BarChart3, Calendar, Clock, GraduationCap, HatGlasses, Users, HardHat, Settings} from 'lucide-react';
 import {CalendarView} from "./modules/calendar/ui/calendar.view";
 import {getCurrentEvent} from "./modules/calendar/_actions/get-current-event.action";
 import {NowView} from "./modules/calendar/ui/now.view";
@@ -11,6 +11,7 @@ import {VoteResultsView} from "./modules/votes/ui/vote-results.view";
 import {TeamCreationView} from "./modules/teams/ui/team-creation.view";
 import {ListTeamsView} from "./modules/teams/ui/list-teams.view";
 import {ListVisitorsView} from "./modules/visitors/ui/list-visitors.view";
+import {ConfigView} from "./modules/config/ui/config.view";
 
 export const StartupWeekendAdminApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
@@ -72,6 +73,7 @@ export const StartupWeekendAdminApp = () => {
                         {id: 'teams', icon: Users, label: 'Teams'},
                         {id: 'votes', icon: BarChart3, label: 'Votes'},
                         {id: 'calendrier', icon: Calendar, label: 'Calendrier'},
+                        {id: 'config', icon: Settings, label: 'Config'},
                     ].map(({id, icon: Icon, label}) => (
                         <button
                             key={id}
@@ -131,6 +133,11 @@ export const StartupWeekendAdminApp = () => {
                 {/* Calendrier */}
                 {activeTab === 'calendrier' && (
                     <CalendarView/>
+                )}
+
+                {/* Configuration */}
+                {activeTab === 'config' && (
+                    <ConfigView/>
                 )}
             </main>
 

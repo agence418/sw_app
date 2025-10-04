@@ -138,6 +138,18 @@ CREATE TABLE event_state
     UNIQUE (day)
 );
 
+-- Table de configuration globale
+CREATE TABLE app_config
+(
+    id                    SERIAL PRIMARY KEY,
+    event_start_date      TIMESTAMP NOT NULL,
+    allow_visitor_registration BOOLEAN NOT NULL DEFAULT true,
+    allow_visitor_accounts BOOLEAN NOT NULL DEFAULT true,
+    who_can_vote          TEXT[] NOT NULL DEFAULT ARRAY['participant']::TEXT[],
+    votes_per_participant INTEGER NOT NULL DEFAULT 3,
+    updated_at            TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Données de base pour l'administrateur
 INSERT INTO administrators (name, email, password)
 VALUES ('${ADMIN_NAME}', '${ADMIN_EMAIL}', 'TO_RESET');
@@ -147,6 +159,10 @@ INSERT INTO event_state (day, current_step)
 VALUES ('vendredi', 0);
 INSERT INTO event_state (day, current_step)
 VALUES ('dimanche', 0);
+
+-- Initialisation de la configuration par défaut
+INSERT INTO app_config (event_start_date, allow_visitor_registration, allow_visitor_accounts, who_can_vote, votes_per_participant)
+VALUES ('2025-09-05T18:00:00', true, true, ARRAY['participant']::TEXT[], 3);
 
 -- Index pour optimiser les performances
 CREATE INDEX idx_votes_participant ON votes (participant_id);
