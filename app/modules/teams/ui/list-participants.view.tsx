@@ -1,7 +1,9 @@
 'use client';
 
 import React, {useEffect, useState} from 'react';
-import {Edit2, RefreshCw, Save, Trash2, UserPlus, X} from 'lucide-react';
+import {Edit2, RefreshCw, Save, Trash2, UserPlus, X, QrCode} from 'lucide-react';
+import {useSession} from "next-auth/react";
+import {ResetPasswordModal} from "@/app/modules/_shared/ui/reset-password-modal.view";
 
 interface Participant {
     id: number;
@@ -16,6 +18,8 @@ export const ListParticipantsView = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [showAddForm, setShowAddForm] = useState(false);
+    const [showRefreshQRCodeModal, setShowRefreshQRCodeModal] = useState(false)
+    const [userOnModal, setUserOnModal] = useState(undefined);
     const [editingId, setEditingId] = useState<number | null>(null);
     const [formData, setFormData] = useState({
         name: '',
@@ -23,6 +27,7 @@ export const ListParticipantsView = () => {
         phone: '',
         skills: ''
     });
+    const {user} = useSession().data
 
     // Charger les participants depuis l'API
     const loadParticipants = async () => {
@@ -43,6 +48,11 @@ export const ListParticipantsView = () => {
     useEffect(() => {
         loadParticipants();
     }, []);
+
+    const handleShowResetPasswordQRCode = async (participant: Participant) => {
+        setUserOnModal(participant);
+        setShowRefreshQRCodeModal(true);
+    }
 
     const handleAdd = async () => {
         if (!formData.name || !formData.email) return;
@@ -274,6 +284,14 @@ export const ListParticipantsView = () => {
                                                     )}
                                                 </div>
                                                 <div className="flex gap-1 ml-2">
+                                                    {user.role === 'admin' && (
+                                                        <button
+                                                            onClick={() => handleShowResetPasswordQRCode(participant)}
+                                                            className="p-1 text-blue-600 hover:bg-blue-100 rounded"
+                                                        >
+                                                            <QrCode className="w-4 h-4"/>
+                                                        </button>
+                                                    )}
                                                     <button
                                                         onClick={() => handleEdit(participant)}
                                                         className="p-1 text-blue-600 hover:bg-blue-100 rounded"
@@ -306,6 +324,7 @@ export const ListParticipantsView = () => {
                     )}
                 </div>
             </div>
+            <ResetPasswordModal show={showRefreshQRCodeModal} user={userOnModal} setShow={setShowRefreshQRCodeModal}/>
         </div>
     );
 };
