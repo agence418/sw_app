@@ -1,7 +1,9 @@
 'use client';
 
 import React, {useEffect, useState} from 'react';
-import { UserPlus, Trash2, Edit2, Save, X, Award } from 'lucide-react';
+import { UserPlus, Trash2, Edit2, Save, X, Award, QrCode } from 'lucide-react';
+import {useSession} from "next-auth/react";
+import {ResetPasswordModal} from "@/app/modules/_shared/ui/reset-password-modal.view";
 
 interface Coach {
     id: string;
@@ -15,6 +17,9 @@ export const ListCoachesView = () => {
 
     const [showAddForm, setShowAddForm] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [userOnModal, setUserOnModal] = useState<Coach | null>(null);
+    const [showRefreshQRCodeModal, setShowRefreshQRCodeModal] = useState(false)
+    const {user} = useSession().data
 
     const fetchCoaches = async () => {
         try {
@@ -40,6 +45,11 @@ export const ListCoachesView = () => {
         email: '',
         expertise: '',
     });
+
+    const handleShowResetPasswordQRCode = async (coach: Coach) => {
+        setUserOnModal(coach);
+        setShowRefreshQRCodeModal(true);
+    }
 
     const handleAdd = async () => {
         if (!formData.name || !formData.email || !formData.expertise) return;
@@ -242,6 +252,15 @@ export const ListCoachesView = () => {
                                                 </div>
                                             </div>
                                             <div className="flex gap-1 ml-2">
+
+                                                {user.role === 'admin' && (
+                                                    <button
+                                                        onClick={() => handleShowResetPasswordQRCode(coach)}
+                                                        className="p-1 text-blue-600 hover:bg-blue-100 rounded"
+                                                    >
+                                                        <QrCode className="w-4 h-4"/>
+                                                    </button>
+                                                )}
                                                 <button
                                                     onClick={() => handleEdit(coach)}
                                                     className="p-1 text-blue-600 hover:bg-blue-100 rounded"
@@ -264,6 +283,7 @@ export const ListCoachesView = () => {
                     )}
                 </div>
             </div>
+            <ResetPasswordModal show={showRefreshQRCodeModal} user={userOnModal} setShow={setShowRefreshQRCodeModal}/>
         </div>
     );
 };
