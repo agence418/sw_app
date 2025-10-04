@@ -8,7 +8,7 @@ export async function PUT(
     const {id} = await params;
     try {
         const data = await request.json();
-        const visitor = await db.updateCoach(parseInt(id), data);
+        const visitor = await db.updateVisitor(parseInt(id), data);
 
         if (!visitor) {
             return NextResponse.json(
@@ -32,16 +32,16 @@ export async function DELETE(
 ) {
     const {id} = await params;
     try {
-        const success = await db.deleteCoach(parseInt(id));
+        const success = await db.deleteVisitor(parseInt(id));
 
         if (!success) {
             return NextResponse.json(
-                {error: 'Coach non trouvé'},
+                {error: 'Visiteur non trouvé'},
                 {status: 404}
             );
         }
 
-        return NextResponse.json({message: 'Coach supprimé'});
+        return NextResponse.json({message: 'Visiteur supprimé'});
     } catch (error) {
         return NextResponse.json(
             {error: 'Erreur lors de la suppression'},

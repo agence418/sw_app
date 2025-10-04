@@ -15,6 +15,7 @@ export async function GET(request: Request) {
     const visitor = await db.getVisitorByEmail(email.trim().toLowerCase());
 
     let user = admin || coach || participant || visitor;
+    console.log({user})
 
     // Générer un token JWT avec une expiration de 1 heure
     const token = resetToken(user);
