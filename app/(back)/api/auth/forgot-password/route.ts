@@ -1,7 +1,7 @@
 import {NextRequest, NextResponse} from 'next/server';
 import {db} from '@/lib/db';
-import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
+import {resetToken} from "@/app/modules/auth/lib/reset-token.lib";
 
 // Créer un transporteur email - À configurer avec vos paramètres SMTP
 const createTransporter = () => {
@@ -33,37 +33,12 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Vérifier si l'utilisateur existe dans une des tables
-        let user = null;
-        let userType = '';
-
-        // Vérifier dans la table administrators
         const admin = await db.getAdminByEmail(email.trim().toLowerCase());
         const coach = await db.getCoachByEmail(email.trim().toLowerCase());
         const participant = await db.getParticipantByEmail(email.trim().toLowerCase());
         const visitor = await db.getVisitorByEmail(email.trim().toLowerCase());
 
-        switch (true) {
-            case !!admin:
-                user = admin;
-                userType = 'admin';
-                break;
-            case !!coach:
-                user = coach;
-                userType = 'coach';
-                break;
-            case !!participant:
-                user = participant;
-                userType = 'participant';
-                break;
-            case !!visitor:
-                user = visitor;
-                userType = 'visitor';
-                break;
-            default:
-                user = null;
-                userType = '';
-        }
+        const user = admin || coach || participant || visitor;
 
         // Même si l'utilisateur n'existe pas, on retourne un succès pour des raisons de sécurité
         if (!user) {
@@ -73,19 +48,9 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Générer un token JWT avec une expiration de 1 heure
-        const resetToken = jwt.sign(
-            {
-                userId: user.id,
-                email: user.email,
-                userType: userType,
-                type: 'password_reset'
-            },
-            process.env.NEXTAUTH_SECRET || 'your-secret-key',
-            {expiresIn: '1h'}
-        );
+        const token = resetToken(user);
+        const resetLink = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
 
-        const resetLink = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
         console.log({resetLink})
 
         // Créer le transporteur email
