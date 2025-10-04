@@ -1,7 +1,7 @@
 'use client';
 
-import React, {useState, useMemo, useEffect} from 'react';
-import {Calendar, Clock, Users, BarChart3, UserCog} from 'lucide-react';
+import React, {useEffect, useMemo, useState} from 'react';
+import {BarChart3, Calendar, Clock, GraduationCap, HatGlasses, Users, HardHat} from 'lucide-react';
 import {CalendarView} from "./modules/calendar/ui/calendar.view";
 import {getCurrentEvent} from "./modules/calendar/_actions/get-current-event.action";
 import {NowView} from "./modules/calendar/ui/now.view";
@@ -36,7 +36,7 @@ export const StartupWeekendAdminApp = () => {
             setCurrentEvent(event);
         };
         fetchCurrentEvent();
-        
+
         // Rafraîchir toutes les minutes
         const interval = setInterval(fetchCurrentEvent, 60000);
         return () => clearInterval(interval);
@@ -62,13 +62,13 @@ export const StartupWeekendAdminApp = () => {
             </header>
 
             {/* Navigation */}
-            <nav className="bg-white border-b border-gray-200 px-4">
+            <nav className="bg-white border-t border-gray-200 px-4 bottom-[53px] left-0 w-full">
                 <div className="flex overflow-x-auto justify-between space-x-1 py-2">
                     {[
                         {id: 'accueil', icon: Clock, label: 'Accueil'},
-                        {id: 'participants', icon: Users, label: 'Participants'},
-                        {id: 'visitors', icon: Users, label: 'Visiteurs'},
-                        {id: 'coaches', icon: UserCog, label: 'Coachs'},
+                        {id: 'participants', icon: HardHat, label: 'Participants'},
+                        {id: 'visitors', icon: HatGlasses, label: 'Visiteurs'},
+                        {id: 'coaches', icon: GraduationCap, label: 'Coachs'},
                         {id: 'teams', icon: Users, label: 'Teams'},
                         {id: 'votes', icon: BarChart3, label: 'Votes'},
                         {id: 'calendrier', icon: Calendar, label: 'Calendrier'},
@@ -92,11 +92,12 @@ export const StartupWeekendAdminApp = () => {
                 {/* Page d'accueil */}
                 {activeTab === 'accueil' && (
                     <>
-                        {getCurrentEvent()?.title === 'Présentation des idées (60 secondes/idée)' ? <TeamCreationView /> :
-                        getCurrentEvent()?.title === 'Votes' ? <VoteResultsView /> :
-                            <>
-                                <NowView/>
-                            </>
+                        {getCurrentEvent()?.title === 'Présentation des idées (60 secondes/idée)' ?
+                            <TeamCreationView/> :
+                            getCurrentEvent()?.title === 'Votes' ? <VoteResultsView/> :
+                                <>
+                                    <NowView/>
+                                </>
                         }
                     </>
                 )}
@@ -119,7 +120,7 @@ export const StartupWeekendAdminApp = () => {
 
                 {/* Gestion des participants */}
                 {activeTab === 'teams' && (
-                    <ListTeamsView />
+                    <ListTeamsView/>
                 )}
 
                 {/* Résultats des votes */}
