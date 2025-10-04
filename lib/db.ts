@@ -776,6 +776,62 @@ async getAdminByEmail(email: string): Promise<DbAdmin | null> {
             console.error('Erreur de connexion à la base de données:', error);
             return false;
         }
+    },
+
+    // Configuration de l'application
+    async getAppConfig(): Promise<any> {
+        try {
+            const { rows } = await pool.query(
+                'SELECT * FROM app_config ORDER BY id DESC LIMIT 1'
+            );
+            return rows[0] || null;
+        } catch (error) {
+            console.error('Erreur getAppConfig:', error);
+            return null;
+        }
+    },
+
+    async updateAppConfig(data: {
+        event_start_date?: string;
+        allow_visitor_registration?: boolean;
+        allow_visitor_accounts?: boolean;
+        who_can_vote?: string[];
+        votes_per_participant?: number;
+    }): Promise<any> {
+        try {
+            const config = await db.getAppConfig();
+            if (!config) {
+                // Créer la configuration si elle n'existe pas
+                const { rows } = await pool.query(
+                    'INSERT INTO app_config (event_start_date, allow_visitor_registration, allow_visitor_accounts, who_can_vote, votes_per_participant) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+                    [
+                        data.event_start_date || '2025-09-05T18:00:00',
+                        data.allow_visitor_registration ?? true,
+                        data.allow_visitor_accounts ?? true,
+                        data.who_can_vote || ['participant'],
+                        data.votes_per_participant ?? 3
+                    ]
+                );
+                return rows[0];
+            } else {
+                // Mettre à jour la configuration existante
+                const { rows } = await pool.query(
+                    'UPDATE app_config SET event_start_date = COALESCE($1, event_start_date), allow_visitor_registration = COALESCE($2, allow_visitor_registration), allow_visitor_accounts = COALESCE($3, allow_visitor_accounts), who_can_vote = COALESCE($4, who_can_vote), votes_per_participant = COALESCE($5, votes_per_participant), updated_at = CURRENT_TIMESTAMP WHERE id = $6 RETURNING *',
+                    [
+                        data.event_start_date,
+                        data.allow_visitor_registration,
+                        data.allow_visitor_accounts,
+                        data.who_can_vote,
+                        data.votes_per_participant,
+                        config.id
+                    ]
+                );
+                return rows[0];
+            }
+        } catch (error) {
+            console.error('Erreur updateAppConfig:', error);
+            throw error;
+        }
     }
 };
 
