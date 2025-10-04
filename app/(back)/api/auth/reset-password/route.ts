@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
                     success = await db.updateParticipantPassword(userId, password);
                     break;
                 case 'visitor':
-                    success = await db.updateParticipantPassword(userId, password);
+                    success = await db.updateVisitorPassword(userId, password);
                     break;
                 default:
                     return NextResponse.json(

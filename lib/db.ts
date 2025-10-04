@@ -67,6 +67,9 @@ export const db = {
             const { rows } = await pool.query(
                 'SELECT * FROM participants ORDER BY name'
             );
+            rows.map((row) => {
+                row.role = 'participant';
+            })
             return rows;
         } catch (error) {
             console.error('Erreur getParticipants:', error);
@@ -137,6 +140,9 @@ export const db = {
             const { rows } = await pool.query(
                 'SELECT * FROM coaches ORDER BY name'
             );
+            rows.map((row) => {
+                row.role = 'coach';
+            })
             return rows;
         } catch (error) {
             console.error('Erreur getCoaches:', error);
@@ -191,6 +197,9 @@ export const db = {
             const { rows } = await pool.query(
                 'SELECT * FROM visitors ORDER BY name'
             );
+            rows.map((row) => {
+                row.role = 'visitor';
+            })
             return rows;
         } catch (error) {
             console.error('Erreur getVisitor:', error);
@@ -332,6 +341,9 @@ export const db = {
             const { rows } = await pool.query(
                 'SELECT * FROM administrators ORDER BY name'
             );
+            rows.map((row) => {
+                row.role = 'admin';
+            })
             return rows;
         } catch (error) {
             console.error('Erreur getAdministrators:', error);
@@ -697,6 +709,20 @@ export const db = {
             return result.rowCount > 0;
         } catch (error) {
             console.error('Erreur updateParticipantPassword:', error);
+            return false;
+        }
+    },
+
+    async updateVisitorPassword(id: number, password: string): Promise<boolean> {
+        try {
+            const hashedPassword = await hashPassword(password);
+            const result = await pool.query(
+                'UPDATE visitors SET password = $1 WHERE id = $2',
+                [hashedPassword, id]
+            );
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Erreur updateVisitorPassword:', error);
             return false;
         }
     },
