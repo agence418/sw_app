@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { ForgotPasswordView } from './forgot-password.view';
+import { RegisterView } from './register.view';
 
 export const LoginView = () => {
     const [email, setEmail] = useState('');
@@ -10,6 +11,7 @@ export const LoginView = () => {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [showForgotPassword, setShowForgotPassword] = useState(false);
+    const [showRegister, setShowRegister] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -35,6 +37,10 @@ export const LoginView = () => {
 
     if (showForgotPassword) {
         return <ForgotPasswordView onBack={() => setShowForgotPassword(false)} />;
+    }
+
+    if (showRegister) {
+        return <RegisterView onBackToLogin={() => setShowRegister(false)} />;
     }
 
     return (
@@ -88,6 +94,14 @@ export const LoginView = () => {
                         disabled={isLoading}
                     >
                         Génerer un nouveau mot de passe
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setShowRegister(true)}
+                        className="w-full text-center text-sm text-green-600 hover:text-green-400 transition-colors mt-2"
+                        disabled={isLoading}
+                    >
+                        Pas encore inscrit ? Créer un compte
                     </button>
                 </form>
             </div>
