@@ -55,6 +55,9 @@ export async function POST(request: NextRequest) {
                 case 'participant':
                     success = await db.updateParticipantPassword(userId, password);
                     break;
+                case 'visitor':
+                    success = await db.updateParticipantPassword(userId, password);
+                    break;
                 default:
                     return NextResponse.json(
                         { error: 'Type d\'utilisateur invalide' },

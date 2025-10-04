@@ -80,6 +80,9 @@ export const db = {
                 'SELECT * FROM participants WHERE email = $1',
                 [email]
             );
+            rows.map((row) => {
+                row.role = 'participant';
+            })
             return rows[0] || null;
         } catch (error) {
             console.error('Erreur getParticipantByEmail:', error);
@@ -201,6 +204,9 @@ export const db = {
                 'SELECT * FROM visitors WHERE email = $1',
                 [email]
             );
+            rows.map((row) => {
+                row.role = 'visitor';
+            })
             return rows[0] || null;
         } catch (error) {
             console.error('Erreur getVisitorByEmail:', error);
@@ -627,6 +633,9 @@ export const db = {
                 'SELECT * FROM administrators WHERE email = $1',
                 [email]
             );
+            rows.map((row) => {
+                row.role = 'admin';
+            })
             return rows[0] || null;
         } catch (error) {
             console.error('Erreur getAdminByEmail:', error);
@@ -640,6 +649,9 @@ export const db = {
                 'SELECT * FROM coaches WHERE email = $1',
                 [email]
             );
+            rows.map((row) => {
+                row.role = 'coach';
+            })
             return rows[0] || null;
         } catch (error) {
             console.error('Erreur getCoachByEmail:', error);

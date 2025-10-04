@@ -17,6 +17,7 @@ function ResetPasswordComponent() {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
     const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+    const [userEmail, setUserEmail] = useState()
 
     useEffect(() => {
         if (!token) {
@@ -29,6 +30,8 @@ function ResetPasswordComponent() {
             try {
                 const response = await fetch(`/api/auth/verify-reset-token?token=${token}`);
                 setTokenValid(response.ok);
+                const data = await response.json();
+                setUserEmail(data.email);
             } catch (error) {
                 setTokenValid(false);
             }
@@ -148,6 +151,9 @@ function ResetPasswordComponent() {
             <div className="p-8 w-full h-screen items-center justify-center flex flex-col">
                 <div className="text-center mb-8">
                     <h1 className="text-2xl font-bold mb-2">Nouveau mot de passe</h1>
+                    <p className="mb-6">
+                        {userEmail}
+                    </p>
                     <p className="text-sm">
                         Choisissez un mot de passe sécurisé pour votre compte.
                     </p>
