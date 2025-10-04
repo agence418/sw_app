@@ -227,7 +227,7 @@ export const db = {
         try {
             const { rows } = await pool.query(
                 'INSERT INTO visitors (name, email, password, phone) VALUES ($1, $2, $3, $4) RETURNING *',
-                [data.name, data.email, data.password = 'not_set', data.phone || null]
+                [data.name, data.email, data.password || 'not_set', data.phone || null]
             );
             return rows[0];
         } catch (error) {
@@ -618,7 +618,7 @@ export const db = {
 
             // Vérifier dans la table visitors
             const visitorResult = await pool.query(
-                'SELECT id, name, email, password, \'visitor\' as role FROM administrators WHERE email = $1',
+                'SELECT id, name, email, password, \'visitor\' as role FROM visitors WHERE email = $1',
                 [email.toLowerCase()]
             );
 
@@ -639,7 +639,7 @@ export const db = {
 
     // Fonction utilitaire pour tester la connexion
     // Méthodes pour l'authentification et la réinitialisation de mot de passe
-    async getAdminByEmail(email: string): Promise<DbAdmin | null> {
+async getAdminByEmail(email: string): Promise<DbAdmin | null> {
         try {
             const { rows } = await pool.query(
                 'SELECT * FROM administrators WHERE email = $1',
