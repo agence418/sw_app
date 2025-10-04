@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useEffect, useState} from 'react';
-import {Edit2, RefreshCw, Save, Shield, Trash2, UserPlus, X} from 'lucide-react';
+import {Edit2, RefreshCw, Save, QrCode, Trash2, UserPlus, X} from 'lucide-react';
 import {useSession} from "next-auth/react";
 import QRCode from 'qrcode';
 
@@ -316,7 +316,7 @@ export const ListVisitorsView = () => {
                                                             onClick={() => handleShowResetPasswordQRCode(visitor)}
                                                             className="p-1 text-blue-600 hover:bg-blue-100 rounded"
                                                         >
-                                                            <Shield className="w-4 h-4"/>
+                                                            <QrCode className="w-4 h-4"/>
                                                         </button>
                                                     )}
                                                     <button
