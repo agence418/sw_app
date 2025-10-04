@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useEffect, useState} from 'react';
-import {Edit2, RefreshCw, Save, QrCode, Trash2, UserPlus, X} from 'lucide-react';
+import {Edit2, QrCode, RefreshCw, Save, Trash2, UserPlus, X} from 'lucide-react';
 import {useSession} from "next-auth/react";
 import QRCode from 'qrcode';
 
@@ -53,6 +53,11 @@ export const ListVisitorsView = () => {
 
     const handleShowResetPasswordQRCode = async (visitor: Visitor) => {
         try {
+            setUserOnModal(visitor);
+            setShowRefreshQRCodeModal(true);
+            setonModalQRCode(undefined)
+
+
             const res = await fetch(`/api/auth/get-reset-password-link?email=${encodeURIComponent(visitor.email)}`);
             const data = await res.json();
             if (!res.ok) {
@@ -70,10 +75,7 @@ export const ListVisitorsView = () => {
                 }
             })
 
-            // Afficher le QR code dans une modale
-            setUserOnModal(visitor)
             setonModalQRCode(codeSrc)
-            setShowRefreshQRCodeModal(true);
         } catch (err) {
             alert('Erreur lors de la génération du QR code');
             // console.error(err)
@@ -354,16 +356,26 @@ export const ListVisitorsView = () => {
             </div>
             {showRefreshQRCodeModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 w-11/12 max-w-md">
-                        <h3 className="text-lg font-semibold mb-4">QR Code de réinitialisation</h3>
+                    <div className="bg-white rounded-lg p-6 w-11/12 max-w-md max-h-[100vh] overflow-auto">
+                        <h3 className="text-lg font-semibold mb-4">Réinitialisation du mot de passe</h3>
+                        {userOnModal && (
+                            <>
+                                <p className="text-lg font-semibold mt-8 text-center w-full">{userOnModal.name}</p>
+                                <p className="text-xs font-semibold mb-8 text-center text-gray-500 w-full">{userOnModal.email}</p>
+                            </>
+                        )}
                         <p className="text-sm text-gray-600 mb-4">Scannez ce QR code pour rediriger l'utilisateur vers
                             la page de réinitialisation du mot de passe.</p>
-                        {userOnModal &&
-                          <p className="text-xs text-gray-500 mb-4">Généré pour : {userOnModal.email}</p>}
-                        {onModalQRCode && (
-                            <div id={'qrcode'} className="flex justify-center mb-4">
-                                <img src={onModalQRCode} alt="QR Code" className="w-48 h-48"/>
-                            </div>)}
+                        {onModalQRCode ? (
+                            <div id={'qrcode'} className="flex justify-center my-12">
+                                <img src={onModalQRCode} alt="QR Code"/>
+                            </div>) : (
+                            <div className="text-center py-8">
+                                <div
+                                    className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                                <p className="mt-2 text-gray-600 text-sm">Génération du QR code...</p>
+                            </div>
+                        )}
                         <button
                             onClick={() => setShowRefreshQRCodeModal(false)}
                             className="w-full bg-gray-600 text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
