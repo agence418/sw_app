@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { ForgotPasswordView } from './forgot-password.view';
 import { RegisterView } from './register.view';
+import {useConfig} from "@/app/modules/config/store/config.store";
 
 export const LoginView = () => {
+    const { config } = useConfig(state => state);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -95,14 +97,16 @@ export const LoginView = () => {
                     >
                         Génerer un nouveau mot de passe
                     </button>
-                    <button
-                        type="button"
-                        onClick={() => setShowRegister(true)}
-                        className="w-full text-center text-sm text-green-600 hover:text-green-400 transition-colors mt-2"
-                        disabled={isLoading}
-                    >
-                        Pas encore inscrit ? Créer un compte
-                    </button>
+                    {config.allow_visitor_accounts && config.allow_visitor_registration && (
+                        <button
+                            type="button"
+                            onClick={() => setShowRegister(true)}
+                            className="w-full text-center text-sm text-green-600 hover:text-green-400 transition-colors mt-2"
+                            disabled={isLoading}
+                        >
+                            Créer un compte visiteur
+                        </button>
+                    )}
                 </form>
             </div>
         </div>

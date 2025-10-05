@@ -3,12 +3,18 @@ import { withAuth } from "next-auth/middleware";
 export default withAuth({
     callbacks: {
         authorized: ({ req, token }) => {
-            // Si c'est une route API (sauf auth), on vérifie le token
-            if (req.nextUrl.pathname.startsWith('/api/') && 
-                !req.nextUrl.pathname.startsWith('/api/auth')) {
+            // Routes API publiques
+            if (req.nextUrl.pathname.startsWith('/api/auth') ||
+                req.nextUrl.pathname === '/api/config') {
+                return true;
+            }
+
+            // Si c'est une route API, on vérifie le token
+            if (req.nextUrl.pathname.startsWith('/api/')) {
                 return !!token;
             }
-            return true;
+
+            return false;
         }
     }
 });
