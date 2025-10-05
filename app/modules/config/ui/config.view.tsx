@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Save, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 
 interface AppConfig {
     id?: number;
@@ -15,7 +15,6 @@ interface AppConfig {
 export const ConfigView = () => {
     const [config, setConfig] = useState<AppConfig | null>(null);
     const [loading, setLoading] = useState(true);
-    const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
@@ -44,32 +43,34 @@ export const ConfigView = () => {
         loadConfig();
     }, []);
 
-    const handleSave = async () => {
-        if (!config) return;
-
+    const saveConfig = async (updatedConfig: AppConfig) => {
         try {
-            setSaving(true);
             setError(null);
             setSuccess(null);
 
             const response = await fetch('/api/config', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(config)
+                body: JSON.stringify(updatedConfig)
             });
 
             if (!response.ok) throw new Error('Erreur lors de la sauvegarde');
 
             const updated = await response.json();
             setConfig(updated);
-            setSuccess('Configuration sauvegardée avec succès !');
+            setSuccess('Sauvegardé');
 
-            setTimeout(() => setSuccess(null), 3000);
+            setTimeout(() => setSuccess(null), 2000);
         } catch (err) {
-            setError('Erreur lors de la sauvegarde de la configuration');
-        } finally {
-            setSaving(false);
+            setError('Erreur lors de la sauvegarde');
         }
+    };
+
+    const updateConfig = (updates: Partial<AppConfig>) => {
+        if (!config) return;
+        const updatedConfig = { ...config, ...updates };
+        setConfig(updatedConfig);
+        saveConfig(updatedConfig);
     };
 
     const toggleVotePermission = (role: string) => {
@@ -80,7 +81,7 @@ export const ConfigView = () => {
             ? currentRoles.filter(r => r !== role)
             : [...currentRoles, role];
 
-        setConfig({ ...config, who_can_vote: newRoles });
+        updateConfig({ who_can_vote: newRoles });
     };
 
     if (loading) {
@@ -113,8 +114,10 @@ export const ConfigView = () => {
             )}
 
             {success && (
-                <div className="p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
-                    {success}
+                <div className={'p-4 fixed z-50 w-full bottom-0 left-0'}>
+                    <div className="p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
+                        {success}
+                    </div>
                 </div>
             )}
 
@@ -122,17 +125,19 @@ export const ConfigView = () => {
                 {/* Date de début de l'événement */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Date de début de l'événement
+                        Jour de début de l'événement
                     </label>
                     <input
-                        type="datetime-local"
-                        value={config.event_start_date.slice(0, 16)}
-                        onChange={(e) => setConfig({
-                            ...config,
-                            event_start_date: e.target.value + ':00'
+                        type="date"
+                        value={config.event_start_date.slice(0, 10)}
+                        onChange={(e) => updateConfig({
+                            event_start_date: e.target.value + 'T18:00:00'
                         })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600"
                     />
+                    <p className="text-xs text-gray-500 mt-1">
+                        Jour de fin : {new Date(new Date(config.event_start_date).getTime() + 2 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                    </p>
                 </div>
 
                 {/* Autoriser l'enregistrement des visiteurs */}
@@ -141,8 +146,7 @@ export const ConfigView = () => {
                         <input
                             type="checkbox"
                             checked={config.allow_visitor_registration}
-                            onChange={(e) => setConfig({
-                                ...config,
+                            onChange={(e) => updateConfig({
                                 allow_visitor_registration: e.target.checked
                             })}
                             className="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500"
@@ -164,8 +168,7 @@ export const ConfigView = () => {
                             <input
                                 type="checkbox"
                                 checked={config.allow_visitor_accounts}
-                                onChange={(e) => setConfig({
-                                    ...config,
+                                onChange={(e) => updateConfig({
                                     allow_visitor_accounts: e.target.checked
                                 })}
                                 className="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500"
@@ -213,8 +216,7 @@ export const ConfigView = () => {
                         min="1"
                         max="10"
                         value={config.votes_per_participant}
-                        onChange={(e) => setConfig({
-                            ...config,
+                        onChange={(e) => updateConfig({
                             votes_per_participant: parseInt(e.target.value) || 1
                         })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600"
@@ -223,18 +225,6 @@ export const ConfigView = () => {
                         Nombre maximum de votes qu'un participant peut effectuer
                     </p>
                 </div>
-            </div>
-
-            {/* Bouton de sauvegarde */}
-            <div className="flex justify-end">
-                <button
-                    onClick={handleSave}
-                    disabled={saving}
-                    className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    <Save className="w-4 h-4" />
-                    {saving ? 'Enregistrement...' : 'Enregistrer la configuration'}
-                </button>
             </div>
         </div>
     );
