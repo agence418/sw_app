@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import {useState} from 'react';
 
 interface RegisterViewProps {
     onBackToLogin: () => void;
 }
 
-export const RegisterView = ({ onBackToLogin }: RegisterViewProps) => {
+export const RegisterView = ({onBackToLogin}: RegisterViewProps) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -125,7 +125,8 @@ export const RegisterView = ({ onBackToLogin }: RegisterViewProps) => {
                         />
                     </div>
                     <div>
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium">Confirmer le mot de passe</label>
+                        <label htmlFor="confirmPassword" className="block text-sm font-medium">Confirmer le mot de
+                            passe</label>
                         <input
                             type="password"
                             id="confirmPassword"
@@ -142,7 +143,7 @@ export const RegisterView = ({ onBackToLogin }: RegisterViewProps) => {
                         disabled={isLoading}
                         className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {isLoading ? 'Inscription...' : 'S\'inscrire'}
+                        {isLoading ? 'Inscription...' : 'Créer un compte visiteur'}
                     </button>
                     <button
                         type="button"

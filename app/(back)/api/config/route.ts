@@ -5,15 +5,6 @@ import { authOptions } from '@/lib/auth';
 
 export async function GET() {
     try {
-        const session = await getServerSession(authOptions);
-
-        if (!session || session.user.role !== 'admin') {
-            return NextResponse.json(
-                { error: 'Non autorisé' },
-                { status: 403 }
-            );
-        }
-
         const config = await db.getAppConfig();
         return NextResponse.json(config);
     } catch (error) {

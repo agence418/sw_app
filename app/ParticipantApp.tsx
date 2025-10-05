@@ -8,9 +8,11 @@ import {VoteView} from "./modules/votes/ui/vote.view";
 import {NowView} from "./modules/calendar/ui/now.view";
 import {SendFileComp} from "./modules/powerpoint/ui/send-file.comp";
 import {ChooseCoachView} from "./modules/coach/ui/choose-coach.view";
+import {withLogin} from "./modules/auth/ui/with-login.hoc";
+import {SessionProvider} from "./modules/auth/providers/session.provider";
 import {ToolsView} from "./modules/tools/ui/tools.view";
 
-export const VisitorApp = () => {
+export const ParticipantApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
     const [currentTime, setCurrentTime] = useState(new Date());
     const [eventEnded, setEventEnded] = useState(false);

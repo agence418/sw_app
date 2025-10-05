@@ -8,6 +8,7 @@ import {StartupWeekendCoachApp} from '../../../CoachApp';
 import {logoutAction} from "../_actions/logout.action";
 import {LogOutIcon} from "lucide-react";
 import {VisitorApp} from "../../../VisitorApp";
+import {withConfig} from "@/app/modules/config/ui/with-config.hoc";
 
 export const withLogin = <P extends Record<string, any>>(
     Component: React.ComponentType<P>
@@ -28,7 +29,7 @@ export const withLogin = <P extends Record<string, any>>(
         }
 
         if (status === 'unauthenticated' || !session) {
-            return <LoginView/>;
+            return <LoginView />;
         }
 
         if (session?.user.role === 'admin') {
