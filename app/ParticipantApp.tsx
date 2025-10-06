@@ -11,17 +11,19 @@ import {ChooseCoachView} from "./modules/coach/ui/choose-coach.view";
 import {withLogin} from "./modules/auth/ui/with-login.hoc";
 import {SessionProvider} from "./modules/auth/providers/session.provider";
 import {ToolsView} from "./modules/tools/ui/tools.view";
+import {useConfig} from "@/app/modules/config/store/config.store";
 
 export const ParticipantApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
     const [currentTime, setCurrentTime] = useState(new Date());
     const [eventEnded, setEventEnded] = useState(false);
     const [currentEvent, setCurrentEvent] = useState<any>(null);
+    const {config} = useConfig((state) => state);
 
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
-        const startTime = new Date('2025-09-05T18:00:00');
-        const endTime = new Date('2025-09-07T15:00:00');
+        const startTime = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
+        const endTime = new Date(config.event_start_date ??'2025-09-07T15:00:00');
         const totalDuration = endTime.getTime() - startTime.getTime();
         const elapsed = currentTime.getTime() - startTime.getTime();
 
@@ -32,8 +34,8 @@ export const ParticipantApp = () => {
 
     // Vérifier si l'événement est terminé
     useEffect(() => {
-        const startTime = new Date('2025-09-05T18:00:00');
-        const endTime = new Date('2025-09-07T15:00:00');
+        const startTime = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
+        const endTime = new Date(config.event_start_date ??'2025-09-07T15:00:00');
         const elapsed = currentTime.getTime() - startTime.getTime();
         const totalDuration = endTime.getTime() - startTime.getTime();
         
