@@ -5,7 +5,6 @@ export const withConfig = <P extends Record<string, any>>(
     Component: React.ComponentType<P>
 ) => {
     const WrappedComponent = (props: P) => {
-        console.log('wc')
 
         const loadConfig = async () => {
             try {
@@ -13,7 +12,6 @@ export const withConfig = <P extends Record<string, any>>(
                 const response = await fetch('/api/config');
                 if (!response.ok) throw new Error('Erreur lors du chargement de la configuration');
                 const data = await response.json();
-                console.log({data})
 
                 useConfig.setState({
                     config: data,

@@ -12,16 +12,18 @@ import {TeamCreationView} from "./modules/teams/ui/team-creation.view";
 import {ListTeamsView} from "./modules/teams/ui/list-teams.view";
 import {ListVisitorsView} from "./modules/visitors/ui/list-visitors.view";
 import {ConfigView} from "./modules/config/ui/config.view";
+import {useConfig} from "@/app/modules/config/store/config.store";
 
 export const StartupWeekendAdminApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
     const [currentTime, setCurrentTime] = useState(new Date());
     const [currentEvent, setCurrentEvent] = useState<any>(null);
+    const {config} = useConfig((state) => state);
 
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
-        const startTime = new Date('2025-09-05T18:00:00');
-        const endTime = new Date('2025-09-07T15:00:00');
+        const startTime = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
+        const endTime = new Date(config.event_start_date ??'2025-09-07T15:00:00');
         const totalDuration = endTime.getTime() - startTime.getTime();
         const elapsed = currentTime.getTime() - startTime.getTime();
 
