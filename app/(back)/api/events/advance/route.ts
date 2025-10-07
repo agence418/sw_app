@@ -15,20 +15,10 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const { day } = await request.json();
-
-        if (!day || !['vendredi', 'dimanche'].includes(day)) {
-            return NextResponse.json(
-                { error: 'Jour invalide. Doit être "vendredi" ou "dimanche"' },
-                { status: 400 }
-            );
-        }
-
-        const newStep = await db.advanceEventStep(day);
+        const newStep = await db.advanceEventStep();
         
         return NextResponse.json({
             success: true,
-            day,
             currentStep: newStep
         });
     } catch (error) {
@@ -52,28 +42,20 @@ export async function PUT(request: NextRequest) {
             );
         }
 
-        const { day, step } = await request.json();
+        const { step } = await request.json();
 
-        if (!day || !['vendredi', 'dimanche'].includes(day)) {
-            return NextResponse.json(
-                { error: 'Jour invalide. Doit être "vendredi" ou "dimanche"' },
-                { status: 400 }
-            );
-        }
-
-        if (typeof step !== 'number' || step < 0) {
+        if (typeof step !== 'number' || step < -1) {
             return NextResponse.json(
                 { error: 'Étape invalide' },
                 { status: 400 }
             );
         }
 
-        const success = await db.setEventStep(day, step);
+        const success = await db.setEventStep(step);
         
         if (success) {
             return NextResponse.json({
                 success: true,
-                day,
                 currentStep: step
             });
         } else {
@@ -93,20 +75,9 @@ export async function PUT(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
     try {
-        const url = new URL(request.url);
-        const day = url.searchParams.get('day');
-
-        if (!day || !['vendredi', 'dimanche'].includes(day)) {
-            return NextResponse.json(
-                { error: 'Paramètre day requis (vendredi ou dimanche)' },
-                { status: 400 }
-            );
-        }
-
-        const currentStep = await db.getCurrentEventState(day as 'vendredi' | 'dimanche');
+        const currentStep = await db.getCurrentEventState();
         
         return NextResponse.json({
-            day,
             currentStep
         });
     } catch (error) {

@@ -3,22 +3,22 @@
 import React, {useState, useMemo, useEffect} from 'react';
 import {Calendar, Clock, Link, MessageSquare} from 'lucide-react';
 import {CalendarView} from "./modules/calendar/ui/calendar.view";
-import {getCurrentEvent} from "./modules/calendar/_actions/get-current-event.action";
 import {VoteView} from "./modules/votes/ui/vote.view";
 import {NowView} from "./modules/calendar/ui/now.view";
 import {SendFileComp} from "./modules/powerpoint/ui/send-file.comp";
 import {ChooseCoachView} from "./modules/coach/ui/choose-coach.view";
-import {withLogin} from "./modules/auth/ui/with-login.hoc";
-import {SessionProvider} from "./modules/auth/providers/session.provider";
 import {ToolsView} from "./modules/tools/ui/tools.view";
 import {useConfig} from "@/app/modules/config/store/config.store";
+import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
 
 export const ParticipantApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
     const [currentTime, setCurrentTime] = useState(new Date());
     const [eventEnded, setEventEnded] = useState(false);
-    const [currentEvent, setCurrentEvent] = useState<any>(null);
     const {config} = useConfig((state) => state);
+    const {status} = useCurrentStatus(state => state);
+    const {currentEvent} = status;
+
 
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
@@ -35,19 +35,6 @@ export const ParticipantApp = () => {
         }
         return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
     }, [currentTime, config]);
-
-    // Récupérer l'événement actuel
-    useEffect(() => {
-        const fetchCurrentEvent = async () => {
-            const event = await getCurrentEvent();
-            setCurrentEvent(event);
-        };
-        fetchCurrentEvent();
-        
-        // Rafraîchir toutes les minutes
-        const interval = setInterval(fetchCurrentEvent, 60000);
-        return () => clearInterval(interval);
-    }, []);
 
     if (eventEnded) {
         return (

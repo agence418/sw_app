@@ -70,7 +70,7 @@ export const ConfigView = () => {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-gray-900">Configuration</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Configuration</h2>
             </div>
 
             {error && (
@@ -90,7 +90,7 @@ export const ConfigView = () => {
             <div className="bg-white dark:bg-black rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6 space-y-6">
                 {/* Date de début de l'événement */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Jour de début de l'événement
                     </label>
                     <input
@@ -99,9 +99,9 @@ export const ConfigView = () => {
                         onChange={(e) => updateConfig({
                             event_start_date: e.target.value + 'T18:00:00'
                         })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600  dark:text-gray-800"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                         Jour de fin
                         : {new Date(new Date(config.event_start_date).getTime() + 2 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR', {
                         day: '2-digit',
@@ -122,7 +122,7 @@ export const ConfigView = () => {
                             })}
                             className="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500"
                         />
-                        <span className="text-sm font-medium text-gray-700">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                             Autoriser l'enregistrement des visiteurs
                         </span>
                     </label>
@@ -133,7 +133,7 @@ export const ConfigView = () => {
 
                 {/* Qui peut se connecter */}
                 <div>
-                    <h3 className="text-sm font-semibold text-gray-900 mb-3">Qui peut se connecter</h3>
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">Qui peut se connecter</h3>
                     <div className="space-y-2 ml-4">
                         <label className="flex items-center gap-3 cursor-pointer">
                             <input
@@ -142,9 +142,9 @@ export const ConfigView = () => {
                                 onChange={(e) => updateConfig({
                                     allow_visitor_accounts: e.target.checked
                                 })}
-                                className="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                                className="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-600"
                             />
-                            <span className="text-sm text-gray-700">
+                            <span className="text-sm text-gray-700 dark:text-gray-300">
                                 Autoriser les visiteurs à se connecter
                             </span>
                         </label>
@@ -156,7 +156,7 @@ export const ConfigView = () => {
 
                 {/* Qui peut voter */}
                 <div>
-                    <h3 className="text-sm font-semibold text-gray-900 mb-3">Qui peut voter</h3>
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">Qui peut voter</h3>
                     <div className="space-y-2 ml-4">
                         {['participant', 'coach', 'visitor', 'admin'].map((role) => (
                             <label key={role} className="flex items-center gap-3 cursor-pointer">
@@ -166,7 +166,7 @@ export const ConfigView = () => {
                                     onChange={() => toggleVotePermission(role)}
                                     className="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500"
                                 />
-                                <span className="text-sm text-gray-700 capitalize">
+                                <span className="text-sm text-gray-700 dark:text-gray-300 capitalize">
                                     {role === 'participant' ? 'Participants' :
                                         role === 'coach' ? 'Coachs' :
                                             role === 'visitor' ? 'Visiteurs' :
@@ -177,9 +177,8 @@ export const ConfigView = () => {
                     </div>
                 </div>
 
-                {/* Nombre de votes par participant */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Nombre de votes par participant
                     </label>
                     <input
@@ -190,7 +189,7 @@ export const ConfigView = () => {
                         onChange={(e) => updateConfig({
                             votes_per_participant: parseInt(e.target.value) || 1
                         })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 dark:text-gray-800"
                     />
                     <p className="text-xs text-gray-500 mt-1">
                         Nombre maximum de votes qu'un participant peut effectuer

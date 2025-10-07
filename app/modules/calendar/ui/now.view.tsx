@@ -1,15 +1,16 @@
 import {Clock} from "lucide-react";
 import React from "react";
-import {getCurrentEvent} from "../_actions/get-current-event.action";
+import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
 
 export const NowView = () => {
-    const currentEvent = getCurrentEvent();
+    const {currentEvent} = useCurrentStatus(state => state.status);
 
     return (
         <div className="space-y-6">
-            <div className="bg-white dark:bg-black rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
+            <div
+                className="bg-white dark:bg-black rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
                 <h2 className="text-lg text-gray-800 dark:text-gray-200 font-semibold mb-4 flex items-center">
-                    <Clock className="w-5 h-5 mr-2 text-green-600" />
+                    <Clock className="w-5 h-5 mr-2 text-green-600"/>
                     Maintenant
                 </h2>
                 {currentEvent ? (
