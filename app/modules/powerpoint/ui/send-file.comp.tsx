@@ -5,9 +5,9 @@ export const SendFileComp = () => {
     const [presentationFile, setPresentationFile] = useState<File | null>(null);
 
     return (
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="bg-white dark:bg-black rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
             <h2 className="text-lg font-semibold mb-4 flex items-center">
-                <Upload className="w-5 h-5 mr-2 text-blue-600"/>
+                <Upload className="w-5 h-5 mr-2 text-blue-500"/>
                 Envoi de présentation
             </h2>
             <p className="text-gray-600 mb-6 text-sm">
@@ -35,7 +35,7 @@ export const SendFileComp = () => {
 
             {presentationFile && (
                 <button
-                    className="w-full mt-4 bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition-colors">
+                    className="w-full mt-4 bg-green-600 text-white dark:text-gray-900 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors">
                     Envoyer la présentation
                 </button>
             )}

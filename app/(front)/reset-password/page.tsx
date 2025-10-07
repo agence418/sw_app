@@ -110,7 +110,7 @@ function ResetPasswordComponent() {
     // Token invalide ou manquant
     if (tokenValid === false) {
         return (
-            <div className="flex items-center justify-center bg-white h-screen">
+            <div className="flex items-center justify-center bg-white dark:bg-black h-screen">
                 <div className="p-8 w-full h-screen items-center justify-center flex flex-col">
                     <div className="text-center">
                         <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
@@ -122,7 +122,7 @@ function ResetPasswordComponent() {
                         </p>
                         <button
                             onClick={() => router.push('/')}
-                            className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-400 transition-colors"
+                            className="w-full px-4 py-2 bg-green-600 text-white dark:text-gray-900 rounded-lg hover:bg-green-400 transition-colors"
                         >
                             Retour à la connexion
                         </button>
@@ -135,7 +135,7 @@ function ResetPasswordComponent() {
     // Vérification du token en cours
     if (tokenValid === null) {
         return (
-            <div className="flex items-center justify-center bg-white h-screen">
+            <div className="flex items-center justify-center bg-white dark:bg-black h-screen">
                 <div className="p-8 w-full h-screen items-center justify-center flex flex-col">
                     <div className="text-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
@@ -147,7 +147,7 @@ function ResetPasswordComponent() {
     }
 
     return (
-        <div className="flex items-center justify-center bg-white h-screen">
+        <div className="flex items-center justify-center bg-white dark:bg-black h-screen">
             <div className="p-8 w-full h-screen items-center justify-center flex flex-col">
                 <div className="text-center mb-8">
                     <h1 className="text-2xl font-bold mb-2">Nouveau mot de passe</h1>
@@ -231,7 +231,7 @@ function ResetPasswordComponent() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-green-600 text-white dark:text-gray-900 py-2 rounded-md hover:bg-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {loading ? 'Modification en cours...' : 'Modifier le mot de passe'}
                     </button>
@@ -244,7 +244,7 @@ function ResetPasswordComponent() {
 export default function ResetPasswordPage() {
     return (
         <Suspense fallback={
-            <div className="flex items-center justify-center bg-white h-screen">
+            <div className="flex items-center justify-center bg-white dark:bg-black h-screen">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
             </div>
         }>

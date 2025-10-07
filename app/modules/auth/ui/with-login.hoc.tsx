@@ -23,7 +23,7 @@ export const withLogin = <P extends Record<string, any>>(
         if (status === 'loading') {
             return (
                 <div className="flex items-center justify-center min-h-screen">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                 </div>
             );
         }
@@ -51,7 +51,7 @@ export const withLogin = <P extends Record<string, any>>(
                 {session && (
                     <button
                         onClick={handleLogout}
-                        className="fixed top-4 right-4 z-50 text-white bg-transparent px-4 py-2 rounded-full transition-colors text-sm"
+                        className="fixed top-4 right-4 z-50 text-white bg-transparent px-2 py-[5px] rounded-full transition-colors text-sm"
                     >
                         <LogOutIcon size={18}/>
                     </button>
@@ -65,7 +65,7 @@ export const withLogin = <P extends Record<string, any>>(
                 {session && (
                     <button
                         onClick={handleLogout}
-                        className="fixed top-4 right-4 z-50 text-white bg-transparent px-4 py-2 rounded-full transition-colors text-sm"
+                        className="fixed top-4 right-4 z-50 text-white bg-transparent px-2 py-[5px] rounded-full transition-colors text-sm"
                     >
                         <LogOutIcon size={18}/>
                     </button>
@@ -78,7 +78,7 @@ export const withLogin = <P extends Record<string, any>>(
             {session && (
                 <button
                     onClick={handleLogout}
-                    className="fixed top-4 right-4 z-50 text-white bg-transparent px-4 py-2 rounded-full transition-colors text-sm"
+                    className="fixed top-4 right-4 z-50 text-white bg-transparent px-2 py-[5px] rounded-full transition-colors text-sm"
                 >
                     <LogOutIcon size={18}/>
                 </button>

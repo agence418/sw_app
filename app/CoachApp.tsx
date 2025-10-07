@@ -15,27 +15,19 @@ export const StartupWeekendCoachApp = () => {
 
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
+        setEventEnded(false)
         const startTime = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
         const endTime = new Date(config.event_start_date ??'2025-09-07T15:00:00');
         const totalDuration = endTime.getTime() - startTime.getTime();
         const elapsed = currentTime.getTime() - startTime.getTime();
 
         if (elapsed < 0) return 0;
-        if (elapsed > totalDuration) return 100;
-        return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
-    }, [currentTime]);
-
-    // Vérifier si l'événement est terminé
-    useEffect(() => {
-        const startTime = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
-        const endTime = new Date(config.event_start_date ??'2025-09-07T15:00:00');
-        const elapsed = currentTime.getTime() - startTime.getTime();
-        const totalDuration = endTime.getTime() - startTime.getTime();
-        
         if (elapsed > totalDuration) {
             setEventEnded(true);
+            return 100;
         }
-    }, [currentTime]);
+        return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
+    }, [currentTime, config]);
 
     // Récupérer l'événement actuel
     useEffect(() => {
@@ -65,9 +57,9 @@ export const StartupWeekendCoachApp = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Header */}
-            <header className="bg-blue-600 text-white p-4 shadow-lg">
+            <header className="bg-gray-50 dark:bg-gray-9000 text-white dark:text-gray-900 p-4 shadow-lg">
                 <h1 className="text-xl font-bold text-center">Startup Weekend</h1>
                 <div className="mt-2">
                     <div className="flex justify-between items-center text-sm mb-1">
@@ -76,7 +68,7 @@ export const StartupWeekendCoachApp = () => {
                     </div>
                     <div className="w-full bg-white/20 rounded-full h-2">
                         <div
-                            className="bg-white rounded-full h-2 transition-all duration-500"
+                            className="bg-white dark:bg-black rounded-full h-2 transition-all duration-500"
                             style={{width: `${progress}%`}}
                         />
                     </div>
@@ -91,11 +83,11 @@ export const StartupWeekendCoachApp = () => {
 
             {/* Status bar en bas */}
             {progress > 0 && (
-                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+                <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 p-4">
                     <div className="text-center text-sm text-gray-600">
                         {currentEvent ? (
                             <div>
-                                <span className="font-medium text-blue-600">En cours:</span> {currentEvent.title}
+                                <span className="font-medium text-blue-500">En cours:</span> {currentEvent.title}
                             </div>
                         ) : (
                             'Startup Weekend en cours...'

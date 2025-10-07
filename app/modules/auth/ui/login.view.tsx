@@ -46,7 +46,7 @@ export const LoginView = () => {
     }
 
     return (
-        <div className="flex items-center justify-center bg-white h-screen">
+        <div className="flex items-center justify-center bg-white dark:bg-black h-screen">
             <div className="p-8 w-full h-screen items-center justify-center flex flex-col">
                 <h2 className="text-2xl font-bold mb-6 text-center">Connexion</h2>
                 {error && (
@@ -62,7 +62,7 @@ export const LoginView = () => {
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 dark:text-gray-900"
                             placeholder="email"
                             required
                             disabled={isLoading}
@@ -76,7 +76,7 @@ export const LoginView = () => {
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600  dark:text-gray-900"
                             placeholder="password"
                             required
                             disabled={isLoading}

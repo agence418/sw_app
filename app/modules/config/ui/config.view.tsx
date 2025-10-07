@@ -87,7 +87,7 @@ export const ConfigView = () => {
                 </div>
             )}
 
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-6">
+            <div className="bg-white dark:bg-black rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6 space-y-6">
                 {/* Date de début de l'événement */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
