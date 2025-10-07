@@ -114,16 +114,16 @@ export const Vote = () => {
 
     if (loading) {
         return (
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <div className="bg-white dark:bg-black rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
                 <div className="text-center text-gray-600">Chargement des projets...</div>
             </div>
         );
     }
 
     return (
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="bg-white dark:bg-black rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
             <h2 className="text-lg font-semibold mb-4 flex items-center">
-                <Users className="w-5 h-5 mr-2 text-blue-600" />
+                <Users className="w-5 h-5 mr-2 text-blue-500" />
                 Votes des projets
             </h2>
             
@@ -174,13 +174,13 @@ export const Vote = () => {
                                 key={project.id} 
                                 className={`flex items-start p-4 border rounded-lg cursor-pointer transition-all ${
                                     selectedProjects.includes(project.id)
-                                        ? 'border-blue-500 bg-blue-50'
-                                        : 'border-gray-200 hover:bg-gray-50'
+                                        ? 'border-blue-500 bg-gray-50 dark:bg-gray-900'
+                                        : 'border-gray-200 dark:border-gray-800 hover:bg-gray-50'
                                 }`}
                             >
                                 <input
                                     type="checkbox"
-                                    className="w-4 h-4 text-blue-600 mt-1 mr-3"
+                                    className="w-4 h-4 text-blue-500 mt-1 mr-3"
                                     checked={selectedProjects.includes(project.id)}
                                     onChange={() => handleProjectSelection(project.id)}
                                 />
@@ -210,7 +210,7 @@ export const Vote = () => {
                     <button 
                         onClick={handleSubmit}
                         disabled={isSubmitting || selectedProjects.length !== 3}
-                        className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-gray-50 dark:bg-gray-9000 text-white dark:text-gray-900 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isSubmitting ? (
                             "Enregistrement en cours..."

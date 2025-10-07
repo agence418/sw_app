@@ -96,7 +96,7 @@ export const ListTeamsView = () => {
                         </h3>
                         <div className="space-y-4">
                             {otherTeams.map((team) => (
-                                <div key={team.id} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                                <div key={team.id} className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 bg-gray-50 dark:bg-gray-900">
                                     <h3 className="font-semibold text-gray-800 text-lg flex items-center gap-2 mb-2">
                                         <Users className="w-5 h-5 text-gray-500" />
                                         {team.name}
@@ -191,11 +191,11 @@ export const ListTeamsView = () => {
                                             </h4>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                                 {team.members.map((member) => (
-                                                    <div key={member.id} className="bg-white rounded p-2 text-sm">
+                                                    <div key={member.id} className="bg-white dark:bg-black rounded p-2 text-sm">
                                                         <div className="font-medium text-gray-800">{member.name}</div>
                                                         <div className="text-gray-600 text-xs">{member.email}</div>
                                                         {member.role && (
-                                                            <div className="text-blue-600 text-xs font-medium mt-1">
+                                                            <div className="text-blue-500 text-xs font-medium mt-1">
                                                                 {member.role}
                                                             </div>
                                                         )}
@@ -259,11 +259,11 @@ export const ListTeamsView = () => {
                                             </h4>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                                 {team.members.map((member) => (
-                                                    <div key={member.id} className="bg-white rounded p-2 text-sm">
+                                                    <div key={member.id} className="bg-white dark:bg-black rounded p-2 text-sm">
                                                         <div className="font-medium text-gray-800">{member.name}</div>
                                                         <div className="text-gray-600 text-xs">{member.email}</div>
                                                         {member.role && (
-                                                            <div className="text-blue-600 text-xs font-medium mt-1">
+                                                            <div className="text-blue-500 text-xs font-medium mt-1">
                                                                 {member.role}
                                                             </div>
                                                         )}
@@ -283,15 +283,15 @@ export const ListTeamsView = () => {
 
     return (
         <div className="w-full px-2 md:px-4">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-                <div className="p-4 border-b border-gray-200">
+            <div className="bg-white dark:bg-black rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+                <div className="p-4 border-b border-gray-200 dark:border-gray-800">
                     <h2 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
                         <Users className="w-5 h-5 text-blue-500" />
                         Liste des Équipes
                     </h2>
                     <button
                         onClick={loadTeams}
-                        className="flex items-center justify-center gap-2 bg-gray-600 text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
+                        className="flex items-center justify-center gap-2 bg-gray-600 text-white dark:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
                         disabled={loading}
                     >
                         <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -302,7 +302,7 @@ export const ListTeamsView = () => {
                 <div className="p-4">
                     {loading ? (
                         <div className="text-center py-8">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
                             <p className="mt-2 text-gray-600 text-sm">Chargement des équipes...</p>
                         </div>
                     ) : error ? (

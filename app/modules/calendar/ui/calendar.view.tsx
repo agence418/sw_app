@@ -5,14 +5,14 @@ export const CalendarView = () => {
     return (
         <div className="space-y-4">
             {Object.entries(CALENDAR).map(([day, events]) => (
-                <div key={day} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                <div key={day} className="bg-white dark:bg-black rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-800">
                     <h3 className="text-lg font-semibold mb-3 capitalize text-gray-800">
                         {day}
                     </h3>
                     <div className="space-y-2">
                         {events.map((event, index) => (
-                            <div key={index} className="flex items-center p-3 bg-gray-50 rounded-lg">
-                                <div className="text-sm font-medium text-blue-600 w-16">
+                            <div key={index} className="flex items-center p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                                <div className="text-sm font-medium text-blue-500 w-16">
                                     {event.time}
                                 </div>
                                 <div className="flex-1 text-gray-800">

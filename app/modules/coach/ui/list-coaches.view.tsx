@@ -122,9 +122,9 @@ export const ListCoachesView = () => {
 
     return (
         <div className="w-full px-2 md:px-4">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-                <div className="p-4 border-b border-gray-200">
-                    <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-3">
+            <div className="bg-white dark:bg-black rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+                <div className="p-4 border-b border-gray-200 dark:border-gray-800">
+                    <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-2 mb-3">
                         <Award className="w-4 h-4 text-yellow-500" />
                         Gestion des Coachs
                     </h2>
@@ -138,34 +138,34 @@ export const ListCoachesView = () => {
                 </div>
 
                 {showAddForm && (
-                    <div className="p-4 bg-purple-50 border-b border-purple-200">
+                    <div className="p-4 ">
                         <div className="space-y-3">
                             <input
                                 type="text"
                                 placeholder="Nom"
                                 value={formData.name}
                                 onChange={(e) => setFormData({...formData, name: e.target.value})}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm dark:text-gray-800"
                             />
                             <input
                                 type="email"
                                 placeholder="Email"
                                 value={formData.email}
                                 onChange={(e) => setFormData({...formData, email: e.target.value})}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm dark:text-gray-800"
                             />
                             <input
                                 type="text"
                                 placeholder="Expertise"
                                 value={formData.expertise}
                                 onChange={(e) => setFormData({...formData, expertise: e.target.value})}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm dark:text-gray-800"
                             />
                         </div>
                         <div className="flex flex-col sm:flex-row gap-2 mt-4">
                             <button
                                 onClick={handleAdd}
-                                className="flex items-center justify-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm"
+                                className="flex items-center justify-center gap-2 bg-green-600 text-white dark:text-gray-900 px-3 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm"
                             >
                                 <Save className="w-4 h-4" />
                                 Enregistrer
@@ -175,7 +175,7 @@ export const ListCoachesView = () => {
                                     setShowAddForm(false);
                                     setFormData({ name: '', email: '', expertise: '' });
                                 }}
-                                className="flex items-center justify-center gap-2 bg-gray-600 text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
+                                className="flex items-center justify-center gap-2 bg-gray-600 text-white dark:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
                             >
                                 <X className="w-4 h-4" />
                                 Annuler
@@ -192,28 +192,28 @@ export const ListCoachesView = () => {
                     ) : (
                     <div className="space-y-3">
                         {coaches.map((coach) => (
-                            <div key={coach.id} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                            <div key={coach.id} className="border border-gray-200 dark:border-gray-800 rounded-lg p-3 bg-gray-50 dark:bg-gray-900">
                                 {editingId === coach.id ? (
                                     <div className="space-y-2">
                                         <input
                                             type="text"
                                             value={formData.name}
                                             onChange={(e) => setFormData({...formData, name: e.target.value})}
-                                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm dark:text-gray-800"
                                             placeholder="Nom"
                                         />
                                         <input
                                             type="email"
                                             value={formData.email}
                                             onChange={(e) => setFormData({...formData, email: e.target.value})}
-                                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm dark:text-gray-800"
                                             placeholder="Email"
                                         />
                                         <input
                                             type="text"
                                             value={formData.expertise}
                                             onChange={(e) => setFormData({...formData, expertise: e.target.value})}
-                                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm dark:text-gray-800"
                                             placeholder="Expertise"
                                         />
                                         <div className="flex gap-2 mt-2">
@@ -242,11 +242,11 @@ export const ListCoachesView = () => {
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center gap-2 mb-1">
                                                     <Award className="w-4 h-4 text-yellow-500 flex-shrink-0" />
-                                                    <h3 className="font-semibold text-gray-800 text-sm truncate">{coach.name}</h3>
+                                                    <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-sm truncate">{coach.name}</h3>
                                                 </div>
-                                                <p className="text-gray-600 text-xs truncate">{coach.email}</p>
+                                                <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{coach.email}</p>
                                                 <div className="mt-1">
-                                                    <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs">
+                                                    <span className="bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-white px-2 py-1 rounded text-xs">
                                                         {coach.expertise}
                                                     </span>
                                                 </div>
@@ -256,20 +256,20 @@ export const ListCoachesView = () => {
                                                 {user.role === 'admin' && (
                                                     <button
                                                         onClick={() => handleShowResetPasswordQRCode(coach)}
-                                                        className="p-1 text-blue-600 hover:bg-blue-100 rounded"
+                                                        className="p-1 text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900 dark:hover:text-white rounded"
                                                     >
                                                         <QrCode className="w-4 h-4"/>
                                                     </button>
                                                 )}
                                                 <button
                                                     onClick={() => handleEdit(coach)}
-                                                    className="p-1 text-blue-600 hover:bg-blue-100 rounded"
+                                                    className="p-1 text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900 dark:hover:text-white rounded"
                                                 >
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDelete(coach.id)}
-                                                    className="p-1 text-red-600 hover:bg-red-100 rounded"
+                                                    className="p-1 text-red-600 hover:bg-red-100 dark:hover:bg-red-900 dark:hover:text-white rounded"
                                                 >
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>

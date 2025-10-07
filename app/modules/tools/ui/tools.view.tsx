@@ -11,9 +11,9 @@ const LIENS_PRATIQUES = [
 
 export const ToolsView = () => {
     return (
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="bg-white dark:bg-black rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
             <h2 className="text-lg font-semibold mb-4 flex items-center">
-                <Link className="w-5 h-5 mr-2 text-blue-600"/>
+                <Link className="w-5 h-5 mr-2 text-blue-500"/>
                 Outils pratiques
             </h2>
 
@@ -22,7 +22,7 @@ export const ToolsView = () => {
                     <a
                         key={index}
                         href={lien.url}
-                        className="block p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="block p-4 border border-gray-200 dark:border-gray-800 rounded-lg hover:bg-gray-50 dark:bg-gray-900 transition-colors"
                         target="_blank"
                         rel="noopener noreferrer"
                     >

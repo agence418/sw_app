@@ -58,7 +58,7 @@ export const ForgotPasswordView: React.FC<ForgotPasswordViewProps> = ({ onBack }
 
     if (emailSent) {
         return (
-            <div className="flex items-center justify-center bg-white h-screen">
+            <div className="flex items-center justify-center bg-white dark:bg-black h-screen">
                 <div className="p-8 w-full h-screen items-center justify-center flex flex-col">
                     <div className="text-center">
                         <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
@@ -73,7 +73,7 @@ export const ForgotPasswordView: React.FC<ForgotPasswordViewProps> = ({ onBack }
                         </p>
                         <button
                             onClick={onBack}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-400 transition-colors"
+                            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white dark:text-gray-900 rounded-lg hover:bg-green-400 transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
                             Retour à la connexion
@@ -85,7 +85,7 @@ export const ForgotPasswordView: React.FC<ForgotPasswordViewProps> = ({ onBack }
     }
 
     return (
-        <div className="flex items-center justify-center bg-white h-screen">
+        <div className="flex items-center justify-center bg-white dark:bg-black h-screen">
             <div className="p-8 w-full h-screen items-center justify-center flex flex-col">
                 <div className="text-center mb-8">
                     <h1 className="text-2xl font-bold mb-2">Générer un nouveau mot de passe</h1>
@@ -104,7 +104,7 @@ export const ForgotPasswordView: React.FC<ForgotPasswordViewProps> = ({ onBack }
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 dark:text-gray-900"
                             placeholder="votre@email.com"
                             required
                         />
@@ -138,7 +138,7 @@ export const ForgotPasswordView: React.FC<ForgotPasswordViewProps> = ({ onBack }
                     <button
                         type="button"
                         onClick={onBack}
-                        className="w-full text-center text-sm text-gray-700 hover:text-gray-900 transition-colors mt-2"
+                        className="w-full text-center text-sm text-green-600 hover:text-gray-900 dark:hover:text-green-400 transition-colors mt-2"
                     >
                         Retour à la connexion
                     </button>

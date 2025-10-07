@@ -90,7 +90,7 @@ export const AdminEventControls: React.FC<AdminEventControlsProps> = ({ currentD
     if (!todayEvents) return null;
 
     return (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+        <div className="bg-gray-50 dark:bg-gray-900 border border-green-400 rounded-lg p-4 mb-4">
             <h3 className="text-lg font-semibold text-blue-800 mb-3">
                 🔧 Contrôles Administrateur - {currentDay.charAt(0).toUpperCase() + currentDay.slice(1)}
             </h3>
@@ -116,7 +116,7 @@ export const AdminEventControls: React.FC<AdminEventControlsProps> = ({ currentD
                     <button
                         onClick={advanceStep}
                         disabled={loading || !nextEvent}
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex items-center gap-2 px-4 py-2 bg-gray-50 dark:bg-gray-9000 text-white dark:text-gray-900 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <ChevronRight className="w-4 h-4" />
                         {loading ? 'Avancement...' : 'Passer à l\'étape suivante'}
@@ -125,7 +125,7 @@ export const AdminEventControls: React.FC<AdminEventControlsProps> = ({ currentD
                     <button
                         onClick={resetToStep0}
                         disabled={loading}
-                        className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50"
+                        className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white dark:text-gray-900 rounded-lg hover:bg-gray-700 disabled:opacity-50"
                     >
                         <RotateCcw className="w-4 h-4" />
                         {loading ? 'Reset...' : 'Reset à 0'}

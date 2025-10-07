@@ -73,7 +73,7 @@ export const RegisterView = ({onBackToLogin}: RegisterViewProps) => {
 
     if (success) {
         return (
-            <div className="flex items-center justify-center bg-white h-screen">
+            <div className="flex items-center justify-center bg-white dark:bg-black h-screen">
                 <div className="p-8 w-full h-screen items-center justify-center flex flex-col">
                     <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
                         Enregistrement réussi ! Redirection vers la page de connexion...
@@ -84,7 +84,7 @@ export const RegisterView = ({onBackToLogin}: RegisterViewProps) => {
     }
 
     return (
-        <div className="flex items-center justify-center bg-white h-screen">
+        <div className="flex items-center justify-center bg-white dark:bg-black h-screen">
             <div className="p-8 w-full h-screen items-center justify-center flex flex-col">
                 <h2 className="text-2xl font-bold mb-6 text-center">Inscription</h2>
                 {error && (
@@ -100,7 +100,7 @@ export const RegisterView = ({onBackToLogin}: RegisterViewProps) => {
                             id="name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 dark:text-gray-900"
                             placeholder="Nom complet"
                             required
                             disabled={isLoading}
@@ -113,7 +113,7 @@ export const RegisterView = ({onBackToLogin}: RegisterViewProps) => {
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 dark:text-gray-900"
                             placeholder="email@example.com"
                             required
                             disabled={isLoading}
@@ -126,7 +126,7 @@ export const RegisterView = ({onBackToLogin}: RegisterViewProps) => {
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 dark:text-gray-900"
                             placeholder="Mot de passe (min. 6 caractères)"
                             required
                             disabled={isLoading}
@@ -140,7 +140,7 @@ export const RegisterView = ({onBackToLogin}: RegisterViewProps) => {
                             id="confirmPassword"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 dark:text-gray-900"
                             placeholder="Confirmer le mot de passe"
                             required
                             disabled={isLoading}
@@ -157,7 +157,7 @@ export const RegisterView = ({onBackToLogin}: RegisterViewProps) => {
                                 className="mt-1 w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                                 disabled={isLoading}
                             />
-                            <span className="text-sm text-gray-700">
+                            <span className="text-sm text-gray-700 dark:text-gray-300">
                                 J'accepte les{' '}
                                 <button
                                     type="button"
@@ -195,7 +195,7 @@ export const RegisterView = ({onBackToLogin}: RegisterViewProps) => {
             {/* Modale CGU */}
             {showCGU && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto p-6">
+                    <div className="bg-white dark:bg-black rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto p-6">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-xl font-bold text-gray-900">Conditions Générales d'Utilisation</h3>
                             <button
@@ -267,7 +267,7 @@ export const RegisterView = ({onBackToLogin}: RegisterViewProps) => {
                                     setAcceptCGU(true);
                                     setShowCGU(false);
                                 }}
-                                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                                className="px-4 py-2 bg-green-600 text-white dark:text-gray-900 rounded-md hover:bg-green-700 transition-colors"
                             >
                                 Accepter les CGU
                             </button>

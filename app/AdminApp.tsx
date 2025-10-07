@@ -46,7 +46,7 @@ export const StartupWeekendAdminApp = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Header */}
             <header className="bg-green-600 text-white p-4 shadow-lg">
                 <h1 className="text-xl font-bold text-center">Startup Weekend</h1>
@@ -57,7 +57,7 @@ export const StartupWeekendAdminApp = () => {
                     </div>
                     <div className="w-full bg-white/20 rounded-full h-2">
                         <div
-                            className="bg-white rounded-full h-2 transition-all duration-500"
+                            className="bg-white dark:bg-black rounded-full h-2 transition-all duration-500"
                             style={{width: `${progress}%`}}
                         />
                     </div>
@@ -65,7 +65,7 @@ export const StartupWeekendAdminApp = () => {
             </header>
 
             {/* Navigation */}
-            <nav className="bg-white border-t border-gray-200 px-4 bottom-[53px] left-0 w-full">
+            <nav className="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 px-4 bottom-[53px] left-0 w-full">
                 <div className="flex overflow-x-auto justify-between space-x-1 py-2">
                     {[
                         {id: 'accueil', icon: Clock, label: 'Accueil'},
@@ -81,7 +81,7 @@ export const StartupWeekendAdminApp = () => {
                             key={id}
                             onClick={() => setActiveTab(id)}
                             className={`flex flex-col items-center p-2 rounded-lg min-w-0 flex-shrink-0 ${
-                                activeTab === id ? 'bg-blue-100 text-blue-600' : 'text-gray-600'
+                                activeTab === id ? 'bg-green-600 text-white' : 'text-gray-600 dark:text-gray-400'
                             }`}
                         >
                             <Icon className="w-5 h-5 mb-1"/>
@@ -144,11 +144,11 @@ export const StartupWeekendAdminApp = () => {
             </main>
 
             {progress > 0 && (
-                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+                <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 p-4">
                     <div className="text-center text-sm text-gray-600">
                         {currentEvent ? (
                             <div>
-                                <span className="font-medium text-blue-600">En cours:</span> {currentEvent.title}
+                                <span className="font-medium text-blue-500">En cours:</span> {currentEvent.title}
                             </div>
                         ) : (
                             'Startup Weekend en cours...'

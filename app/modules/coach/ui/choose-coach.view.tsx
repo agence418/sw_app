@@ -136,9 +136,9 @@ export const ChooseCoachView = () => {
 
     if (loading) {
         return (
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <div className="bg-white dark:bg-black rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
                 <div className="text-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
                     <div className="mt-2 text-gray-500">Chargement...</div>
                 </div>
             </div>
@@ -162,9 +162,9 @@ export const ChooseCoachView = () => {
     }
 
     return (
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="bg-white dark:bg-black rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
             <h2 className="text-lg font-semibold mb-2 flex items-center">
-                <MessageSquare className="w-5 h-5 mr-2 text-blue-600"/>
+                <MessageSquare className="w-5 h-5 mr-2 text-blue-500"/>
                 Préférences de coaching
             </h2>
             <div className="mb-4 text-sm">
@@ -176,7 +176,7 @@ export const ChooseCoachView = () => {
             <p className="text-gray-600 mb-6 text-sm">
                 Sélectionnez jusqu'à 3 coaches que votre équipe aimerait rencontrer samedi.
                 <br/>
-                <span className="text-blue-600 font-medium">
+                <span className="text-blue-500 font-medium">
                     {coachPreferences.length}/3 coaches sélectionnés
                 </span>
             </p>
@@ -200,14 +200,14 @@ export const ChooseCoachView = () => {
                         <label key={coach.id}
                                className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors ${
                                    isDisabled 
-                                       ? 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-60' 
+                                       ? 'border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 cursor-not-allowed opacity-60' 
                                        : isSelected
-                                           ? 'border-blue-300 bg-blue-50 hover:bg-blue-100'
-                                           : 'border-gray-200 hover:bg-gray-50'
+                                           ? 'border-blue-300 bg-gray-50 dark:bg-gray-900 hover:bg-blue-100'
+                                           : 'border-gray-200 dark:border-gray-800 hover:bg-gray-50'
                                }`}>
                             <input
                                 type="checkbox"
-                                className="w-4 h-4 text-blue-600 mr-3"
+                                className="w-4 h-4 text-blue-500 mr-3"
                                 checked={isSelected}
                                 disabled={isDisabled}
                                 onChange={(e) => handleCoachToggle(coach.name, e.target.checked)}

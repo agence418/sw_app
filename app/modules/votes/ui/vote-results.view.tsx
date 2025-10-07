@@ -104,7 +104,7 @@ export const VoteResultsView = () => {
         <>
             <button
                 onClick={createTeams}
-                className="mb-4 w-full bg-purple-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="mb-4 w-full bg-purple-500 text-white dark:text-gray-900 py-2 px-4 rounded-lg font-medium hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
                 <>
                     Valider les {projectsToCreate} projets
@@ -115,7 +115,7 @@ export const VoteResultsView = () => {
             <div className="w-full px-2 md:px-4 space-y-4">
                 {/* Statistiques globales */}
                 <div className="grid grid-cols-1 gap-3">
-                    <div className="bg-white rounded-lg p-3 border border-gray-200">
+                    <div className="bg-white dark:bg-black rounded-lg p-3 border border-gray-200 dark:border-gray-800">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-xs text-gray-600">Total votes</p>
@@ -129,8 +129,8 @@ export const VoteResultsView = () => {
                 </div>
 
                 {/* Résultats détaillés */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-                    <div className="p-4 border-b border-gray-200">
+                <div className="bg-white dark:bg-black rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+                    <div className="p-4 border-b border-gray-200 dark:border-gray-800">
                         <div className="flex justify-between items-center">
                             <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
                                 <Trophy className="w-4 h-4 text-yellow-500"/>
@@ -138,7 +138,7 @@ export const VoteResultsView = () => {
                             </h2>
                             <button
                                 onClick={loadVoteResults}
-                                className="flex items-center gap-1 bg-gray-600 text-white px-2 py-1 rounded hover:bg-gray-700 transition-colors text-xs"
+                                className="flex items-center gap-1 bg-gray-600 text-white dark:text-gray-900 px-2 py-1 rounded hover:bg-gray-700 transition-colors text-xs"
                                 disabled={loading}
                             >
                                 <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`}/>
@@ -151,7 +151,7 @@ export const VoteResultsView = () => {
                         {loading ? (
                             <div className="text-center py-8">
                                 <div
-                                    className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                                    className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
                                 <p className="mt-2 text-gray-600 text-sm">Chargement...</p>
                             </div>
                         ) : error ? (
@@ -165,7 +165,7 @@ export const VoteResultsView = () => {
                         ) : (
                             <div className="space-y-4">
                                 {voteResults.map((result, index) => (
-                                    <div key={index} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                                    <div key={index} className="border border-gray-200 dark:border-gray-800 rounded-lg p-3 bg-gray-50 dark:bg-gray-900">
                                         <div className="flex items-start justify-between mb-2">
                                             <div className="flex-1 min-w-0">
                                                 {index < 10 && (
@@ -186,11 +186,11 @@ export const VoteResultsView = () => {
                                         {/* Barre de progression */}
                                         <div className="w-full bg-gray-200 rounded-full h-6 mb-3">
                                             <div
-                                                className={`h-6 rounded-full flex items-center justify-center text-white text-xs font-medium transition-all duration-500 ${
+                                                className={`h-6 rounded-full flex items-center justify-center text-white dark:text-gray-900 text-xs font-medium transition-all duration-500 ${
                                                     index === 0 ? 'bg-gradient-to-r from-yellow-400 to-yellow-600' :
                                                         index === 1 ? 'bg-gradient-to-r from-gray-400 to-gray-600' :
                                                             index === 2 ? 'bg-gradient-to-r from-orange-400 to-orange-600' :
-                                                                'bg-gradient-to-r from-blue-400 to-blue-600'
+                                                                'bg-gradient-to-r from-blue-400 to-blue-500'
                                                 }`}
                                                 style={{width: `${Math.max((result.votes / maxVotes) * 100, 15)}%`}}
                                             >
@@ -205,7 +205,7 @@ export const VoteResultsView = () => {
                                                 {result.voters.map((voter, vIndex) => (
                                                     <span
                                                         key={vIndex}
-                                                        className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs"
+                                                        className="bg-gray-50 dark:bg-gray-900 text-blue-700 px-2 py-1 rounded text-xs"
                                                     >
                                                     {voter}
                                                 </span>
