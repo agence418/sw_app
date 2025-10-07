@@ -181,7 +181,7 @@ export const StartupWeekendAdminApp = () => {
                         </button>
                     </div>
 
-                    {getCurrentDay() === 'mardi' && (
+                    {getCurrentDay() === 'vendredi' && (
                         <>
                             {!status.votesAllowed ? (
                                 <button

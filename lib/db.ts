@@ -854,6 +854,54 @@ export const db = {
             console.error('Erreur updateAppConfig:', error);
             throw error;
         }
+    },
+
+    // Gestion du verrouillage des votes
+    async getVotesLockStatus(): Promise<boolean> {
+        try {
+            const {rows} = await pool.query(
+                `SELECT val
+                 FROM event_state
+                 WHERE var = 'votes_allowed'`
+            );
+            return rows[0]?.val === 1;
+        } catch (error) {
+            console.error('Erreur getVotesLockStatus:', error);
+            return false;
+        }
+    },
+
+    async setVotesLockStatus(allowed: boolean): Promise<boolean> {
+        try {
+            // Vérifier si la variable existe
+            const {rows: existingRows} = await pool.query(
+                `SELECT *
+                 FROM event_state
+                 WHERE var = 'votes_allowed'`
+            );
+
+            if (existingRows.length === 0) {
+                // Créer la variable si elle n'existe pas
+                await pool.query(
+                    `INSERT INTO event_state (var, val)
+                     VALUES ('votes_allowed', $1)`,
+                    [allowed ? 1 : 0]
+                );
+            } else {
+                // Mettre à jour la variable existante
+                await pool.query(
+                    `UPDATE event_state
+                     SET val        = $1,
+                         updated_at = CURRENT_TIMESTAMP
+                     WHERE var = 'votes_allowed'`,
+                    [allowed ? 1 : 0]
+                );
+            }
+            return true;
+        } catch (error) {
+            console.error('Erreur setVotesLockStatus:', error);
+            return false;
+        }
     }
 };
 
