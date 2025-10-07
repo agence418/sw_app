@@ -11,6 +11,8 @@ DROP TABLE IF EXISTS coaches CASCADE;
 DROP TABLE IF EXISTS administrators CASCADE;
 DROP TABLE IF EXISTS participants CASCADE;
 DROP TABLE IF EXISTS visitors CASCADE;
+DROP TABLE IF EXISTS event_state CASCADE;
+DROP TABLE IF EXISTS app_config CASCADE;
 
 -- Supprimer les séquences existantes pour les recréer proprement
 DROP SEQUENCE IF EXISTS projects_id_seq CASCADE;
@@ -132,10 +134,10 @@ CREATE TABLE team_members
 CREATE TABLE event_state
 (
     id           SERIAL PRIMARY KEY,
-    day          VARCHAR(20) NOT NULL, -- 'vendredi' ou 'dimanche'
-    current_step INTEGER     NOT NULL DEFAULT 0,
+    var          VARCHAR(50) NOT NULL,
+    val          INTEGER     NOT NULL DEFAULT 0,
     updated_at   TIMESTAMP            DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (day)
+    UNIQUE (var)
 );
 
 -- Table de configuration globale
@@ -155,10 +157,8 @@ INSERT INTO administrators (name, email, password)
 VALUES ('${ADMIN_NAME}', '${ADMIN_EMAIL}', 'TO_RESET');
 
 -- Initialisation des états des événements
-INSERT INTO event_state (day, current_step)
-VALUES ('vendredi', 0);
-INSERT INTO event_state (day, current_step)
-VALUES ('dimanche', 0);
+INSERT INTO event_state (var, val)
+VALUES ('current_step', 0);
 
 -- Initialisation de la configuration par défaut
 INSERT INTO app_config (event_start_date, allow_visitor_registration, allow_visitor_accounts, who_can_vote, votes_per_participant)

@@ -2,17 +2,17 @@
 
 import React, {useEffect, useMemo, useState} from 'react';
 import {Link as LinkIcon} from 'lucide-react';
-import {getCurrentEvent} from "./modules/calendar/_actions/get-current-event.action";
 import {VoteView} from "./modules/votes/ui/vote.view";
 import Link from 'next/link';
 import {useConfig} from "@/app/modules/config/store/config.store";
+import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
 
 export const VisitorApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
     const [currentTime, setCurrentTime] = useState(new Date());
     const [eventEnded, setEventEnded] = useState(false);
-    const [currentEvent, setCurrentEvent] = useState<any>(null);
-    const {config} = useConfig((state) => state)
+    const {status} = useCurrentStatus(state => state);
+    const {currentEvent} = status;    const {config} = useConfig((state) => state)
 
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
@@ -29,19 +29,6 @@ export const VisitorApp = () => {
         }
         return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
     }, [currentTime, config]);
-
-    // Récupérer l'événement actuel
-    useEffect(() => {
-        const fetchCurrentEvent = async () => {
-            const event = await getCurrentEvent();
-            setCurrentEvent(event);
-        };
-        fetchCurrentEvent();
-
-        // Rafraîchir toutes les minutes
-        const interval = setInterval(fetchCurrentEvent, 60000);
-        return () => clearInterval(interval);
-    }, []);
 
     if (eventEnded) {
         return (
