@@ -30,14 +30,13 @@ export async function POST(request: Request) {
 
         console.log('Données reçues:', { name, description, participantId });
 
-        if (!name || !description || !participantId) {
+        if (!name || !participantId) {
             console.log('Champs manquants:', { 
-                name: !!name, 
-                description: !!description, 
+                name: !!name,
                 participantId: !!participantId
             });
             return NextResponse.json(
-                { error: 'Tous les champs sont requis' },
+                { error: 'Le nom et le participant sont requis' },
                 { status: 400 }
             );
         }

@@ -6,7 +6,7 @@ export const CalendarView = () => {
         <div className="space-y-4">
             {Object.entries(CALENDAR).map(([day, events]) => (
                 <div key={day} className="bg-white dark:bg-black rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-800">
-                    <h3 className="text-lg font-semibold mb-3 capitalize text-gray-800">
+                    <h3 className="text-lg font-semibold mb-3 capitalize text-gray-800 dark:text-gray-200">
                         {day}
                     </h3>
                     <div className="space-y-2">
@@ -15,7 +15,7 @@ export const CalendarView = () => {
                                 <div className="text-sm font-medium text-blue-500 w-16">
                                     {event.time}
                                 </div>
-                                <div className="flex-1 text-gray-800">
+                                <div className="flex-1 text-gray-800 dark:text-gray-200">
                                     {event.title}
                                 </div>
                                 {event.duration > 0 && (
