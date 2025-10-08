@@ -317,8 +317,16 @@ export const db = {
     },
 
     // Votes
-    async getVotes(): Promise<DbVote[]> {
+    async getVotes(id?: string, role?: string): Promise<DbVote[]> {
         try {
+            if (role !== 'admin' && id) {
+                const {rows} = await pool.query(
+                    'SELECT * FROM votes WHERE participant_id = $1 ORDER BY vote_time DESC',
+                    [id]
+                );
+                return rows;
+            }
+
             const {rows} = await pool.query(
                 'SELECT * FROM votes ORDER BY vote_time DESC'
             );
@@ -352,24 +360,11 @@ export const db = {
         }
     },
 
-    async createVote(data: any): Promise<DbVote> {
+    async createVote(projectName: string, id?: string, role?: string): Promise<DbVote> {
         try {
-            // Récupérer le nom du projet depuis l'ID
-            const projectResult = await pool.query(
-                'SELECT name FROM projects WHERE id = $1',
-                [parseInt(data.projectId)]
-            );
-
-            if (projectResult.rows.length === 0) {
-                throw new Error('Projet non trouvé');
-            }
-
-            const projectName = projectResult.rows[0].name;
-
-            // Vérifier si le participant a déjà voté pour ce projet
             const existing = await pool.query(
                 'SELECT * FROM votes WHERE participant_id = $1 AND idea_name = $2',
-                [data.participantId, projectName]
+                [id, projectName]
             );
 
             if (existing.rows.length > 0) {
@@ -378,12 +373,94 @@ export const db = {
 
             const {rows} = await pool.query(
                 'INSERT INTO votes (participant_id, idea_name, vote_time) VALUES ($1, $2, NOW()) RETURNING *',
-                [data.participantId, projectName]
+                [id, projectName]
             );
             return rows[0];
         } catch (error) {
             console.error('Erreur createVote:', error);
             throw error;
+        }
+    },
+
+    async deleteVote(projectName: string, id?: string, role?: string): Promise<boolean> {
+        try {
+            const result = await pool.query(
+                'DELETE FROM votes WHERE participant_id = $1 AND idea_name = $2',
+                [id, projectName]
+            );
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Erreur deleteVote:', error);
+            return false;
+        }
+    },
+
+    async canVote(id: string, role: string): Promise<boolean> {
+        try {
+            if (role !== 'participant') return false;
+
+            const votesAllowed = await this.getVotesLockStatus();
+            if (!votesAllowed) return false;
+
+            const {rows} = await pool.query(
+                'SELECT * FROM votes WHERE participant_id = $1',
+                [id]
+            );
+
+            const config = await this.getAppConfig()
+
+            return rows.length < config.votes_per_participant;
+        } catch (error) {
+            console.error('Erreur canVote:', error);
+            return false;
+        }
+    },
+
+    // Gestion du verrouillage des votes
+    async getVotesLockStatus(): Promise<boolean> {
+        try {
+            const {rows} = await pool.query(
+                `SELECT val
+                 FROM event_state
+                 WHERE var = 'votes_allowed'`
+            );
+            return rows[0]?.val === 1;
+        } catch (error) {
+            console.error('Erreur getVotesLockStatus:', error);
+            return false;
+        }
+    },
+
+    async setVotesLockStatus(allowed: boolean): Promise<boolean> {
+        try {
+            // Vérifier si la variable existe
+            const {rows: existingRows} = await pool.query(
+                `SELECT *
+                 FROM event_state
+                 WHERE var = 'votes_allowed'`
+            );
+
+            if (existingRows.length === 0) {
+                // Créer la variable si elle n'existe pas
+                await pool.query(
+                    `INSERT INTO event_state (var, val)
+                     VALUES ('votes_allowed', $1)`,
+                    [allowed ? 1 : 0]
+                );
+            } else {
+                // Mettre à jour la variable existante
+                await pool.query(
+                    `UPDATE event_state
+                     SET val        = $1,
+                         updated_at = CURRENT_TIMESTAMP
+                     WHERE var = 'votes_allowed'`,
+                    [allowed ? 1 : 0]
+                );
+            }
+            return true;
+        } catch (error) {
+            console.error('Erreur setVotesLockStatus:', error);
+            return false;
         }
     },
 
@@ -891,54 +968,6 @@ export const db = {
             throw error;
         }
     },
-
-    // Gestion du verrouillage des votes
-    async getVotesLockStatus(): Promise<boolean> {
-        try {
-            const {rows} = await pool.query(
-                `SELECT val
-                 FROM event_state
-                 WHERE var = 'votes_allowed'`
-            );
-            return rows[0]?.val === 1;
-        } catch (error) {
-            console.error('Erreur getVotesLockStatus:', error);
-            return false;
-        }
-    },
-
-    async setVotesLockStatus(allowed: boolean): Promise<boolean> {
-        try {
-            // Vérifier si la variable existe
-            const {rows: existingRows} = await pool.query(
-                `SELECT *
-                 FROM event_state
-                 WHERE var = 'votes_allowed'`
-            );
-
-            if (existingRows.length === 0) {
-                // Créer la variable si elle n'existe pas
-                await pool.query(
-                    `INSERT INTO event_state (var, val)
-                     VALUES ('votes_allowed', $1)`,
-                    [allowed ? 1 : 0]
-                );
-            } else {
-                // Mettre à jour la variable existante
-                await pool.query(
-                    `UPDATE event_state
-                     SET val        = $1,
-                         updated_at = CURRENT_TIMESTAMP
-                     WHERE var = 'votes_allowed'`,
-                    [allowed ? 1 : 0]
-                );
-            }
-            return true;
-        } catch (error) {
-            console.error('Erreur setVotesLockStatus:', error);
-            return false;
-        }
-    }
 };
 
 // Tester la connexion au démarrage (seulement en développement)

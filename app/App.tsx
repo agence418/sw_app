@@ -6,15 +6,18 @@ import {ParticipantApp} from "@/app/ParticipantApp";
 import {withConfig} from "@/app/modules/config/ui/with-config.hoc";
 import {useEffect} from "react";
 import {fetchEvent} from "@/app/modules/calendar/_actions/fetch-event.action";
+import {fetchVotesStatus} from "@/app/modules/votes/_actions/fetch-votes-status.action";
 
 const ProtectedApp = withConfig(withLogin(ParticipantApp));
 
 const Wrapper = () => {
     useEffect(() => {
-        fetchEvent()
+        fetchEvent();
+        fetchVotesStatus();
 
         const i = setInterval(() => {
             fetchEvent()
+            fetchVotesStatus()
         }, 60000)
 
         return () => clearInterval(i);
