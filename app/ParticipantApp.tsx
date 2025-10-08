@@ -19,7 +19,6 @@ export const ParticipantApp = () => {
     const {status} = useCurrentStatus(state => state);
     const {currentEvent} = status;
 
-
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
         setEventEnded(false)
@@ -53,7 +52,7 @@ export const ParticipantApp = () => {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Header */}
-            <header className="bg-red-600 text-white dark:text-gray-900 p-4 shadow-lg">
+            <header className="bg-red-600 text-white p-4 shadow-lg">
                 <h1 className="text-xl font-bold text-center">Startup Weekend</h1>
                 <div className="mt-2">
                     <div className="flex justify-between items-center text-sm mb-1">
@@ -82,7 +81,7 @@ export const ParticipantApp = () => {
                             key={id}
                             onClick={() => setActiveTab(id)}
                             className={`flex flex-col items-center p-2 rounded-lg min-w-0 flex-shrink-0 ${
-                                activeTab === id ? 'bg-blue-100 text-blue-500' : 'text-gray-600'
+                                activeTab === id ? 'bg-red-600 text-white' : 'text-gray-600'
                             }`}
                         >
                             <Icon className="w-5 h-5 mb-1"/>
@@ -97,7 +96,7 @@ export const ParticipantApp = () => {
                 {/* Page d'accueil */}
                 {activeTab === 'accueil' && (
                     <>
-                        {currentEvent?.title === 'Votes' ? <VoteView/> :
+                        {status.votesAllowed ? <VoteView/> :
                             <>
                                 <NowView/>
                                 {currentTime.getDay() == 4 && (
