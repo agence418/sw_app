@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Link as LinkIcon} from 'lucide-react';
 import {VoteView} from "./modules/votes/ui/vote.view";
 import Link from 'next/link';
@@ -12,7 +12,9 @@ export const VisitorApp = () => {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [eventEnded, setEventEnded] = useState(false);
     const {status} = useCurrentStatus(state => state);
-    const {currentEvent} = status;    const {config} = useConfig((state) => state)
+    const {currentEvent} = status;
+    const {config} = useConfig((state) => state)
+    console.log({config})
 
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
@@ -84,8 +86,7 @@ export const VisitorApp = () => {
                 {/* Page d'accueil */}
                 {activeTab === 'accueil' && (
                     <>
-                        {currentEvent?.title === 'Votes' ? <VoteView/> :
-
+                        {status.votesAllowed && config.who_can_vote.includes('visitor') ? <VoteView/> :
                             <div className="space-y-6">
                                 <div className="rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
                                     <h2 className="text-lg font-semibold flex items-center">
@@ -101,7 +102,8 @@ export const VisitorApp = () => {
 
             {/* Status bar en bas */}
             {progress > 0 && (
-                <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 p-4">
+                <div
+                    className="fixed bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 p-4">
                     <div className="text-center text-sm text-gray-600">
                         {currentEvent ? (
                             <div>
