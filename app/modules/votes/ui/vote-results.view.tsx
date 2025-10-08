@@ -2,6 +2,7 @@
 
 import React, {useEffect, useState} from 'react';
 import {ArrowRight, BarChart3, RefreshCw, Trophy} from 'lucide-react';
+import {useConfig} from "@/app/modules/config/store/config.store";
 
 interface VoteResult {
     ideaName: string;
@@ -13,27 +14,36 @@ interface VoteResult {
 export const VoteResultsView = () => {
     const [voteResults, setVoteResults] = useState<VoteResult[]>([]);
     const [participantsCount, setParticipantsCount] = useState<number>(0);
+    const [coachCount, setCoachCount] = useState<number>(0);
+    const [visitorCount, setVisitorCount] = useState<number>(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const {config} = useConfig(state => state);
 
     const loadVoteResults = async () => {
         try {
             setLoading(true);
             // Charger les résultats des votes et le nombre de participants
-            const [voteResponse, participantsResponse] = await Promise.all([
+            const [voteResponse, participantsCountResponse, coachCountResponse, visitorCountResponse] = await Promise.all([
                 fetch('/api/votes/results'),
-                fetch('/api/participants')
+                fetch('/api/participants/count'),
+                fetch('/api/coaches/count'),
+                fetch('/api/visitor/count')
             ]);
 
-            if (!voteResponse.ok || !participantsResponse.ok) {
+            if (!voteResponse.ok || !participantsCountResponse.ok || !coachCountResponse.ok || !visitorCountResponse.ok) {
                 throw new Error('Erreur lors du chargement');
             }
 
             const voteData = await voteResponse.json();
-            const participantsData = await participantsResponse.json();
+            const participantsCount = await participantsCountResponse.json();
+            const coachCount = await coachCountResponse.json();
+            const visitorCount = await visitorCountResponse.json();
 
             setVoteResults(voteData);
-            setParticipantsCount(participantsData.length);
+            setParticipantsCount(participantsCount);
+            setCoachCount(coachCount);
+            setVisitorCount(visitorCount);
             setError(null);
         } catch (err) {
             setError('Erreur lors du chargement des résultats');
@@ -46,33 +56,44 @@ export const VoteResultsView = () => {
         loadVoteResults();
     }, []);
 
+
+    const canVisitorsVote = config.who_can_vote.includes('visitor');
+    const canCoachesVote = config.who_can_vote.includes('coach');
+    const canParticipantsVote = config.who_can_vote.includes('participant');
+
+    const visitorVotes = canVisitorsVote ? visitorCount * config.votes_per_participant : 0;
+    const coachVotes = canCoachesVote ? coachCount * config.votes_per_participant : 0;
+    const participantVotes = canParticipantsVote ? participantsCount * config.votes_per_participant : 0;
+
+
+    // Calculs pour les statistiques
     const totalVotes = voteResults.reduce((sum, result) => sum + result.votes, 0);
-    const maxPossibleVotes = participantsCount * 3; // Chaque participant a 3 votes
+    const maxPossibleVotes = (visitorVotes + coachVotes + participantVotes) || 1;
     const maxVotes = Math.max(...voteResults.map(r => r.votes), 1);
-    const projectsToCreate = Math.round(maxPossibleVotes/3/7); // 3 votes par participant, 7 participants par équipe
+    const projectsToCreate = Math.round(participantsCount / 7); // 7 participants par équipe
 
     const createTeams = async () => {
         try {
             setLoading(true);
-            
+
             // Calculer le nombre d'équipes à créer (arrondi)
             const numberOfTeams = Math.round(projectsToCreate);
-            
+
             // Prendre les N meilleurs projets
             const topProjects = voteResults.slice(0, numberOfTeams);
-            
+
             // Créer les équipes pour chaque projet
             const teamPromises = topProjects.map(async (result) => {
                 // D'abord récupérer le projet correspondant pour avoir le leader_id
                 const projectResponse = await fetch(`/api/projects?name=${encodeURIComponent(result.ideaName)}`);
                 const projects = await projectResponse.json();
                 const project = projects.find((p: any) => p.name === result.ideaName);
-                
+
                 if (project) {
                     // Créer l'équipe
                     return fetch('/api/teams', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
                             name: `Équipe ${result.ideaName}`,
                             idea_description: project.description,
@@ -81,10 +102,10 @@ export const VoteResultsView = () => {
                     });
                 }
             });
-            
+
             const responses = await Promise.all(teamPromises.filter(Boolean));
             const allSuccessful = responses.every(response => response?.ok);
-            
+
             if (allSuccessful) {
                 alert(`${numberOfTeams} équipes créées avec succès !`);
                 // Recharger les données
@@ -107,7 +128,7 @@ export const VoteResultsView = () => {
                 className="mb-4 w-full bg-purple-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
                 <>
-                    Valider les {projectsToCreate} projets
+                    Créer les {projectsToCreate} projets
                     <ArrowRight className="w-4 h-4 ml-4"/>
                 </>
             </button>
@@ -119,17 +140,23 @@ export const VoteResultsView = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400">Total votes</p>
-                                <p className="text-lg font-bold text-gray-800 dark:text-gray-200">{totalVotes}/{maxPossibleVotes}
-                                    <span className="text-xs text-gray-500 ps-3">({participantsCount} participants × 3 votes)</span>
-                                </p>
+                                <div className="flex flex-row gap-2 items-center">
+                                    <p className="text-lg font-bold text-gray-800 dark:text-gray-200">{totalVotes}/{maxPossibleVotes}
+                                    </p>
+                                    <span
+                                        className="text-xs text-gray-500 ps-3 pe-8">({participantsCount} participants{canVisitorsVote ? ' + ' + visitorCount + ' visiteurs' : ''}{canCoachesVote ? ' + ' + coachVotes + ' coach' : ''} × 3 votes)</span>
+
+
+                                    <BarChart3 className="w-6 h-6 text-blue-500"/>
+                                </div>
                             </div>
-                            <BarChart3 className="w-6 h-6 text-blue-500"/>
                         </div>
                     </div>
                 </div>
 
                 {/* Résultats détaillés */}
-                <div className="bg-white dark:bg-black rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+                <div
+                    className="bg-white dark:bg-black rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
                     <div className="p-4 border-b border-gray-200 dark:border-gray-800">
                         <div className="flex justify-between items-center">
                             <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-2">
@@ -165,7 +192,8 @@ export const VoteResultsView = () => {
                         ) : (
                             <div className="space-y-4">
                                 {voteResults.map((result, index) => (
-                                    <div key={index} className="border border-gray-200 dark:border-gray-800 rounded-lg p-3 bg-gray-50 dark:bg-gray-900">
+                                    <div key={index}
+                                         className="border border-gray-200 dark:border-gray-800 rounded-lg p-3 bg-gray-50 dark:bg-gray-900">
                                         <div className="flex items-start justify-between mb-2">
                                             <div className="flex-1 min-w-0">
                                                 {index < 10 && (

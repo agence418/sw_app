@@ -209,7 +209,7 @@ export const TeamCreationView = () => {
 
                 {projects.length > 0 && (
                     <div className="mt-6">
-                        <h3 className="text-md font-semibold mb-3">Projets créés ({projects.length})</h3>
+                        <h3 className="text-md font-semibold mb-3">Idées ({projects.length})</h3>
                         <div className="space-y-2">
                             {projects.map((project) => (
                                 <div key={project.id} className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
