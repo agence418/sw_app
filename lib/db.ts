@@ -78,6 +78,18 @@ export const db = {
         }
     },
 
+    async getParticipantsCount(): Promise<number> {
+        try {
+            const {rows} = await pool.query(
+                'SELECT COUNT(*)::int AS count FROM participants'
+            );
+            return rows[0]?.count || 0;
+        } catch (error) {
+            console.error('Erreur getParticipantsCount:', error);
+            return 0;
+        }
+    },
+
     async getParticipantByEmail(email: string): Promise<DbParticipant | null> {
         try {
             const {rows} = await pool.query(
@@ -151,6 +163,34 @@ export const db = {
         }
     },
 
+    async getCoachesCount(): Promise<number> {
+        try {
+            const {rows} = await pool.query(
+                'SELECT COUNT(*)::int AS count FROM coaches'
+            );
+            return rows[0]?.count || 0;
+        } catch (error) {
+            console.error('Erreur getCoachesCount:', error);
+            return 0;
+        }
+    },
+
+    async getCoachByEmail(email: string): Promise<DbCoach | null> {
+        try {
+            const {rows} = await pool.query(
+                'SELECT * FROM coaches WHERE email = $1',
+                [email]
+            );
+            rows.map((row) => {
+                row.role = 'coach';
+            })
+            return rows[0] || null;
+        } catch (error) {
+            console.error('Erreur getCoachByEmail:', error);
+            return null;
+        }
+    },
+
     async createCoach(data: Omit<DbCoach, 'id'>): Promise<DbCoach> {
         try {
             const {rows} = await pool.query(
@@ -205,6 +245,18 @@ export const db = {
         } catch (error) {
             console.error('Erreur getVisitor:', error);
             return [];
+        }
+    },
+
+    async getVisitorsCount(): Promise<number> {
+        try {
+            const {rows} = await pool.query(
+                'SELECT COUNT(*)::int AS count FROM visitors'
+            );
+            return rows[0]?.count || 0;
+        } catch (error) {
+            console.error('Erreur getVisitorsCount:', error);
+            return 0;
         }
     },
 
@@ -646,22 +698,6 @@ export const db = {
             return rows[0] || null;
         } catch (error) {
             console.error('Erreur getAdminByEmail:', error);
-            return null;
-        }
-    },
-
-    async getCoachByEmail(email: string): Promise<DbCoach | null> {
-        try {
-            const {rows} = await pool.query(
-                'SELECT * FROM coaches WHERE email = $1',
-                [email]
-            );
-            rows.map((row) => {
-                row.role = 'coach';
-            })
-            return rows[0] || null;
-        } catch (error) {
-            console.error('Erreur getCoachByEmail:', error);
             return null;
         }
     },
