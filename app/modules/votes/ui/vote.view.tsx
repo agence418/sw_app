@@ -5,12 +5,6 @@ import {useSession} from "next-auth/react";
 import {useConfig} from "@/app/modules/config/store/config.store";
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
 
-interface Participant {
-    id: string;
-    name: string;
-    email: string;
-}
-
 export const VoteView = () => {
     const {data: session} = useSession();
     const [projects, setProjects] = useState<Project[]>([]);

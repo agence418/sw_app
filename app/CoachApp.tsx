@@ -1,23 +1,24 @@
 'use client';
 
-import React, {useState, useMemo, useEffect} from 'react';
+import React, {useMemo, useState} from 'react';
 import {ListTeamsView} from "./modules/teams/ui/list-teams.view";
 import {useConfig} from "@/app/modules/config/store/config.store";
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
+import {VoteView} from "@/app/modules/votes/ui/vote.view";
 
 export const StartupWeekendCoachApp = () => {
-    const [activeTab, setActiveTab] = useState('accueil');
     const [currentTime, setCurrentTime] = useState(new Date());
     const [eventEnded, setEventEnded] = useState(false);
 
     const {status} = useCurrentStatus(state => state);
-    const {currentEvent} = status;    const {config} = useConfig((state) => state)
+    const {currentEvent} = status;
+    const {config} = useConfig((state) => state)
 
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
         setEventEnded(false)
         const startTime = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
-        const endTime = new Date(config.event_start_date ??'2025-09-07T15:00:00');
+        const endTime = new Date(config.event_start_date ?? '2025-09-07T15:00:00');
         const totalDuration = endTime.getTime() - startTime.getTime();
         const elapsed = currentTime.getTime() - startTime.getTime();
 
@@ -46,7 +47,7 @@ export const StartupWeekendCoachApp = () => {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Header */}
-            <header className="bg-gray-50 dark:bg-gray-9000 text-white dark:text-gray-900 p-4 shadow-lg">
+            <header className="bg-gray-50 dark:bg-purple-600 text-white p-4 shadow-lg">
                 <h1 className="text-xl font-bold text-center">Startup Weekend</h1>
                 <div className="mt-2">
                     <div className="flex justify-between items-center text-sm mb-1">
@@ -65,12 +66,15 @@ export const StartupWeekendCoachApp = () => {
             {/* Contenu principal */}
             <main className="p-4">
                 {/* Page d'accueil */}
-                <ListTeamsView/>
+                {status.votesAllowed && config.who_can_vote.includes('coach') ? <VoteView/> :
+                    <ListTeamsView/>
+                }
             </main>
 
             {/* Status bar en bas */}
             {progress > 0 && (
-                <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 p-4">
+                <div
+                    className="fixed bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 p-4">
                     <div className="text-center text-sm text-gray-600">
                         {currentEvent ? (
                             <div>
