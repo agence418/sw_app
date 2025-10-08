@@ -1,6 +1,5 @@
 import {Users, CheckCircle2, AlertCircle} from "lucide-react";
 import React, {useState, useEffect} from "react";
-import {ProjectsProvider, useProjects} from "../../projects/contexts/projects.context";
 import { Project } from "../../projects/types/project.types";
 import { useSession } from "next-auth/react";
 
@@ -11,16 +10,9 @@ interface Participant {
 }
 
 export const VoteView = () => {
-    return(
-        <ProjectsProvider>
-            <Vote/>
-        </ProjectsProvider>
-    )
-}
-
-export const Vote = () => {
     const { data: session } = useSession();
-    const { projects, loading, error, fetchProjects } = useProjects();
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [loading, setLoading] = useState(false);
     const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState<{type: 'success' | 'error', text: string} | null>(null);
@@ -29,10 +21,28 @@ export const Vote = () => {
 
     useEffect(() => {
         fetchProjects();
+    }, []);
+
+    useEffect(() => {
         if (session?.user?.id) {
             checkUserVotes();
         }
     }, [session]);
+
+    const fetchProjects = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch('/api/projects');
+            if (response.ok) {
+                const data = await response.json();
+                setProjects(data);
+            }
+        } catch (error) {
+            console.error('Erreur lors de la récupération des projets:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const checkUserVotes = async () => {
         if (!session?.user?.id) return;
@@ -133,9 +143,9 @@ export const Vote = () => {
 
             {submitMessage && (
                 <div className={`mb-4 p-3 rounded-lg text-sm flex items-center ${
-                    submitMessage.type === 'success' 
-                        ? 'bg-green-50 text-green-600' 
-                        : 'bg-red-50 text-red-600'
+                    submitMessage.type === 'success'
+                        ? 'bg-green-50 dark:bg-green-900 text-green-600 dark:text-white'
+                        : 'bg-red-50 dark:bg-red-900 text-red-600 dark:text-white'
                 }`}>
                     {submitMessage.type === 'success' ? (
                         <CheckCircle2 className="w-4 h-4 mr-2" />

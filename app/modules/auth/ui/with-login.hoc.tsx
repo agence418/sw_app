@@ -37,7 +37,7 @@ export const withLogin = <P extends Record<string, any>>(
                 {session && (
                     <button
                         onClick={handleLogout}
-                        className="fixed top-2 right-2 z-50 text-white bg-transparent p-2 rounded-full transition-colors text-sm"
+                        className="absolute top-2 right-2 z-50 text-white bg-transparent p-2 rounded-full transition-colors text-sm"
                     >
                         <LogOutIcon size={18}/>
                     </button>
@@ -51,7 +51,7 @@ export const withLogin = <P extends Record<string, any>>(
                 {session && (
                     <button
                         onClick={handleLogout}
-                        className="fixed top-4 right-4 z-50 text-white bg-transparent px-2 py-[5px] rounded-full transition-colors text-sm"
+                        className="absolute top-4 right-4 z-50 text-white bg-transparent px-2 py-[5px] rounded-full transition-colors text-sm"
                     >
                         <LogOutIcon size={18}/>
                     </button>
@@ -65,7 +65,7 @@ export const withLogin = <P extends Record<string, any>>(
                 {session && (
                     <button
                         onClick={handleLogout}
-                        className="fixed top-4 right-4 z-50 text-white bg-transparent px-2 py-[5px] rounded-full transition-colors text-sm"
+                        className="absolute top-4 right-4 z-50 text-white bg-transparent px-2 py-[5px] rounded-full transition-colors text-sm"
                     >
                         <LogOutIcon size={18}/>
                     </button>
@@ -78,7 +78,7 @@ export const withLogin = <P extends Record<string, any>>(
             {session && (
                 <button
                     onClick={handleLogout}
-                    className="fixed top-4 right-4 z-50 text-white bg-transparent px-2 py-[5px] rounded-full transition-colors text-sm"
+                    className="absolute top-4 right-4 z-50 text-white bg-transparent px-2 py-[5px] rounded-full transition-colors text-sm"
                 >
                     <LogOutIcon size={18}/>
                 </button>
