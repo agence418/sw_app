@@ -500,6 +500,7 @@ export const db = {
                 SELECT t.id,
                        t.name,
                        t.idea_description,
+                       t.position,
                        t.created_at,
                        p.name  as leader_name,
                        p.email as leader_email,
@@ -520,7 +521,14 @@ export const db = {
                                 FROM coach_preferences cp
                                 WHERE cp.team_id = t.id),
                                '[]'
-                       )       as coach_requests
+                       )       as coach_requests,
+                       COALESCE(
+                               (SELECT json_agg(c.name)
+                                FROM team_coaches tc
+                                         JOIN coaches c ON tc.coach_id = c.id
+                                WHERE tc.team_id = t.id),
+                               '[]'
+                       )       as assigned_coaches
                 FROM teams t
                          LEFT JOIN participants p ON t.leader_id = p.id
                 ORDER BY t.name
@@ -635,6 +643,76 @@ export const db = {
         } catch (error) {
             console.error('Erreur getTeamByLeaderId:', error);
             return null;
+        }
+    },
+
+    async updateTeamPosition(teamId: number, position: string): Promise<boolean> {
+        try {
+            const result = await pool.query(`
+                UPDATE teams
+                SET position = $1
+                WHERE id = $2
+            `, [position, teamId]);
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Erreur updateTeamPosition:', error);
+            return false;
+        }
+    },
+
+    // Gestion des coaches d'équipes
+    async addCoachToTeam(teamId: number, coachId: number): Promise<boolean> {
+        try {
+            await pool.query(`
+                INSERT INTO team_coaches (team_id, coach_id)
+                VALUES ($1, $2)
+                ON CONFLICT (team_id, coach_id) DO NOTHING
+            `, [teamId, coachId]);
+            return true;
+        } catch (error) {
+            console.error('Erreur addCoachToTeam:', error);
+            return false;
+        }
+    },
+
+    async removeCoachFromTeam(teamId: number, coachId: number): Promise<boolean> {
+        try {
+            const result = await pool.query(`
+                DELETE FROM team_coaches
+                WHERE team_id = $1 AND coach_id = $2
+            `, [teamId, coachId]);
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Erreur removeCoachFromTeam:', error);
+            return false;
+        }
+    },
+
+    // Gestion des membres d'équipes
+    async addMemberToTeam(teamId: number, participantId: number, role?: string): Promise<boolean> {
+        try {
+            await pool.query(`
+                INSERT INTO team_members (team_id, participant_id, role)
+                VALUES ($1, $2, $3)
+                ON CONFLICT (team_id, participant_id) DO UPDATE SET role = $3
+            `, [teamId, participantId, role || null]);
+            return true;
+        } catch (error) {
+            console.error('Erreur addMemberToTeam:', error);
+            return false;
+        }
+    },
+
+    async removeMemberFromTeam(teamId: number, participantId: number): Promise<boolean> {
+        try {
+            const result = await pool.query(`
+                DELETE FROM team_members
+                WHERE team_id = $1 AND participant_id = $2
+            `, [teamId, participantId]);
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Erreur removeMemberFromTeam:', error);
+            return false;
         }
     },
 
