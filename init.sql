@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS teams CASCADE;
 DROP TABLE IF EXISTS coach_preferences CASCADE;
 DROP TABLE IF EXISTS presentations CASCADE;
 DROP TABLE IF EXISTS votes CASCADE;
-DROP TABLE IF EXISTS projects CASCADE;
+DROP TABLE IF EXISTS ideas CASCADE;
 DROP TABLE IF EXISTS coaches CASCADE;
 DROP TABLE IF EXISTS administrators CASCADE;
 DROP TABLE IF EXISTS participants CASCADE;
@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS event_state CASCADE;
 DROP TABLE IF EXISTS app_config CASCADE;
 
 -- Supprimer les séquences existantes pour les recréer proprement
-DROP SEQUENCE IF EXISTS projects_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS ideas_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS participants_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS teams_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS votes_id_seq CASCADE;
@@ -68,7 +68,7 @@ CREATE TABLE visitors
 );
 
 -- Table des projets
-CREATE TABLE projects
+CREATE TABLE ideas
 (
     id          SERIAL PRIMARY KEY,
     name        VARCHAR(100) NOT NULL,
@@ -173,7 +173,7 @@ CREATE INDEX idx_team_members_team ON team_members (team_id);
 CREATE INDEX idx_team_members_participant ON team_members (participant_id);
 
 -- S'assurer que les séquences sont correctement configurées
-SELECT setval('projects_id_seq', COALESCE((SELECT MAX(id) FROM projects), 0) + 1, false);
+SELECT setval('ideas_id_seq', COALESCE((SELECT MAX(id) FROM ideas), 0) + 1, false);
 SELECT setval('participants_id_seq', COALESCE((SELECT MAX(id) FROM participants), 0) + 1, false);
 SELECT setval('teams_id_seq', COALESCE((SELECT MAX(id) FROM teams), 0) + 1, false);
 SELECT setval('votes_id_seq', COALESCE((SELECT MAX(id) FROM votes), 0) + 1, false);

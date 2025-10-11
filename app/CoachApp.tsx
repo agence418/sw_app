@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useMemo, useState} from 'react';
-import {ListTeamsView} from "./modules/teams/ui/list-teams.view";
+import {ListTeamsView} from "./modules/user-managment/participants/ui/list-teams.view";
 import {useConfig} from "@/app/modules/config/store/config.store";
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
 import {VoteView} from "@/app/modules/votes/ui/vote.view";

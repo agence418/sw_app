@@ -18,12 +18,12 @@ import {
 } from 'lucide-react';
 import {CalendarView} from "./modules/calendar/ui/calendar.view";
 import {NowView} from "./modules/calendar/ui/now.view";
-import {ListParticipantsView} from "./modules/teams/ui/list-participants.view";
-import {ListCoachesView} from "./modules/coach/ui/list-coaches.view";
+import {ListParticipantsView} from "./modules/user-managment/participants/ui/list-participants.view";
+import {ListCoachesView} from "./modules/user-managment/coach/ui/list-coaches.view";
 import {VoteResultsView} from "./modules/votes/ui/vote-results.view";
-import {TeamCreationView} from "./modules/teams/ui/team-creation.view";
-import {ListTeamsView} from "./modules/teams/ui/list-teams.view";
-import {ListVisitorsView} from "./modules/visitors/ui/list-visitors.view";
+import {TeamCreationView} from "./modules/user-managment/participants/ui/team-creation.view";
+import {ListTeamsView} from "./modules/user-managment/participants/ui/list-teams.view";
+import {ListVisitorsView} from "./modules/user-managment/visitors/ui/list-visitors.view";
 import {ConfigView} from "./modules/config/ui/config.view";
 import {useConfig} from "@/app/modules/config/store/config.store";
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";

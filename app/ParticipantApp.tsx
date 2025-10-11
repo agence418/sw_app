@@ -1,12 +1,12 @@
 'use client';
 
-import React, {useState, useMemo, useEffect} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Calendar, Clock, Link, MessageSquare} from 'lucide-react';
 import {CalendarView} from "./modules/calendar/ui/calendar.view";
 import {VoteView} from "./modules/votes/ui/vote.view";
 import {NowView} from "./modules/calendar/ui/now.view";
 import {SendFileComp} from "./modules/powerpoint/ui/send-file.comp";
-import {ChooseCoachView} from "./modules/coach/ui/choose-coach.view";
+import {ChooseCoachView} from "./modules/user-managment/coach/ui/choose-coach.view";
 import {ToolsView} from "./modules/tools/ui/tools.view";
 import {useConfig} from "@/app/modules/config/store/config.store";
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
@@ -23,7 +23,7 @@ export const ParticipantApp = () => {
     const progress = useMemo(() => {
         setEventEnded(false)
         const startTime = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
-        const endTime = new Date(config.event_start_date ??'2025-09-07T15:00:00');
+        const endTime = new Date(config.event_start_date ?? '2025-09-07T15:00:00');
         const totalDuration = endTime.getTime() - startTime.getTime();
         const elapsed = currentTime.getTime() - startTime.getTime();
 
@@ -119,13 +119,14 @@ export const ParticipantApp = () => {
 
                 {/* Outils pratiques */}
                 {activeTab === 'outils' && (
-                    <ToolsView />
+                    <ToolsView/>
                 )}
             </main>
 
             {/* Status bar en bas */}
             {progress > 0 && (
-                <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 p-4">
+                <div
+                    className="fixed bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 p-4">
                     <div className="text-center text-sm text-gray-600">
                         {currentEvent ? (
                             <div>
