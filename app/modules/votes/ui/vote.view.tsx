@@ -1,6 +1,6 @@
 import {AlertCircle, CheckCircle2, Users} from "lucide-react";
 import React, {useEffect, useState} from "react";
-import {Idea} from "../../projects/types/project.types";
+import {Idea} from "../../ideas/types/idea.types";
 import {useSession} from "next-auth/react";
 import {useConfig} from "@/app/modules/config/store/config.store";
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
@@ -14,7 +14,6 @@ export const VoteView = () => {
     const [userHasVoted, setUserHasVoted] = useState(false);
     const [checkingVotes, setCheckingVotes] = useState(false);
     const {config} = useConfig(state => state);
-    const {status} = useCurrentStatus(state => state);
 
     useEffect(() => {
         fetchIdeas();
@@ -29,7 +28,7 @@ export const VoteView = () => {
     const fetchIdeas = async () => {
         setLoading(true);
         try {
-            const response = await fetch('/api/projects');
+            const response = await fetch('/api/ideas');
             if (response.ok) {
                 const data = await response.json();
                 setIdeas(data);
