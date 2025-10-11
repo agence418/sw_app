@@ -17,7 +17,14 @@ export const fetchEvent = async () => {
         const data = await response.json();
 
         const {status} = useCurrentStatus.getState();
-        useCurrentStatus.setState({status: {...status, currentEvent: getEventFromID(data.currentStep)}});
+        useCurrentStatus.setState({
+            status: {
+                ...status,
+                currentEvent: getEventFromID(data.currentStep),
+                nextEvent: getEventFromID(data.currentStep + 1),
+                previousEvent: getEventFromID(data.currentStep - 1)
+            }
+        });
     } catch (error) {
         console.error('Advance event error:', error);
         throw error;
