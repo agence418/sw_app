@@ -20,7 +20,9 @@ export const advanceEvent = async () => {
             status: {
                 ...status,
                 autoAdvance: false,
-                currentEvent: getEventFromID(Math.max((status.currentEvent?.step ?? -1) + 1, 1))
+                currentEvent: getEventFromID(Math.max((status.currentEvent?.step ?? -1) + 1, 1)),
+                nextEvent: getEventFromID(Math.max((status.currentEvent?.step ?? -1) + 2, 1)),
+                previousEvent: getEventFromID(Math.max((status.currentEvent?.step ?? -1), 1))
             }
         });
 

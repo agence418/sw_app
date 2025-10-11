@@ -21,7 +21,9 @@ export const setAutoEvent = async () => {
             status: {
                 ...status,
                 autoAdvance: true,
-                currentEvent: getEventFromID((status.currentEvent?.step ?? 0) - 1)
+                currentEvent: getEventFromID((status.currentEvent?.step ?? 0) - 1),
+                nextEvent: getEventFromID((status.currentEvent?.step ?? 0)),
+                previousEvent: getEventFromID((status.currentEvent?.step ?? 0) - 2)
             }
         });
 

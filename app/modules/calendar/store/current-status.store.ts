@@ -7,6 +7,8 @@ type CurrentStatus = {
     success?: string;
     status: {
         currentEvent?: Event;
+        previousEvent?: Event;
+        nextEvent?: Event;
         defaultEvent?: Event;
         autoAdvance?: boolean;
         votesAllowed: boolean;
