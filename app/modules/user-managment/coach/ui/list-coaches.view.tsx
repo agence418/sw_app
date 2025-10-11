@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import { UserPlus, Trash2, Edit2, Save, X, Award, QrCode } from 'lucide-react';
 import {useSession} from "next-auth/react";
-import {ResetPasswordModal} from "@/app/modules/_shared/ui/reset-password-modal.view";
+import {ResetPasswordModal} from "@/app/modules/user-managment/_shared/ui/reset-password-modal.view";
 
 interface Coach {
     id: string;

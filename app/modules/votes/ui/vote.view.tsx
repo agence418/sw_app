@@ -9,10 +9,8 @@ export const VoteView = () => {
     const {data: session} = useSession();
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
     const [userVotes, setUserVotes] = useState<string[]>([]);
-    console.log({userVotes})
     const [userHasVoted, setUserHasVoted] = useState(false);
     const [checkingVotes, setCheckingVotes] = useState(false);
     const {config} = useConfig(state => state);
@@ -83,7 +81,6 @@ export const VoteView = () => {
             return;
         }
 
-        setIsSubmitting(true);
         setSubmitMessage(null);
 
         try {
@@ -108,7 +105,6 @@ export const VoteView = () => {
             console.error('Erreur lors de la soumission des votes:', error);
             setSubmitMessage({type: 'error', text: 'Erreur lors de l\'enregistrement des votes'});
         } finally {
-            setIsSubmitting(false);
             setTimeout(() => setSubmitMessage(null), 5000);
         }
     };

@@ -1,12 +1,11 @@
 'use client';
 
 import React, {useEffect, useState} from 'react';
-import {Edit2, QrCode, RefreshCw, Save, Trash2, UserPlus, X} from 'lucide-react';
+import {Edit2, RefreshCw, Save, Trash2, UserPlus, X, QrCode} from 'lucide-react';
 import {useSession} from "next-auth/react";
-import {ResetPasswordModal} from "@/app/modules/_shared/ui/reset-password-modal.view";
+import {ResetPasswordModal} from "@/app/modules/user-managment/_shared/ui/reset-password-modal.view";
 
-
-interface Visitor {
+interface Participant {
     id: number;
     name: string;
     email: string;
@@ -14,13 +13,13 @@ interface Visitor {
     skills?: string[];
 }
 
-export const ListVisitorsView = () => {
-    const [visitors, setVisitors] = useState<Visitor[]>([]);
+export const ListParticipantsView = () => {
+    const [participants, setParticipants] = useState<Participant[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [showAddForm, setShowAddForm] = useState(false);
     const [showRefreshQRCodeModal, setShowRefreshQRCodeModal] = useState(false)
     const [userOnModal, setUserOnModal] = useState(undefined);
-    const [showAddForm, setShowAddForm] = useState(false);
     const [editingId, setEditingId] = useState<number | null>(null);
     const [formData, setFormData] = useState({
         name: '',
@@ -30,28 +29,28 @@ export const ListVisitorsView = () => {
     });
     const {user} = useSession().data
 
-    // Charger les visitors depuis l'API
-    const loadVisitors = async () => {
+    // Charger les participants depuis l'API
+    const loadParticipants = async () => {
         try {
             setLoading(true);
-            const response = await fetch('/api/visitor');
+            const response = await fetch('/api/participants');
             if (!response.ok) throw new Error('Erreur lors du chargement');
             const data = await response.json();
-            setVisitors(data);
+            setParticipants(data);
             setError(null);
         } catch (err) {
-            setError('Erreur lors du chargement des visitors');
+            setError('Erreur lors du chargement des participants');
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        loadVisitors();
+        loadParticipants();
     }, []);
 
-    const handleShowResetPasswordQRCode = async (visitor: Visitor) => {
-        setUserOnModal(visitor);
+    const handleShowResetPasswordQRCode = async (participant: Participant) => {
+        setUserOnModal(participant);
         setShowRefreshQRCodeModal(true);
     }
 
@@ -59,7 +58,7 @@ export const ListVisitorsView = () => {
         if (!formData.name || !formData.email) return;
 
         try {
-            const response = await fetch('/api/visitor', {
+            const response = await fetch('/api/participants', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -76,42 +75,42 @@ export const ListVisitorsView = () => {
                 return;
             }
 
-            await loadVisitors();
+            await loadParticipants();
             setFormData({name: '', email: '', phone: '', skills: ''});
             setShowAddForm(false);
         } catch (err) {
-            alert('Erreur lors de l\'ajout du visitor');
+            alert('Erreur lors de l\'ajout du participant');
         }
     };
 
     const handleDelete = async (id: number) => {
-        if (!confirm('Êtes-vous sûr de vouloir supprimer ce visitor ?')) return;
+        if (!confirm('Êtes-vous sûr de vouloir supprimer ce participant ?')) return;
 
         try {
-            const response = await fetch(`/api/visitor/${id}`, {
+            const response = await fetch(`/api/participants/${id}`, {
                 method: 'DELETE'
             });
 
             if (!response.ok) throw new Error('Erreur lors de la suppression');
-            await loadVisitors();
+            await loadParticipants();
         } catch (err) {
             alert('Erreur lors de la suppression');
         }
     };
 
-    const handleEdit = (visitor: Visitor) => {
-        setEditingId(visitor.id);
+    const handleEdit = (participant: Participant) => {
+        setEditingId(participant.id);
         setFormData({
-            name: visitor.name,
-            email: visitor.email,
-            phone: visitor.phone || '',
-            skills: visitor.skills?.join(', ') || ''
+            name: participant.name,
+            email: participant.email,
+            phone: participant.phone || '',
+            skills: participant.skills?.join(', ') || ''
         });
     };
 
     const handleSaveEdit = async () => {
         try {
-            const response = await fetch(`/api/visitor/${editingId}`, {
+            const response = await fetch(`/api/participants/${editingId}`, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -124,7 +123,7 @@ export const ListVisitorsView = () => {
 
             if (!response.ok) throw new Error('Erreur lors de la mise à jour');
 
-            await loadVisitors();
+            await loadParticipants();
             setEditingId(null);
             setFormData({name: '', email: '', phone: '', skills: ''});
         } catch (err) {
@@ -136,10 +135,10 @@ export const ListVisitorsView = () => {
         <div className="w-full px-2 md:px-4">
             <div className="bg-white dark:bg-black rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
                 <div className="p-4 border-b border-gray-200 dark:border-gray-800">
-                    <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">Gestion des Visiteurs</h2>
+                    <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">Gestion des Participants</h2>
                     <div className="flex flex-col sm:flex-row gap-2">
                         <button
-                            onClick={loadVisitors}
+                            onClick={loadParticipants}
                             className="flex items-center justify-center gap-2 bg-gray-600 text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
                             disabled={loading}
                         >
@@ -148,7 +147,7 @@ export const ListVisitorsView = () => {
                         </button>
                         <button
                             onClick={() => setShowAddForm(true)}
-                            className="flex items-center justify-center gap-2  dark:bg-gray-9000 text-white px-3 py-2 rounded-lg bg-green-600 hover:bg-green-400 transition-colors text-sm"
+                            className="flex items-center justify-center gap-2 text-white px-3 py-2 rounded-lg bg-green-600 hover:bg-green-400 transition-colors text-sm"
                         >
                             <UserPlus className="w-4 h-4"/>
                             Ajouter
@@ -191,7 +190,7 @@ export const ListVisitorsView = () => {
                         <div className="flex flex-col sm:flex-row gap-2 mt-4">
                             <button
                                 onClick={handleAdd}
-                                className="flex items-center justify-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm"
+                                className="flex items-center justify-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-400 transition-colors text-sm"
                             >
                                 <Save className="w-4 h-4"/>
                                 Enregistrer
@@ -213,8 +212,7 @@ export const ListVisitorsView = () => {
                 <div className="p-4">
                     {loading ? (
                         <div className="text-center py-8">
-                            <div
-                                className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
                             <p className="mt-2 text-gray-600 text-sm">Chargement...</p>
                         </div>
                     ) : error ? (
@@ -223,9 +221,9 @@ export const ListVisitorsView = () => {
                         </div>
                     ) : (
                         <div className="space-y-3">
-                            {visitors.map((visitor) => (
-                                <div key={visitor.id} className="border border-gray-200 dark:border-gray-800 rounded-lg p-3 bg-gray-50 dark:bg-gray-900">
-                                    {editingId === visitor.id ? (
+                            {participants.map((participant) => (
+                                <div key={participant.id} className="border border-gray-200 dark:border-gray-800 rounded-lg p-3 bg-gray-50 dark:bg-gray-900">
+                                    {editingId === participant.id ? (
                                         <div className="space-y-2">
                                             <input
                                                 type="text"
@@ -258,7 +256,7 @@ export const ListVisitorsView = () => {
                                             <div className="flex gap-2 mt-2">
                                                 <button
                                                     onClick={handleSaveEdit}
-                                                    className="flex items-center justify-center gap-1 bg-green-600 text-white px-2 py-1 rounded hover:bg-green-400 transition-colors flex-1 text-xs"
+                                                    className="flex items-center justify-center gap-1 bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700 transition-colors flex-1 text-xs"
                                                 >
                                                     <Save className="w-3 h-3"/>
                                                     Sauver
@@ -279,42 +277,42 @@ export const ListVisitorsView = () => {
                                         <>
                                             <div className="flex justify-between items-start mb-2">
                                                 <div className="flex-1 min-w-0">
-                                                    <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-sm truncate">{visitor.name}</h3>
-                                                    <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{visitor.email}</p>
-                                                    {visitor.phone && (
-                                                        <p className="text-gray-500 text-xs">{visitor.phone}</p>
+                                                    <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-sm truncate">{participant.name}</h3>
+                                                    <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{participant.email}</p>
+                                                    {participant.phone && (
+                                                        <p className="text-gray-500  text-xs">{participant.phone}</p>
                                                     )}
                                                 </div>
                                                 <div className="flex gap-1 ml-2">
                                                     {user.role === 'admin' && (
                                                         <button
-                                                            onClick={() => handleShowResetPasswordQRCode(visitor)}
+                                                            onClick={() => handleShowResetPasswordQRCode(participant)}
                                                             className="p-1 text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900 dark:hover:text-white rounded"
                                                         >
                                                             <QrCode className="w-4 h-4"/>
                                                         </button>
                                                     )}
                                                     <button
-                                                        onClick={() => handleEdit(visitor)}
+                                                        onClick={() => handleEdit(participant)}
                                                         className="p-1 text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900 dark:hover:text-white rounded"
                                                     >
                                                         <Edit2 className="w-4 h-4"/>
                                                     </button>
                                                     <button
-                                                        onClick={() => handleDelete(visitor.id)}
+                                                        onClick={() => handleDelete(participant.id)}
                                                         className="p-1 text-red-600 hover:bg-red-100 dark:hover:bg-red-900 dark:hover:text-white rounded"
                                                     >
                                                         <Trash2 className="w-4 h-4"/>
                                                     </button>
                                                 </div>
                                             </div>
-                                            {visitor.skills && visitor.skills.length > 0 && (
+                                            {participant.skills && participant.skills.length > 0 && (
                                                 <div className="flex flex-wrap gap-1">
-                                                    {visitor.skills.map((skill, idx) => (
+                                                    {participant.skills.map((skill, idx) => (
                                                         <span key={idx}
-                                                              className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">
-                                    {skill}
-                                </span>
+                                                              className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-gray-200 px-2 py-1 rounded text-xs">
+                                                            {skill}
+                                                        </span>
                                                     ))}
                                                 </div>
                                             )}
@@ -323,12 +321,10 @@ export const ListVisitorsView = () => {
                                 </div>
                             ))}
                         </div>
-                    )
-                    }
+                    )}
                 </div>
             </div>
             <ResetPasswordModal show={showRefreshQRCodeModal} user={userOnModal} setShow={setShowRefreshQRCodeModal}/>
         </div>
-    )
-        ;
+    );
 };
