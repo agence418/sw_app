@@ -226,13 +226,7 @@ export const ChooseCoachView = () => {
                         </label>
                     );
                 })}
-            </div>
-
-            <div className="mt-6 text-xs text-gray-500">
-                <p>• Maximum 3 coaches par équipe</p>
-                <p>• Chaque coach peut être demandé par maximum 5 équipes</p>
-                <p>• Les sélections sont automatiquement sauvegardées</p>
-            </div>
+            </div>s
         </div>
     )
 }
