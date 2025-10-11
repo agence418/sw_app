@@ -66,7 +66,8 @@ export const ListTeamsView = () => {
                         </h3>
                         <div className="space-y-4">
                             {teamsForThisCoach.map((team) => (
-                                <div key={team.id} className="border border-green-200 rounded-lg p-4 bg-green-50 dark:bg-green-800 dark:border-green-700">
+                                <div key={team.id}
+                                     className="border border-green-200 rounded-lg p-4 bg-green-50 dark:bg-green-800 dark:border-green-700">
                                     <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-lg flex items-center gap-2 mb-2">
                                         <Users className="w-5 h-5 text-green-600"/>
                                         {team.name}
@@ -89,7 +90,9 @@ export const ListTeamsView = () => {
                                                     <span
                                                         className="font-medium text-gray-700 dark:text-gray-300">Leader:</span> {team.leader_name}
                                                 </div>
-                                                <div className="text-gray-600 dark:text-gray-400">({team.leader_email})</div>
+                                                <div
+                                                    className="text-gray-600 dark:text-gray-400">({team.leader_email})
+                                                </div>
                                             </div>
                                         </div>
                                     )}
@@ -102,12 +105,13 @@ export const ListTeamsView = () => {
                 {otherTeams.length > 0 && (
                     <div>
                         <h3 className="font-medium text-gray-700 dark:text-gray-300 text-sm mb-4 flex items-center gap-2">
-                            <XCircle className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                            <XCircle className="w-4 h-4 text-gray-600 dark:text-gray-400"/>
                             Autres équipes ({otherTeams.length})
                         </h3>
                         <div className="space-y-4">
                             {otherTeams.map((team) => (
-                                <div key={team.id} className="border border-green-200 rounded-lg p-4 bg-green-50 dark:bg-gray-800 dark:border-gray-700">
+                                <div key={team.id}
+                                     className="border border-green-200 rounded-lg p-4 bg-green-50 dark:bg-gray-800 dark:border-gray-700">
                                     <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-lg flex items-center gap-2 mb-2">
                                         <Users className="w-5 h-5 text-green-600"/>
                                         {team.name}
@@ -130,7 +134,9 @@ export const ListTeamsView = () => {
                                                     <span
                                                         className="font-medium text-gray-700 dark:text-gray-300">Leader:</span> {team.leader_name}
                                                 </div>
-                                                <div className="text-gray-600 dark:text-gray-400">({team.leader_email})</div>
+                                                <div
+                                                    className="text-gray-600 dark:text-gray-400">({team.leader_email})
+                                                </div>
                                             </div>
                                         </div>
                                     )}
@@ -155,44 +161,54 @@ export const ListTeamsView = () => {
             <>
                 {teamsWithCoaches.length > 0 && (
                     <div className="mb-6">
-                        <h3 className="font-medium text-gray-700 text-sm mb-4 flex items-center gap-2">
+                        <h3 className="font-medium text-gray-700 dark:text-gray-300 text-sm mb-4 flex items-center gap-2">
                             <MessageSquare className="w-4 h-4 text-green-600"/>
                             Équipes avec demandes de coaching ({teamsWithCoaches.length})
                         </h3>
                         <div className="space-y-4">
                             {teamsWithCoaches.map((team) => (
-                                <div key={team.id} className="border border-green-200 rounded-lg p-4 bg-green-50">
+                                <div key={team.id}
+                                     className="border border-green-200 rounded-lg p-4 bg-green-50 dark:bg-green-800 dark:border-green-700">
                                     <div className="flex items-start justify-between mb-3">
                                         <div>
-                                            <h3 className="font-semibold text-gray-800 text-lg flex items-center gap-2">
+                                            <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-lg flex items-center gap-2">
                                                 <Users className="w-5 h-5 text-blue-500"/>
                                                 {team.name}
                                             </h3>
                                             {team.idea_description && (
-                                                <p className="text-gray-600 text-sm mt-1">{team.idea_description}</p>
+                                                <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">{team.idea_description}</p>
                                             )}
+
                                         </div>
-                                        <span className="text-xs text-gray-400">
-                                            {new Date(team.created_at).toLocaleDateString()}
-                                        </span>
                                     </div>
 
+                                    {team.position && (
+                                        <div className="flex items-center gap-2">
+                                            <MapPin className="w-4 h-4 text-red-600"/>
+                                            <div className="text-gray-700 dark:text-gray-300 py-2">{team.position}
+                                            </div>
+                                        </div>
+                                    )}
                                     {team.leader_name && (
-                                        <div className="mb-3">
-                                            <div className="flex items-center gap-2 text-sm">
-                                                <Crown className="w-4 h-4 text-yellow-500"/>
-                                                <span className="font-medium text-gray-700">Leader:</span>
-                                                <span className="text-gray-600">{team.leader_name}</span>
-                                                <span className="text-gray-500">({team.leader_email})</span>
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <Crown className="w-4 h-4 text-yellow-500"/>
+                                            <div className="">
+                                                <div className="text-gray-600 dark:text-gray-400">
+                                                    <span
+                                                        className="font-medium text-gray-700 dark:text-gray-300">Leader:</span> {team.leader_name}
+                                                </div>
+                                                <div
+                                                    className="text-gray-600 dark:text-gray-400">({team.leader_email})
+                                                </div>
                                             </div>
                                         </div>
                                     )}
 
                                     {team.coach_requests && team.coach_requests.length > 0 && (
-                                        <div className="mb-3">
+                                        <div className="mb-3 mt-2">
                                             <div className="flex items-center gap-2 text-sm mb-2">
                                                 <MessageSquare className="w-4 h-4 text-green-600"/>
-                                                <span className="font-medium text-gray-700">
+                                                <span className="font-medium text-gray-700 dark:text-gray-300">
                                                     Coaches demandés ({team.coach_requests.length}/3):
                                                 </span>
                                             </div>
@@ -236,16 +252,17 @@ export const ListTeamsView = () => {
 
                 {teamsWithoutCoaches.length > 0 && (
                     <div>
-                        <h3 className="font-medium text-gray-700 text-sm mb-4 flex items-center gap-2">
+                        <h3 className="font-medium text-gray-700 dark:text-gray-300 text-sm mb-4 flex items-center gap-2">
                             <Users className="w-4 h-4 text-orange-600"/>
                             Équipes sans demandes de coaching ({teamsWithoutCoaches.length})
                         </h3>
                         <div className="space-y-4">
                             {teamsWithoutCoaches.map((team) => (
-                                <div key={team.id} className="border border-orange-200 rounded-lg p-4 bg-orange-50">
+                                <div key={team.id}
+                                     className="border border-orange-200 dark:border-orange-800 rounded-lg p-4 bg-orange-50 dark:bg-gray-800">
                                     <div className="flex items-start justify-between mb-3">
                                         <div>
-                                            <h3 className="font-semibold text-gray-800 text-lg flex items-center gap-2">
+                                            <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-lg flex items-center gap-2">
                                                 <Users className="w-5 h-5 text-blue-500"/>
                                                 {team.name}
                                             </h3>
@@ -253,23 +270,32 @@ export const ListTeamsView = () => {
                                                 <p className="text-gray-600 text-sm mt-1">{team.idea_description}</p>
                                             )}
                                         </div>
-                                        <span className="text-xs text-gray-400">
-                                            {new Date(team.created_at).toLocaleDateString()}
-                                        </span>
                                     </div>
 
-                                    {team.leader_name && (
-                                        <div className="mb-3">
-                                            <div className="flex items-center gap-2 text-sm">
-                                                <Crown className="w-4 h-4 text-yellow-500"/>
-                                                <span className="font-medium text-gray-700">Leader:</span>
-                                                <span className="text-gray-600">{team.leader_name}</span>
-                                                <span className="text-gray-500">({team.leader_email})</span>
+                                    {team.position && (
+                                        <div className="flex items-center gap-2">
+                                            <MapPin className="w-4 h-4 text-red-600"/>
+                                            <div className="text-gray-700 dark:text-gray-300 py-2">{team.position}
                                             </div>
                                         </div>
                                     )}
 
-                                    <div className="mb-3 text-sm">
+                                    {team.leader_name && (
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <Crown className="w-4 h-4 text-yellow-500"/>
+                                            <div className="">
+                                                <div className="text-gray-600 dark:text-gray-400">
+                                                    <span
+                                                        className="font-medium text-gray-700 dark:text-gray-300">Leader:</span> {team.leader_name}
+                                                </div>
+                                                <div
+                                                    className="text-gray-600 dark:text-gray-400">({team.leader_email})
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div className="mb-3 text-sm mt-2">
                                         <div className="flex items-center gap-2 text-orange-600">
                                             <MessageSquare className="w-4 h-4"/>
                                             <span className="italic">Aucune demande de coaching pour le moment</span>
