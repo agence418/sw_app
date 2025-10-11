@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useEffect, useState} from 'react';
-import {ArrowRight, BarChart3, RefreshCw, SkipForward, Trophy} from 'lucide-react';
+import {BarChart3, RefreshCw, SkipForward, Trophy} from 'lucide-react';
 import {useConfig} from "@/app/modules/config/store/config.store";
 
 interface VoteResult {
@@ -152,7 +152,14 @@ export const VoteResultsView = () => {
                 className="mb-4 w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
                 <>
-                    {countTeams > 0 ? 'Réinitialiser les projets' : `Créer les ${projectsToCreate} projets`}
+                    <div className="">
+                        <div>Créer les {projectsToCreate} projets</div>
+                        {countTeams > 0 && (
+                            <div className="text-sm mt-1">
+                                Supprimera les {countTeams} projets existants
+                            </div>
+                        )}
+                    </div>
                     <SkipForward className="w-4 h-4 ml-4"/>
                 </>
             </button>
