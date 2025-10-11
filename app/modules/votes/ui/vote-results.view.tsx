@@ -80,10 +80,10 @@ export const VoteResultsView = () => {
             const numberOfTeams = Math.round(projectsToCreate);
 
             // Prendre les N meilleurs projets
-            const topProjects = voteResults.slice(0, numberOfTeams);
+            const topIdeas = voteResults.slice(0, numberOfTeams);
 
             // Créer les équipes pour chaque projet
-            const teamPromises = topProjects.map(async (result) => {
+            const teamPromises = topIdeas.map(async (result) => {
                 // D'abord récupérer le projet correspondant pour avoir le leader_id
                 const projectResponse = await fetch(`/api/projects?name=${encodeURIComponent(result.ideaName)}`);
                 const projects = await projectResponse.json();

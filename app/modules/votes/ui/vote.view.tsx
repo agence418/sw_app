@@ -1,13 +1,13 @@
 import {AlertCircle, CheckCircle2, Users} from "lucide-react";
 import React, {useEffect, useState} from "react";
-import {Project} from "../../projects/types/project.types";
+import {Idea} from "../../projects/types/project.types";
 import {useSession} from "next-auth/react";
 import {useConfig} from "@/app/modules/config/store/config.store";
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
 
 export const VoteView = () => {
     const {data: session} = useSession();
-    const [projects, setProjects] = useState<Project[]>([]);
+    const [projects, setIdeas] = useState<Idea[]>([]);
     const [loading, setLoading] = useState(false);
     const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
     const [userVotes, setUserVotes] = useState<string[]>([]);
@@ -17,7 +17,7 @@ export const VoteView = () => {
     const {status} = useCurrentStatus(state => state);
 
     useEffect(() => {
-        fetchProjects();
+        fetchIdeas();
     }, []);
 
     useEffect(() => {
@@ -26,16 +26,16 @@ export const VoteView = () => {
         }
     }, [session]);
 
-    const fetchProjects = async () => {
+    const fetchIdeas = async () => {
         setLoading(true);
         try {
             const response = await fetch('/api/projects');
             if (response.ok) {
                 const data = await response.json();
-                setProjects(data);
+                setIdeas(data);
             }
         } catch (error) {
-            console.error('Erreur lors de la récupération des projets:', error);
+            console.error('Erreur lors de la récupération des idées:', error);
         } finally {
             setLoading(false);
         }
@@ -64,7 +64,7 @@ export const VoteView = () => {
         }
     };
 
-    const toggleProjectSelection = async (projectName: string) => {
+    const toggleIdeaSelection = async (projectName: string) => {
         if (!session?.user?.id) {
 
             setSubmitMessage({type: 'error', text: 'Vous devez être connecté pour voter'});
@@ -75,7 +75,7 @@ export const VoteView = () => {
         if (userVotes.length >= config.votes_per_participant && isCreation) {
             setSubmitMessage({
                 type: 'error',
-                text: `Vous ne pouvez voter que pour ${config.votes_per_participant} projets.`
+                text: `Vous ne pouvez voter que pour ${config.votes_per_participant} idées.`
             });
             setTimeout(() => setSubmitMessage(null), 3000);
             return;
@@ -163,7 +163,7 @@ export const VoteView = () => {
                     </div>
 
                     <div className="space-y-3 mb-6">
-                        {projects.map((project: Project) => (
+                        {projects.map((project: Idea) => (
                             <label
                                 key={project.id}
                                 className={`flex items-start p-4 border rounded-lg cursor-pointer transition-all ${
@@ -176,7 +176,7 @@ export const VoteView = () => {
                                     type="checkbox"
                                     className="w-4 h-4 text-blue-500 mt-1 mr-3 opacity-0 w-0"
                                     checked={userVotes.includes(project.name)}
-                                    onChange={() => toggleProjectSelection(project.name)}
+                                    onChange={() => toggleIdeaSelection(project.name)}
                                 />
                                 <div className="flex-1">
                                     <div className="font-medium text-gray-900 dark:text-white">{project.name}</div>

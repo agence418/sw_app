@@ -51,7 +51,7 @@ interface DbAdmin {
     created_at?: Date;
 }
 
-interface DbProject {
+interface DbIdea {
     id: number;
     name: string;
     description?: string;
@@ -365,7 +365,7 @@ export const db = {
         }
     },
 
-    async createVote(projectName: string, id?: string, role?: string): Promise<DbVote> {
+    async createVote(ideaName: string, id?: string, role?: string): Promise<DbVote> {
         try {
             if (!id || !role) {
                 throw new Error('user_id et user_type sont requis');
@@ -373,7 +373,7 @@ export const db = {
 
             const existing = await pool.query(
                 'SELECT * FROM votes WHERE user_id = $1 AND user_type = $2 AND idea_name = $3',
-                [id, role, projectName]
+                [id, role, ideaName]
             );
 
             if (existing.rows.length > 0) {
@@ -382,7 +382,7 @@ export const db = {
 
             const {rows} = await pool.query(
                 'INSERT INTO votes (user_id, user_type, idea_name, vote_time) VALUES ($1, $2, $3, NOW()) RETURNING *',
-                [id, role, projectName]
+                [id, role, ideaName]
             );
             return rows[0];
         } catch (error) {
@@ -391,7 +391,7 @@ export const db = {
         }
     },
 
-    async deleteVote(projectName: string, id?: string, role?: string): Promise<boolean> {
+    async deleteVote(ideaName: string, id?: string, role?: string): Promise<boolean> {
         try {
             if (!id || !role) {
                 throw new Error('user_id et user_type sont requis');
@@ -399,7 +399,7 @@ export const db = {
 
             const result = await pool.query(
                 'DELETE FROM votes WHERE user_id = $1 AND user_type = $2 AND idea_name = $3',
-                [id, role, projectName]
+                [id, role, ideaName]
             );
             return result.rowCount > 0;
         } catch (error) {
@@ -618,49 +618,49 @@ export const db = {
     },
 
     // Projets
-    async getProjects(): Promise<any[]> {
+    async getIdeas(): Promise<any[]> {
         try {
             const {rows} = await pool.query(`
                 SELECT p.id::text, p.name,
                        p.description,
                        p.leader_id::text as "participantId", par.name as "participantName",
                        p.created_at as "createdAt"
-                FROM projects p
+                FROM ideas p
                          LEFT JOIN participants par ON p.leader_id = par.id
                 ORDER BY p.created_at DESC
             `);
             return rows;
         } catch (error) {
-            console.error('Erreur getProjects:', error);
+            console.error('Erreur getIdeas:', error);
             return [];
         }
     },
 
-    async getProjectsByName(name: string): Promise<any[]> {
+    async getIdeasByName(name: string): Promise<any[]> {
         try {
             const {rows} = await pool.query(`
                 SELECT p.id::text, p.name,
                        p.description,
                        p.leader_id::text as "participantId", par.name as "participantName",
                        p.created_at as "createdAt"
-                FROM projects p
+                FROM ideas p
                          LEFT JOIN participants par ON p.leader_id = par.id
                 WHERE p.name = $1
             `, [name]);
             return rows;
         } catch (error) {
-            console.error('Erreur getProjectsByName:', error);
+            console.error('Erreur getIdeasByName:', error);
             return [];
         }
     },
 
-    async createProject(data: any): Promise<any> {
+    async createIdea(data: any): Promise<any> {
         try {
             // Vérifier si participantId est vide ou invalide
             const leaderId = data.participantId ? parseInt(data.participantId) : null;
 
             const {rows} = await pool.query(`
-                INSERT INTO projects (name, description, leader_id, status)
+                INSERT INTO ideas (name, description, leader_id, status)
                 VALUES ($1, $2, $3, $4) RETURNING 
                     id::text, 
                     name, 
@@ -670,39 +670,39 @@ export const db = {
             `, [data.name, data.description, leaderId, 'active']);
 
             // Récupérer le nom du participant pour le retour
-            const projectWithParticipant = {
+            const ideaWithParticipant = {
                 ...rows[0],
                 participantName: data.participantName || null
             };
-            return projectWithParticipant;
+            return ideaWithParticipant;
         } catch (error) {
-            console.error('Erreur createProject:', error);
+            console.error('Erreur createIdea:', error);
             throw error;
         }
     },
 
-    async updateProject(id: number, data: Partial<DbProject>): Promise<DbProject | null> {
+    async updateIdea(id: number, data: Partial<DbIdea>): Promise<DbIdea | null> {
         try {
             const {rows} = await pool.query(
-                'UPDATE projects SET name = COALESCE($2, name), description = COALESCE($3, description), status = COALESCE($4, status), leader_id = COALESCE($5, leader_id) WHERE id = $1 RETURNING *',
+                'UPDATE ideas SET name = COALESCE($2, name), description = COALESCE($3, description), status = COALESCE($4, status), leader_id = COALESCE($5, leader_id) WHERE id = $1 RETURNING *',
                 [id, data.name, data.description, data.status, data.leader_id]
             );
             return rows[0] || null;
         } catch (error) {
-            console.error('Erreur updateProject:', error);
+            console.error('Erreur updateIdea:', error);
             return null;
         }
     },
 
-    async deleteProject(id: number): Promise<boolean> {
+    async deleteIdea(id: number): Promise<boolean> {
         try {
             const result = await pool.query(
-                'DELETE FROM projects WHERE id = $1',
+                'DELETE FROM ideas WHERE id = $1',
                 [id]
             );
             return result.rowCount > 0;
         } catch (error) {
-            console.error('Erreur deleteProject:', error);
+            console.error('Erreur deleteIdea:', error);
             return false;
         }
     },

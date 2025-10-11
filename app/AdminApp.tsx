@@ -21,7 +21,7 @@ import {NowView} from "./modules/calendar/ui/now.view";
 import {ListParticipantsView} from "./modules/user-managment/participants/ui/list-participants.view";
 import {ListCoachesView} from "./modules/user-managment/coach/ui/list-coaches.view";
 import {VoteResultsView} from "./modules/votes/ui/vote-results.view";
-import {TeamCreationView} from "./modules/user-managment/participants/ui/team-creation.view";
+import {IdeaCreationView} from "./modules/user-managment/participants/ui/idea-creation.view";
 import {ListTeamsView} from "./modules/user-managment/participants/ui/list-teams.view";
 import {ListVisitorsView} from "./modules/user-managment/visitors/ui/list-visitors.view";
 import {ConfigView} from "./modules/config/ui/config.view";
@@ -208,7 +208,7 @@ export const StartupWeekendAdminApp = () => {
                 {activeTab === 'accueil' && (
                     <>
                         {currentEvent?.title === 'Présentation des idées (60 secondes/idée)' ?
-                            <TeamCreationView/> :
+                            <IdeaCreationView/> :
                             currentEvent?.title === 'Votes' ? <VoteResultsView/> :
                                 <>
                                     <NowView/>
