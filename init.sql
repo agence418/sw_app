@@ -1,6 +1,7 @@
 -- Base de données pour l'application Startup Weekend
 
 -- Script de réinitialisation (supprime les tables existantes)
+DROP TABLE IF EXISTS team_coaches CASCADE;
 DROP TABLE IF EXISTS team_members CASCADE;
 DROP TABLE IF EXISTS teams CASCADE;
 DROP TABLE IF EXISTS coach_preferences CASCADE;
@@ -107,6 +108,7 @@ CREATE TABLE teams
     name             VARCHAR(100) NOT NULL,
     idea_description TEXT,
     leader_id        INTEGER REFERENCES participants (id),
+    position         VARCHAR(100),
     created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -129,6 +131,16 @@ CREATE TABLE team_members
     role           VARCHAR(50),
     joined_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (team_id, participant_id)
+);
+
+-- Table pour lier les coaches aux équipes
+CREATE TABLE team_coaches
+(
+    id         SERIAL PRIMARY KEY,
+    team_id    INTEGER REFERENCES teams (id) ON DELETE CASCADE,
+    coach_id   INTEGER REFERENCES coaches (id) ON DELETE CASCADE,
+    assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (team_id, coach_id)
 );
 
 -- Table pour l'état actuel des événements
@@ -171,6 +183,8 @@ CREATE INDEX idx_presentations_participant ON presentations (participant_id);
 CREATE INDEX idx_coach_preferences_team ON coach_preferences (team_id);
 CREATE INDEX idx_team_members_team ON team_members (team_id);
 CREATE INDEX idx_team_members_participant ON team_members (participant_id);
+CREATE INDEX idx_team_coaches_team ON team_coaches (team_id);
+CREATE INDEX idx_team_coaches_coach ON team_coaches (coach_id);
 
 -- S'assurer que les séquences sont correctement configurées
 SELECT setval('ideas_id_seq', COALESCE((SELECT MAX(id) FROM ideas), 0) + 1, false);
