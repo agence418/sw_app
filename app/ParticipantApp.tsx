@@ -97,10 +97,10 @@ export const ParticipantApp = () => {
                     <>
                         <NowView/>
                         {status.votesAllowed && <VoteView/>}
-                        {currentTime.getDay() == 7 && currentEvent.step < 12 &&
+                        {currentTime?.getDay() == 6 && currentEvent.step < 12 &&
                           <SendFileComp/>
                         }
-                        {currentTime.getDay() == 6 &&
+                        {currentTime?.getDay() == 6 &&
                             <ChooseCoachView/>
                         }
                     </>
