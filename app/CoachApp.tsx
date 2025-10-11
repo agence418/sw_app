@@ -47,7 +47,7 @@ export const StartupWeekendCoachApp = () => {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Header */}
-            <header className="bg-gray-50 dark:bg-purple-600 text-white p-4 shadow-lg">
+            <header className="bg-purple-600 text-white p-4 shadow-lg">
                 <h1 className="text-xl font-bold text-center">Startup Weekend</h1>
                 <div className="mt-2">
                     <div className="flex justify-between items-center text-sm mb-1">
