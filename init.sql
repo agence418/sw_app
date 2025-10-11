@@ -82,10 +82,11 @@ CREATE TABLE projects
 CREATE TABLE votes
 (
     id             SERIAL PRIMARY KEY,
-    participant_id INTEGER REFERENCES participants (id),
+    user_id        INTEGER NOT NULL,
+    user_type      VARCHAR(20) NOT NULL CHECK (user_type IN ('participant', 'coach', 'visitor')),
     idea_name      VARCHAR(200) NOT NULL,
     vote_time      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (participant_id, idea_name)
+    UNIQUE (user_id, user_type, idea_name)
 );
 
 -- Table des présentations envoyées
@@ -165,7 +166,7 @@ INSERT INTO app_config (event_start_date, allow_visitor_registration, allow_visi
 VALUES ('2025-09-05T18:00:00', true, true, ARRAY['participant']::TEXT[], 3);
 
 -- Index pour optimiser les performances
-CREATE INDEX idx_votes_participant ON votes (participant_id);
+CREATE INDEX idx_votes_user ON votes (user_id, user_type);
 CREATE INDEX idx_presentations_participant ON presentations (participant_id);
 CREATE INDEX idx_coach_preferences_team ON coach_preferences (team_id);
 CREATE INDEX idx_team_members_team ON team_members (team_id);

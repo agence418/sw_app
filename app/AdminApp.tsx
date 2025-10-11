@@ -161,17 +161,17 @@ export const StartupWeekendAdminApp = () => {
                                 <SkipBack className="w-4 h-4"/>
                             </button>
                         )}
-                        <button
-                            onClick={() => handleAutoEvent()}
-                            className={`basis-[100%] flex items-center justify-center gap-2 text-white px-3 py-2 rounded-lg bg-green-600 hover:bg-green-400 transition-colors ${status.autoAdvance ? 'opacity-50' : ''}`}
-                            disabled={status.autoAdvance}
-                        >
-                            <span className="">
-                            Auto
-                            <div className={'text-xs'}>({defaultEvent?.title ?? 'Pas d\'événement'})</div>
-                            </span>
-                            <Play className="w-4 h-4"/>
-                        </button>
+                        {/*<button*/}
+                        {/*    onClick={() => handleAutoEvent()}*/}
+                        {/*    className={`basis-[100%] flex items-center justify-center gap-2 text-white px-3 py-2 rounded-lg bg-green-600 hover:bg-green-400 transition-colors ${status.autoAdvance ? 'opacity-50' : ''}`}*/}
+                        {/*    disabled={status.autoAdvance}*/}
+                        {/*>*/}
+                        {/*    <span className="">*/}
+                        {/*    Auto*/}
+                        {/*    <div className={'text-xs'}>({defaultEvent?.title ?? 'Pas d\'événement'})</div>*/}
+                        {/*    </span>*/}
+                        {/*    <Play className="w-4 h-4"/>*/}
+                        {/*</button>*/}
                         <button
                             onClick={() => handleNextEvent()}
                             className="basis-[100%] flex items-center justify-center gap-2 text-white px-3 py-2 rounded-lg bg-green-600 hover:bg-green-400 transition-colors"
@@ -181,7 +181,7 @@ export const StartupWeekendAdminApp = () => {
                         </button>
                     </div>
 
-                    {getCurrentDay() === 'mercredi' && (
+                    {getCurrentDay() === 'samedi' && (
                         <>
                             {!status.votesAllowed ? (
                                 <button

@@ -319,10 +319,10 @@ export const db = {
     // Votes
     async getVotes(id?: string, role?: string): Promise<DbVote[]> {
         try {
-            if (role !== 'admin' && id) {
+            if (role !== 'admin' && id && role) {
                 const {rows} = await pool.query(
-                    'SELECT * FROM votes WHERE participant_id = $1 ORDER BY vote_time DESC',
-                    [id]
+                    'SELECT * FROM votes WHERE user_id = $1 AND user_type = $2 ORDER BY vote_time DESC',
+                    [id, role]
                 );
                 return rows;
             }
@@ -341,15 +341,20 @@ export const db = {
         try {
             const {rows} = await pool.query(`
                 SELECT v.idea_name as "ideaName",
-                       COUNT(*)::int as votes, CASE
-                                                   WHEN (SELECT COUNT(*) FROM votes) > 0
-                                                       THEN ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM votes)), 0)::int
-                        ELSE 0
-                END
-                as percentage,
-                    ARRAY_AGG(p.name ORDER BY p.name) as voters
+                       COUNT(*)::int as votes,
+                       CASE
+                           WHEN (SELECT COUNT(*) FROM votes) > 0
+                               THEN ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM votes)), 0)::int
+                           ELSE 0
+                       END as percentage,
+                       ARRAY_AGG(
+                           CASE v.user_type
+                               WHEN 'participant' THEN (SELECT name FROM participants WHERE id = v.user_id)
+                               WHEN 'coach' THEN (SELECT name FROM coaches WHERE id = v.user_id)
+                               WHEN 'visitor' THEN (SELECT name FROM visitors WHERE id = v.user_id)
+                           END ORDER BY v.vote_time
+                       ) as voters
                 FROM votes v
-                JOIN participants p ON v.participant_id = p.id
                 GROUP BY v.idea_name
                 ORDER BY votes DESC
             `);
@@ -362,18 +367,22 @@ export const db = {
 
     async createVote(projectName: string, id?: string, role?: string): Promise<DbVote> {
         try {
+            if (!id || !role) {
+                throw new Error('user_id et user_type sont requis');
+            }
+
             const existing = await pool.query(
-                'SELECT * FROM votes WHERE participant_id = $1 AND idea_name = $2',
-                [id, projectName]
+                'SELECT * FROM votes WHERE user_id = $1 AND user_type = $2 AND idea_name = $3',
+                [id, role, projectName]
             );
 
             if (existing.rows.length > 0) {
-                throw new Error('Ce participant a déjà voté pour ce projet');
+                throw new Error('Cet utilisateur a déjà voté pour ce projet');
             }
 
             const {rows} = await pool.query(
-                'INSERT INTO votes (participant_id, idea_name, vote_time) VALUES ($1, $2, NOW()) RETURNING *',
-                [id, projectName]
+                'INSERT INTO votes (user_id, user_type, idea_name, vote_time) VALUES ($1, $2, $3, NOW()) RETURNING *',
+                [id, role, projectName]
             );
             return rows[0];
         } catch (error) {
@@ -384,9 +393,13 @@ export const db = {
 
     async deleteVote(projectName: string, id?: string, role?: string): Promise<boolean> {
         try {
+            if (!id || !role) {
+                throw new Error('user_id et user_type sont requis');
+            }
+
             const result = await pool.query(
-                'DELETE FROM votes WHERE participant_id = $1 AND idea_name = $2',
-                [id, projectName]
+                'DELETE FROM votes WHERE user_id = $1 AND user_type = $2 AND idea_name = $3',
+                [id, role, projectName]
             );
             return result.rowCount > 0;
         } catch (error) {
@@ -397,17 +410,17 @@ export const db = {
 
     async canVote(id: string, role: string): Promise<boolean> {
         try {
-            if (role !== 'participant') return false;
+            const config = await this.getAppConfig();
+
+            if (!config.who_can_vote.includes(role)) return false;
 
             const votesAllowed = await this.getVotesLockStatus();
             if (!votesAllowed) return false;
 
             const {rows} = await pool.query(
-                'SELECT * FROM votes WHERE participant_id = $1',
-                [id]
+                'SELECT * FROM votes WHERE user_id = $1 AND user_type = $2',
+                [id, role]
             );
-
-            const config = await this.getAppConfig()
 
             return rows.length < config.votes_per_participant;
         } catch (error) {
