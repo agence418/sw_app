@@ -2,7 +2,6 @@
 
 import React, {useEffect, useMemo, useState} from 'react';
 import {
-    ArrowRight,
     BarChart3,
     Calendar,
     Clock,
@@ -27,10 +26,10 @@ import {ListVisitorsView} from "./modules/user-managment/visitors/ui/list-visito
 import {ConfigView} from "./modules/config/ui/config.view";
 import {useConfig} from "@/app/modules/config/store/config.store";
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
-import {getCurrentDay} from "@/app/modules/calendar/helpers/get-current-day.action";
 import {backEvent} from "@/app/modules/calendar/_actions/back-event.action";
 import {advanceEvent} from "@/app/modules/calendar/_actions/advance-event.action";
 import {setAutoEvent} from "@/app/modules/calendar/_actions/set-auto-event.action";
+import {lockVotes} from "@/app/modules/votes/_actions/lock-votes.action";
 
 export const StartupWeekendAdminApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
@@ -55,6 +54,15 @@ export const StartupWeekendAdminApp = () => {
 
     const handleNextEvent = () => {
         try {
+            if (currentEvent?.step === 2 && countTeams === 0) {
+                alert('Vous devez créer au moins une équipe avant de passer à l\'événement suivant.');
+                return;
+            }
+
+            if (currentEvent?.step === 2) {
+                lockVotes()
+            }
+
             advanceEvent();
         } catch (error) {
             console.error(error);
@@ -205,7 +213,7 @@ export const StartupWeekendAdminApp = () => {
                         </button>
                     </div>
 
-                    {getCurrentDay() === 'samedi' && (
+                    {currentEvent?.step > 0 && currentEvent?.step < 3 && (
                         <>
                             {!status.votesAllowed ? (
                                 <button
