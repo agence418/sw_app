@@ -66,7 +66,7 @@ nano .env.local
 ```env
 DATABASE_URL=postgresql://startup_user:startup_password@localhost:5432/startup_weekend
 NEXTAUTH_SECRET=your-secret-key-here
-NEXTAUTH_URL=http://localhost:3001
+NEXTAUTH_URL=http://localhost:3000
 NODE_ENV=development
 ```
 
