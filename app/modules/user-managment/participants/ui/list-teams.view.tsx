@@ -191,11 +191,20 @@ export const ListTeamsView = () => {
     }, [isAdmin]);
 
     const renderCoachView = () => {
+        // Équipes où le coach a été affecté par un admin
+        const assignedTeams = teams.filter(team =>
+            team.assigned_coaches && team.assigned_coaches.includes(coachName || '')
+        );
+
+        // Équipes qui ont demandé ce coach
         const teamsForThisCoach = teams.filter(team =>
             team.coach_requests && team.coach_requests.includes(coachName || '')
         );
+
+        // Autres équipes (ni affectées, ni demandées)
         const otherTeams = teams.filter(team =>
-            !team.coach_requests || !team.coach_requests.includes(coachName || '')
+            !team.assigned_coaches?.includes(coachName || '') &&
+            (!team.coach_requests || !team.coach_requests.includes(coachName || ''))
         );
 
         return (
@@ -212,6 +221,50 @@ export const ListTeamsView = () => {
                                      className="border border-green-200 rounded-lg p-4 bg-green-50 dark:bg-green-800 dark:border-green-700">
                                     <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-lg flex items-center gap-2 mb-2">
                                         <Users className="w-5 h-5 text-green-600"/>
+                                        {team.name}
+                                    </h3>
+                                    {team.idea_description && (
+                                        <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">{team.idea_description}</p>
+                                    )}
+                                    {team.position && (
+                                        <div className="flex items-center gap-2">
+                                            <MapPin className="w-4 h-4 text-red-600"/>
+                                            <div className="text-gray-700 dark:text-gray-300 py-2">{team.position}
+                                            </div>
+                                        </div>
+                                    )}
+                                    {team.leader_name && (
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <Crown className="w-4 h-4 text-yellow-500"/>
+                                            <div className="">
+                                                <div className="text-gray-600 dark:text-gray-400">
+                                                    <span
+                                                        className="font-medium text-gray-700 dark:text-gray-300">Leader:</span> {team.leader_name}
+                                                </div>
+                                                <div
+                                                    className="text-gray-600 dark:text-gray-400">({team.leader_email})
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {assignedTeams.length > 0 && (
+                    <div className="mb-6">
+                        <h3 className="font-medium text-gray-700 dark:text-gray-300 text-sm mb-4 flex items-center gap-2">
+                            <GraduationCap className="w-4 h-4 text-purple-600"/>
+                            Équipes affecté ({assignedTeams.length})
+                        </h3>
+                        <div className="space-y-4">
+                            {assignedTeams.map((team) => (
+                                <div key={team.id}
+                                     className="border border-purple-200 rounded-lg p-4 bg-purple-50 dark:bg-purple-900 dark:border-purple-700">
+                                    <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-lg flex items-center gap-2 mb-2">
+                                        <Users className="w-5 h-5 text-purple-600"/>
                                         {team.name}
                                     </h3>
                                     {team.idea_description && (
