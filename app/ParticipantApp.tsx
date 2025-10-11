@@ -74,7 +74,6 @@ export const ParticipantApp = () => {
                     {[
                         {id: 'accueil', icon: Clock, label: 'Accueil'},
                         {id: 'calendrier', icon: Calendar, label: 'Calendrier'},
-                        {id: 'coach', icon: MessageSquare, label: 'Coach'},
                         {id: 'outils', icon: Link, label: 'Outils'}
                     ].map(({id, icon: Icon, label}) => (
                         <button
@@ -92,17 +91,17 @@ export const ParticipantApp = () => {
             </nav>
 
             {/* Contenu principal */}
-            <main className="p-4">
+            <main className="p-4 space-y-4">
                 {/* Page d'accueil */}
                 {activeTab === 'accueil' && (
                     <>
-                        {status.votesAllowed ? <VoteView/> :
-                            <>
-                                <NowView/>
-                                {currentTime.getDay() == 4 && (
-                                    <SendFileComp/>
-                                )}
-                            </>
+                        <NowView/>
+                        {status.votesAllowed && <VoteView/>}
+                        {currentTime.getDay() == 7 && currentEvent.step < 12 &&
+                          <SendFileComp/>
+                        }
+                        {currentTime.getDay() == 6 &&
+                            <ChooseCoachView/>
                         }
                     </>
                 )}
@@ -110,11 +109,6 @@ export const ParticipantApp = () => {
                 {/* Calendrier */}
                 {activeTab === 'calendrier' && (
                     <CalendarView/>
-                )}
-
-                {/* Formulaire coach */}
-                {activeTab === 'coach' && (
-                    <ChooseCoachView/>
                 )}
 
                 {/* Outils pratiques */}
