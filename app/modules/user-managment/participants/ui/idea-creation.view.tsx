@@ -1,6 +1,6 @@
 import {Plus, Users} from "lucide-react";
 import React, {useEffect, useMemo, useState} from "react";
-import {CreateProjectDTO, Project} from "../../projects/types/project.types";
+import {CreateIdeaDTO, Idea} from "../../ideas/types/idea.types";
 
 interface Participant {
     id: string;
@@ -8,10 +8,10 @@ interface Participant {
     email: string;
 }
 
-export const TeamCreationView = () => {
-    const [projects, setProjects] = useState<Project[]>([]);
+export const IdeaCreationView = () => {
+    const [ideas, setIdeas] = useState<Idea[]>([]);
     const [participants, setParticipants] = useState<Participant[]>([]);
-    const [formData, setFormData] = useState<CreateProjectDTO>({
+    const [formData, setFormData] = useState<CreateIdeaDTO>({
         name: "",
         description: "",
         participantId: "",
@@ -23,18 +23,18 @@ export const TeamCreationView = () => {
 
     useEffect(() => {
         fetchParticipants();
-        fetchProjects();
+        fetchIdeas();
     }, []);
 
     const availableParticipants = useMemo(() => {
-        if (!participants.length || !projects.length) return participants;
+        if (!participants.length || !ideas.length) return participants;
 
         const assignedParticipantIds = new Set(
-            projects.map(project => String(project.participantId)) // ✅ Conversion en string
+            ideas.map(idea => String(idea.participantId)) // ✅ Conversion en string
         );
 
         return participants.filter(p => !assignedParticipantIds.has(String(p.id)));
-    }, [participants, projects]);
+    }, [participants, ideas]);
 
     const fetchParticipants = async () => {
         try {
@@ -48,12 +48,12 @@ export const TeamCreationView = () => {
         }
     };
 
-    const fetchProjects = async () => {
+    const fetchIdeas = async () => {
         try {
-            const response = await fetch('/api/projects');
+            const response = await fetch('/api/ideas');
             if (response.ok) {
                 const data = await response.json();
-                setProjects(data);
+                setIdeas(data);
             }
         } catch (error) {
             console.error('Erreur lors de la récupération des projets:', error);
@@ -69,7 +69,7 @@ export const TeamCreationView = () => {
         setError(null);
 
         try {
-            const response = await fetch('/api/projects', {
+            const response = await fetch('/api/ideas', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(formData),
@@ -77,10 +77,10 @@ export const TeamCreationView = () => {
 
             if (!response.ok) throw new Error('Erreur lors de la création du projet');
 
-            const newProject = await response.json();
-            newProject.participantName = participants.find((participant) => participant.id.toString() === newProject.participantId)?.name || "";
+            const newIdea = await response.json();
+            newIdea.participantName = participants.find((participant) => participant.id.toString() === newIdea.participantId)?.name || "";
 
-            setProjects(prev => [newProject, ...prev]);
+            setIdeas(prev => [newIdea, ...prev]);
             setFormData({
                 name: "",
                 description: "",
@@ -109,21 +109,6 @@ export const TeamCreationView = () => {
 
     return (
         <>
-            {/*<button*/}
-            {/*    type="submit"*/}
-            {/*    disabled={isSubmitting}*/}
-            {/*    className="mb-4 w-full bg-purple-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"*/}
-            {/*>*/}
-            {/*    {isSubmitting ? (*/}
-            {/*        "Création en cours..."*/}
-            {/*    ) : (*/}
-            {/*        <>*/}
-            {/*            Valider les projets*/}
-            {/*            <ArrowRight className="w-4 h-4 ml-4" />*/}
-            {/*        </>*/}
-            {/*    )}*/}
-            {/*</button>*/}
-
             <div
                 className="bg-white dark:bg-black rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
                 <h2 className="text-lg font-semibold mb-4 flex items-center">
@@ -201,23 +186,23 @@ export const TeamCreationView = () => {
                         ) : (
                             <>
                                 <Plus className="w-4 h-4 mr-2"/>
-                                Ajouter l'idée
+                                Ajouter le projet
                             </>
                         )}
                     </button>
                 </form>
 
-                {projects.length > 0 && (
+                {ideas.length > 0 && (
                     <div className="mt-6">
-                        <h3 className="text-md font-semibold mb-3">Idées ({projects.length})</h3>
+                        <h3 className="text-md font-semibold mb-3">Idées ({ideas.length})</h3>
                         <div className="space-y-2">
-                            {projects.map((project) => (
-                                <div key={project.id} className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                                    <div className="font-medium text-gray-900 dark:text-gray-100">{project.name}</div>
+                            {ideas.map((idea) => (
+                                <div key={idea.id} className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                                    <div className="font-medium text-gray-900 dark:text-gray-100">{idea.name}</div>
                                     <div
-                                        className="text-sm text-gray-600 dark:text-gray-400">{project.description ?? 'Tu pe'}</div>
+                                        className="text-sm text-gray-600 dark:text-gray-400">{idea.description ?? 'Tu pe'}</div>
                                     <div className="text-xs text-gray-500 mt-1">
-                                        Par: {project.participantName}
+                                        Par: {idea.participantName}
                                     </div>
                                 </div>
                             ))}
