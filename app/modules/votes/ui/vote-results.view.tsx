@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useEffect, useState} from 'react';
-import {ArrowRight, BarChart3, RefreshCw, Trophy} from 'lucide-react';
+import {ArrowRight, BarChart3, RefreshCw, SkipForward, Trophy} from 'lucide-react';
 import {useConfig} from "@/app/modules/config/store/config.store";
 
 interface VoteResult {
@@ -19,6 +19,7 @@ export const VoteResultsView = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const {config} = useConfig(state => state);
+    const [countTeams, setCountTeams] = useState(0);
 
     const loadVoteResults = async () => {
         try {
@@ -51,11 +52,30 @@ export const VoteResultsView = () => {
             setLoading(false);
         }
     };
+    const loadCountTeams = async () => {
+        try {
+            setCountTeams(0);
+            setLoading(true);
+            const response = await fetch('/api/teams/count');
+
+            if (!response.ok) {
+                throw new Error('Erreur lors du chargement');
+            }
+
+            const data = await response.json();
+            setCountTeams(data);
+            setError(null);
+        } catch (err) {
+            setError('Erreur lors du chargement du nombre d\'équipes');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         loadVoteResults();
+        loadCountTeams();
     }, []);
-
 
     const canVisitorsVote = config.who_can_vote.includes('visitor');
     const canCoachesVote = config.who_can_vote.includes('coach');
@@ -82,10 +102,13 @@ export const VoteResultsView = () => {
             // Prendre les N meilleurs projets
             const topIdeas = voteResults.slice(0, numberOfTeams);
 
+            // Supprimer toutes les équipes existantes avant de créer de nouvelles
+            await fetch('/api/teams', {method: 'DELETE'});
+
             // Créer les équipes pour chaque projet
             const teamPromises = topIdeas.map(async (result) => {
                 // D'abord récupérer le projet correspondant pour avoir le leader_id
-                const projectResponse = await fetch(`/api/projects?name=${encodeURIComponent(result.ideaName)}`);
+                const projectResponse = await fetch(`/api/ideas?name=${encodeURIComponent(result.ideaName)}`);
                 const projects = await projectResponse.json();
                 const project = projects.find((p: any) => p.name === result.ideaName);
 
@@ -107,12 +130,13 @@ export const VoteResultsView = () => {
             const allSuccessful = responses.every(response => response?.ok);
 
             if (allSuccessful) {
-                alert(`${numberOfTeams} équipes créées avec succès !`);
                 // Recharger les données
                 await loadVoteResults();
             } else {
                 alert('Erreur lors de la création de certaines équipes');
             }
+
+            await loadCountTeams();
         } catch (error) {
             console.error('Erreur lors de la création des équipes:', error);
             alert('Erreur lors de la création des équipes');
@@ -125,11 +149,11 @@ export const VoteResultsView = () => {
         <>
             <button
                 onClick={createTeams}
-                className="mb-4 w-full bg-purple-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="mb-4 w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
                 <>
-                    Créer les {projectsToCreate} projets
-                    <ArrowRight className="w-4 h-4 ml-4"/>
+                    {countTeams > 0 ? 'Réinitialiser les projets' : `Créer les ${projectsToCreate} projets`}
+                    <SkipForward className="w-4 h-4 ml-4"/>
                 </>
             </button>
 

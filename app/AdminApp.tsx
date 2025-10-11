@@ -1,7 +1,8 @@
 'use client';
 
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
+    ArrowRight,
     BarChart3,
     Calendar,
     Clock,
@@ -10,7 +11,6 @@ import {
     HatGlasses,
     Lock,
     LockOpen,
-    Play,
     Settings,
     SkipBack,
     SkipForward,
@@ -38,6 +38,7 @@ export const StartupWeekendAdminApp = () => {
     const {config} = useConfig((state) => state);
     const {status} = useCurrentStatus((state) => state);
     const {currentEvent, defaultEvent} = status;
+    const [countTeams, setCountTeams] = useState(0);
 
 
     // Calcul de la progression du weekend
@@ -100,6 +101,28 @@ export const StartupWeekendAdminApp = () => {
             if (showAlert) alert('Erreur lors du verrouillage des votes');
         }
     };
+
+    const loadCountTeams = async () => {
+        try {
+            setCountTeams(0);
+            const response = await fetch('/api/teams/count');
+
+            if (!response.ok) {
+                throw new Error('Erreur lors du chargement');
+            }
+
+            const data = await response.json();
+            setCountTeams(data);
+        } catch (err) {
+            console.error(err);
+            alert('Erreur lors du chargement des équipes');
+        }
+    };
+    console.log({countTeams})
+
+    useEffect(() => {
+        loadCountTeams();
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -174,7 +197,8 @@ export const StartupWeekendAdminApp = () => {
                         {/*</button>*/}
                         <button
                             onClick={() => handleNextEvent()}
-                            className="basis-[100%] flex items-center justify-center gap-2 text-white px-3 py-2 rounded-lg bg-green-600 hover:bg-green-400 transition-colors"
+                            className={`basis-[100%] flex items-center justify-center gap-2 text-white px-3 py-2 rounded-lg bg-green-600 hover:bg-green-400 transition-colors ${currentEvent?.step === 2 && countTeams === 0 ? 'opacity-50' : ''}`}
+                            disabled={currentEvent?.step === 2 && countTeams === 0}
                         >
                             {!currentEvent ? 'Start' : currentEvent?.nextCTA ?? 'Next'}
                             <SkipForward className="w-4 h-4"/>

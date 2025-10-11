@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import {getServerSession} from "next-auth";
+import {authOptions} from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
     try {
@@ -23,12 +25,35 @@ export async function GET(request: NextRequest) {
     }
 }
 
+
+export async function DELETE(request: NextRequest) {
+    const {user} = await getServerSession(authOptions);
+
+    if (user?.role !== 'admin') {
+        return NextResponse.json(
+            { error: 'Accès réservé aux administrateurs' },
+            { status: 403 }
+        );
+    }
+
+    try {
+        await db.deleteTeams();
+        return NextResponse.json({ message: 'Toutes les équipes ont été supprimées' });
+
+    } catch (error) {
+        return NextResponse.json(
+            { error },
+            { status: 500 }
+        );
+    }
+}
+
 export async function POST(request: Request) {
     try {
         const body = await request.json();
         const { name, idea_description, leader_id } = body;
 
-        if (!name || !idea_description || !leader_id) {
+        if (!name || !leader_id) {
             return NextResponse.json(
                 { error: 'Tous les champs sont requis' },
                 { status: 400 }
@@ -37,7 +62,7 @@ export async function POST(request: Request) {
 
         const team = await db.createTeam({
             name,
-            idea_description,
+            idea_description: idea_description ?? '',
             leader_id: parseInt(leader_id)
         });
 

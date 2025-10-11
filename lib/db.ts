@@ -532,6 +532,18 @@ export const db = {
         }
     },
 
+    async getTeamsCount(): Promise<number> {
+        try {
+            const {rows} = await pool.query(
+                'SELECT COUNT(*)::int AS count FROM teams'
+            );
+            return rows[0]?.count || 0;
+        } catch (error) {
+            console.error('Erreur getTeamsCount:', error);
+            return 0;
+        }
+    },
+
     async createTeam(data: any): Promise<any> {
         try {
             const {rows} = await pool.query(`
@@ -541,6 +553,15 @@ export const db = {
             return rows[0];
         } catch (error) {
             console.error('Erreur createTeam:', error);
+            throw error;
+        }
+    },
+
+    async deleteTeams(): Promise<void> {
+        try {
+            await pool.query('DELETE FROM teams');
+        } catch (error) {
+            console.error('Erreur deleteTeams:', error);
             throw error;
         }
     },
