@@ -147,15 +147,6 @@ export async function POST(request: NextRequest) {
                 console.error('Erreur lors de l\'envoi de l\'email:', emailError);
                 // On continue quand même pour ne pas bloquer l'utilisateur
             }
-        } else {
-            // Si aucun transporteur n'est configuré, afficher dans la console
-            console.log('=== EMAIL DE RESET (mode développement) ===');
-            console.log(`À: ${user.email}`);
-            console.log(`Nom: ${user.name}`);
-            console.log(`Type: ${userType}`);
-            console.log(`Lien de réinitialisation: ${resetLink}`);
-            console.log('==========================================');
-            console.log('Pour activer l\'envoi d\'emails, configurez les variables SMTP_* dans .env.local');
         }
 
         return NextResponse.json(

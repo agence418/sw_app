@@ -1,6 +1,6 @@
 import {AlertCircle, CheckCircle2, Users} from "lucide-react";
 import React, {useEffect, useState} from "react";
-import {Idea} from "../../ideas/types/idea.types";
+import {Idea} from "../../user-managment/ideas/types/idea.types";
 import {useSession} from "next-auth/react";
 import {useConfig} from "@/app/modules/config/store/config.store";
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
