@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
         const participantId = session.user.id;
 
         // Récupérer l'équipe du participant
-        const team = await db.getTeamByLeaderId(participantId);
+        const team = await db.getTeamByLeaderId(parseInt(participantId));
 
         if (!team) {
             return NextResponse.json(

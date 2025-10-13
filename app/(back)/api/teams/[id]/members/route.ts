@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/auth";
 // POST: Ajouter un membre à une équipe
 export async function POST(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     const session = await getServerSession(authOptions);
 
@@ -19,7 +19,8 @@ export async function POST(
 
     try {
         const { participantId, role } = await request.json();
-        const teamId = parseInt(params.id);
+        const { id } = await params;
+        const teamId = parseInt(id);
 
         if (!participantId) {
             return NextResponse.json(
@@ -50,7 +51,7 @@ export async function POST(
 // DELETE: Retirer un membre d'une équipe
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     const session = await getServerSession(authOptions);
 
@@ -64,7 +65,8 @@ export async function DELETE(
     try {
         const { searchParams } = new URL(request.url);
         const participantId = searchParams.get('participantId');
-        const teamId = parseInt(params.id);
+        const { id } = await params;
+        const teamId = parseInt(id);
 
         if (!participantId) {
             return NextResponse.json(

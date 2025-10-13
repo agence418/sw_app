@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/auth";
 // PATCH: Mettre à jour la position d'une équipe
 export async function PATCH(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     const session = await getServerSession(authOptions);
 
@@ -19,7 +19,8 @@ export async function PATCH(
 
     try {
         const { position } = await request.json();
-        const teamId = parseInt(params.id);
+        const { id } = await params;
+        const teamId = parseInt(id);
 
         if (!position) {
             return NextResponse.json(
