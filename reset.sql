@@ -9,7 +9,6 @@ DROP TABLE IF EXISTS presentations CASCADE;
 DROP TABLE IF EXISTS votes CASCADE;
 DROP TABLE IF EXISTS ideas CASCADE;
 DROP TABLE IF EXISTS coaches CASCADE;
-DROP TABLE IF EXISTS administrators CASCADE;
 DROP TABLE IF EXISTS participants CASCADE;
 DROP TABLE IF EXISTS visitors CASCADE;
 DROP TABLE IF EXISTS event_state CASCADE;
@@ -20,19 +19,8 @@ DROP SEQUENCE IF EXISTS ideas_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS participants_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS teams_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS votes_id_seq CASCADE;
-DROP SEQUENCE IF EXISTS administrators_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS coaches_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS visitors_id_seq CASCADE;
-
--- Table des administrateurs
-CREATE TABLE administrators
-(
-    id         SERIAL PRIMARY KEY,
-    name       VARCHAR(100)        NOT NULL,
-    email      VARCHAR(100) UNIQUE NOT NULL,
-    password   VARCHAR(255)        NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
 
 -- Table des coachs
 CREATE TABLE coaches
@@ -165,10 +153,6 @@ CREATE TABLE app_config
     updated_at            TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Données de base pour l'administrateur
-INSERT INTO administrators (name, email, password)
-VALUES ('${ADMIN_NAME}', '${ADMIN_EMAIL}', 'TO_RESET');
-
 -- Initialisation des états des événements
 INSERT INTO event_state (var, val)
 VALUES ('current_step', 0);
@@ -191,7 +175,6 @@ SELECT setval('ideas_id_seq', COALESCE((SELECT MAX(id) FROM ideas), 0) + 1, fals
 SELECT setval('participants_id_seq', COALESCE((SELECT MAX(id) FROM participants), 0) + 1, false);
 SELECT setval('teams_id_seq', COALESCE((SELECT MAX(id) FROM teams), 0) + 1, false);
 SELECT setval('votes_id_seq', COALESCE((SELECT MAX(id) FROM votes), 0) + 1, false);
-SELECT setval('administrators_id_seq', COALESCE((SELECT MAX(id) FROM administrators), 0) + 1, false);
 SELECT setval('coaches_id_seq', COALESCE((SELECT MAX(id)
                                           FROM coaches), 0) + 1, false);
 SELECT setval('visitors_id_seq', COALESCE((SELECT MAX(id)
