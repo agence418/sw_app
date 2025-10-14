@@ -161,7 +161,6 @@ export const StartupWeekendAdminApp = () => {
                         {id: 'visitors', icon: HatGlasses, label: 'Visiteurs'},
                         {id: 'coaches', icon: GraduationCap, label: 'Coachs'},
                         {id: 'teams', icon: Users, label: 'Teams'},
-                        {id: 'votes', icon: BarChart3, label: 'Votes'},
                         {id: 'calendrier', icon: Calendar, label: 'Calendrier'},
                         {id: 'config', icon: Settings, label: 'Config'},
                     ].map(({id, icon: Icon, label}) => (
@@ -192,17 +191,6 @@ export const StartupWeekendAdminApp = () => {
                                 <SkipBack className="w-4 h-4"/>
                             </button>
                         )}
-                        {/*<button*/}
-                        {/*    onClick={() => handleAutoEvent()}*/}
-                        {/*    className={`basis-[100%] flex items-center justify-center gap-2 text-white px-3 py-2 rounded-lg bg-green-600 hover:bg-green-400 transition-colors ${status.autoAdvance ? 'opacity-50' : ''}`}*/}
-                        {/*    disabled={status.autoAdvance}*/}
-                        {/*>*/}
-                        {/*    <span className="">*/}
-                        {/*    Auto*/}
-                        {/*    <div className={'text-xs'}>({defaultEvent?.title ?? 'Pas d\'événement'})</div>*/}
-                        {/*    </span>*/}
-                        {/*    <Play className="w-4 h-4"/>*/}
-                        {/*</button>*/}
                         <button
                             onClick={() => handleNextEvent()}
                             className={`basis-[100%] flex items-center justify-center gap-2 text-white px-3 py-2 rounded-lg bg-green-600 hover:bg-green-400 transition-colors ${currentEvent?.step === 2 && countTeams === 0 ? 'opacity-50' : ''}`}

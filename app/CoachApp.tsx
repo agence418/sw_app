@@ -30,7 +30,7 @@ export const StartupWeekendCoachApp = () => {
         return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
     }, [currentTime, config]);
 
-    if (eventEnded) {
+    if (status.currentEvent?.step > 7) {
         return (
             <div
                 className="min-h-screen text-white bg-green-600 to-cyan-500 flex items-center justify-center p-4">

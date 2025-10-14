@@ -35,7 +35,7 @@ export const ParticipantApp = () => {
         return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
     }, [currentTime, config]);
 
-    if (eventEnded) {
+    if (status.currentEvent?.step > 7) {
         return (
             <div
                 className="min-h-screen text-white dark:text-gray-900 bg-green-600 to-cyan-500 flex items-center justify-center p-4">
@@ -97,12 +97,20 @@ export const ParticipantApp = () => {
                     <>
                         <NowView/>
                         {status.votesAllowed && <VoteView/>}
-                        {currentTime?.getDay() == 0 && currentEvent.step < 12 &&
-                          <SendFileComp/>
-                        }
-                        {currentTime?.getDay() == 6 &&
-                            <ChooseCoachView/>
-                        }
+                        {/* Afficher SendFileComp le jour de début +2 (dimanche) */}
+                        {(() => {
+                            const startDate = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
+                            const dayPlusTwo = new Date(startDate);
+                            dayPlusTwo.setDate(startDate.getDate() + 2);
+                            return currentTime.toDateString() === dayPlusTwo.toDateString() && currentEvent.step < 12;
+                        })() && <SendFileComp/>}
+                        {/* Afficher ChooseCoachView le jour de début +1 (samedi) */}
+                        {(() => {
+                            const startDate = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
+                            const dayPlusOne = new Date(startDate);
+                            dayPlusOne.setDate(startDate.getDate() + 1);
+                            return currentTime.toDateString() === dayPlusOne.toDateString();
+                        })() && <ChooseCoachView/>}
                     </>
                 )}
 

@@ -1,6 +1,7 @@
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
 import {getEventFromID} from "@/app/modules/calendar/helpers/get-event-from-id.action";
 import {fetchEvent} from "@/app/modules/calendar/_actions/fetch-event.action";
+import {useConfig} from "@/app/modules/config/store/config.store";
 
 export const backEvent = async () => {
     try {
@@ -17,13 +18,14 @@ export const backEvent = async () => {
 
 
         const {status} = useCurrentStatus.getState();
+        const {config} = useConfig.getState();
         useCurrentStatus.setState({
             status: {
                 ...status,
                 autoAdvance: false,
-                currentEvent: getEventFromID((status.currentEvent?.step ?? 0) - 1),
-                nextEvent: getEventFromID((status.currentEvent?.step ?? 0)),
-                previousEvent: getEventFromID((status.currentEvent?.step ?? 0) - 2)
+                currentEvent: getEventFromID((status.currentEvent?.step ?? 0) - 1, config.event_start_date),
+                nextEvent: getEventFromID((status.currentEvent?.step ?? 0), config.event_start_date),
+                previousEvent: getEventFromID((status.currentEvent?.step ?? 0) - 2, config.event_start_date)
             }
         });
 
