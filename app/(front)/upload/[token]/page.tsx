@@ -4,6 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {CheckCircle, Upload, X} from 'lucide-react';
 import jwt from 'jsonwebtoken';
 import {useParams} from 'next/navigation';
+import '../../global.css';
 
 interface TokenPayload {
     teamId: number;

@@ -1,6 +1,7 @@
 'use client';
 
 import {useState} from 'react';
+import {validateEmail, validatePassword} from '@/lib/validation';
 
 interface RegisterViewProps {
     onBackToLogin: () => void;
@@ -28,14 +29,21 @@ export const RegisterView = ({onBackToLogin}: RegisterViewProps) => {
             return;
         }
 
+        if (!validateEmail(email)) {
+            setError('Veuillez entrer une adresse email valide');
+            setIsLoading(false);
+            return;
+        }
+
         if (password !== confirmPassword) {
             setError('Les mots de passe ne correspondent pas');
             setIsLoading(false);
             return;
         }
 
-        if (password.length < 6) {
-            setError('Le mot de passe doit contenir au moins 6 caractères');
+        const passwordValidation = validatePassword(password);
+        if (!passwordValidation.isValid) {
+            setError(passwordValidation.error);
             setIsLoading(false);
             return;
         }
@@ -127,10 +135,13 @@ export const RegisterView = ({onBackToLogin}: RegisterViewProps) => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 dark:text-gray-900"
-                            placeholder="Mot de passe (min. 6 caractères)"
+                            placeholder="Mot de passe sécurisé"
                             required
                             disabled={isLoading}
                         />
+                        <p className="mt-1 text-xs text-gray-500">
+                            Min. 8 caractères avec majuscule, minuscule, chiffre et caractère spécial
+                        </p>
                     </div>
                     <div>
                         <label htmlFor="confirmPassword" className="block text-sm font-medium">Confirmer le mot de
