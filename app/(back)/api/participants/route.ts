@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { validateEmail } from '@/lib/validation';
 
 export async function GET() {
     try {
@@ -16,11 +17,19 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const data = await request.json();
-        
+
         // Validation simple
         if (!data.name || !data.email) {
             return NextResponse.json(
                 { error: 'Nom et email requis' },
+                { status: 400 }
+            );
+        }
+
+        // Valider le format de l'email
+        if (!validateEmail(data.email)) {
+            return NextResponse.json(
+                { error: 'Adresse email invalide' },
                 { status: 400 }
             );
         }

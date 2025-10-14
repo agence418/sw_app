@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { hashPassword } from '@/lib/password';
+import { validateEmail, validatePassword } from '@/lib/validation';
 
 export async function POST(request: Request) {
     try {
@@ -9,6 +10,23 @@ export async function POST(request: Request) {
         if (!data.name || !data.email || !data.password) {
             return NextResponse.json(
                 { error: 'Nom, email et mot de passe requis' },
+                { status: 400 }
+            );
+        }
+
+        // Valider le format de l'email
+        if (!validateEmail(data.email)) {
+            return NextResponse.json(
+                { error: 'Adresse email invalide' },
+                { status: 400 }
+            );
+        }
+
+        // Valider la sécurité du mot de passe
+        const passwordValidation = validatePassword(data.password);
+        if (!passwordValidation.isValid) {
+            return NextResponse.json(
+                { error: passwordValidation.error },
                 { status: 400 }
             );
         }
