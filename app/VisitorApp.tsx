@@ -6,6 +6,7 @@ import {VoteView} from "./modules/votes/ui/vote.view";
 import Link from 'next/link';
 import {useConfig} from "@/app/modules/config/store/config.store";
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
+import {getCurrentDayOffset} from "@/app/modules/calendar/helpers/get-event-from-stage-id.action";
 
 export const VisitorApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
@@ -30,7 +31,7 @@ export const VisitorApp = () => {
         startTime.setHours(18, 0, 0, 0); // Forcer à 18h00
         const endTime = new Date(startTime);
         endTime.setDate(startTime.getDate() + 2);
-        endTime.setHours(15, 0, 0, 0); // Dimanche 15h
+        endTime.setHours(20, 0, 0, 0); // Dimanche 15h
         const totalDuration = endTime.getTime() - startTime.getTime();
         const elapsed = currentTime.getTime() - startTime.getTime();
 
@@ -42,13 +43,13 @@ export const VisitorApp = () => {
         return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
     }, [currentTime, config]);
 
-    if (status.currentEvent?.step > 3) {
+    if (getCurrentDayOffset(config.event_start_date ?? '2025-09-05T18:00:00') > 0) {
         return (
             <div
                 className="min-h-screen text-white dark:text-gray-900 bg-green-600 to-cyan-500 flex items-center justify-center p-4">
                 <div className="backdrop-blur-sm rounded-3xl p-8 max-w-md w-full text-center">
-                    <h1 className="text-3xl font-bold mb-4">Merci !</h1>
-                    <p className="text-lg mb-6">
+                    <h1 className="text-3xl font-bold mb-4 text-white">Merci !</h1>
+                    <p className="text-lg mb-6 text-white">
                         Les votes sont terminés.<br/>
                         Merci d'avoir participé !
                     </p>

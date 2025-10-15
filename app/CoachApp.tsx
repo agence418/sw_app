@@ -6,6 +6,7 @@ import {useConfig} from "@/app/modules/config/store/config.store";
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
 import {VoteView} from "@/app/modules/votes/ui/vote.view";
 import {Link as LinkIcon} from "lucide-react";
+import Link from "next/link";
 
 export const StartupWeekendCoachApp = () => {
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -30,7 +31,7 @@ export const StartupWeekendCoachApp = () => {
         startTime.setHours(18, 0, 0, 0); // Forcer à 18h00
         const endTime = new Date(startTime);
         endTime.setDate(startTime.getDate() + 2);
-        endTime.setHours(15, 0, 0, 0); // Dimanche 15h
+        endTime.setHours(20, 0, 0, 0); // Dimanche 15h
         const totalDuration = endTime.getTime() - startTime.getTime();
         const elapsed = currentTime.getTime() - startTime.getTime();
 
@@ -42,7 +43,7 @@ export const StartupWeekendCoachApp = () => {
         return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
     }, [currentTime, config]);
 
-    if (status.currentEvent?.step > 16) {
+    if (status.currentEvent?.step > 19) {
         return (
             <div
                 className="min-h-screen text-white bg-green-600 flex items-center justify-center p-4">
@@ -50,6 +51,14 @@ export const StartupWeekendCoachApp = () => {
                     <h1 className="text-3xl font-bold mb-4">Félicitations !</h1>
                     <p className="text-lg mb-6">
                         Vous l'avez fait !
+                    </p>
+                </div>
+                <div className="absolute bottom-0 left-0 w-full p-4 text-sm">
+                    <p className={'text-center text-white'}>
+                        Application réalisée par : <br/>
+                        <Link href={'https://agence418.fr'}>
+                            Agence 418
+                        </Link>
                     </p>
                 </div>
             </div>

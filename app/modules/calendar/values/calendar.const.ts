@@ -41,24 +41,41 @@ export const CALENDAR: Calendar = {
     5: {
         day: 'Dimanche',
         steps: [
-            {step: 16, time: '11:00', title: 'Présentations finales (3 min/équipe)'},
-        ],
-        cta: 'Vérouiller l\'envoie des présentations'
-    },
-    6: {
-        day: 'Dimanche',
-        steps: [
-            {step: 17, time: '11:00', title: 'Présentations finales (3 min/équipe)'},
-            {step: 17, time: '11:00', title: 'Présentations finales (3 min/équipe)'},
-            {step: 18, time: '13:00', title: 'Délibération du jury'},
-            {step: 19, time: '14:00', title: 'Remise des prix et clôture'},
-        ],
-        cta: 'Fin'
-    },
-    7: {
-        day: 'Dimanche',
-        steps: [
-            {step: 20, time: '15:00', title: 'Fin du Startup Weekend'}
+            {
+                step: 16, time: '14:00',
+                title: 'Préparation pour les présentations finales',
+                day: 'Dimanche',
+            },
+            {
+                step: 17, time: '15:30',
+                title: 'Mot de la fin',
+                day: 'Dimanche',
+            },
+            {
+                step: 17, time: '16:15',
+                title: 'Présentations finales',
+                day: 'Dimanche',
+            },
+            {
+                step: 18, time: '17:30',
+                title: 'Délibération du jury',
+                day: 'Dimanche',
+            },
+            {
+                step: 19, time: '18:15',
+                title: 'Annonce des résultats et remise des prix',
+                day: 'Dimanche',
+            },
+            {
+                step: 20, time: '19:00',
+                title: 'Cocktail et concert de clôture',
+                day: 'Dimanche',
+            },
+            {
+                step: 21, time: '21:00',
+                title: 'C\'est fini !',
+                day: 'Dimanche',
+            }
         ],
         cta: 'Fin'
     }

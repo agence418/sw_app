@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useMemo, useState} from 'react';
-import {Calendar, Clock, Link, MessageSquare} from 'lucide-react';
+import {Calendar, Clock, Link as LinkIcon, MessageSquare} from 'lucide-react';
 import {CalendarView} from "./modules/calendar/ui/calendar.view";
 import {VoteView} from "./modules/votes/ui/vote.view";
 import {NowView} from "./modules/calendar/ui/now.view";
@@ -11,6 +11,7 @@ import {ToolsView} from "./modules/tools/ui/tools.view";
 import {useConfig} from "@/app/modules/config/store/config.store";
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
 import {getCurrentDayOffset} from "@/app/modules/calendar/helpers/get-event-from-stage-id.action";
+import Link from "next/link";
 
 export const ParticipantApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
@@ -35,7 +36,7 @@ export const ParticipantApp = () => {
         startTime.setHours(18, 0, 0, 0); // Forcer à 18h00
         const endTime = new Date(startTime);
         endTime.setDate(startTime.getDate() + 2);
-        endTime.setHours(15, 0, 0, 0); // Dimanche 15h
+        endTime.setHours(20, 0, 0, 0); // Dimanche 15h
         const totalDuration = endTime.getTime() - startTime.getTime();
         const elapsed = currentTime.getTime() - startTime.getTime();
 
@@ -47,14 +48,22 @@ export const ParticipantApp = () => {
         return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
     }, [currentTime, config]);
 
-    if (status.currentEvent?.step > 16) {
+    if (status.currentEvent?.step > 19) {
         return (
             <div
                 className="min-h-screen text-white dark:text-gray-900 bg-green-600 to-cyan-500 flex items-center justify-center p-4">
                 <div className="backdrop-blur-sm rounded-3xl p-8 max-w-md w-full text-center">
-                    <h1 className="text-3xl font-bold mb-4">Merci !</h1>
-                    <p className="text-lg mb-6">
+                    <h1 className="text-3xl font-bold mb-4 text-white">Merci !</h1>
+                    <p className="text-lg mb-6 text-white">
                         Le Startup Weekend est terminé. Merci pour votre participation !
+                    </p>
+                </div>
+                <div className="absolute bottom-0 left-0 w-full p-4 text-sm">
+                    <p className={'text-center text-white'}>
+                        Application réalisée par : <br/>
+                        <Link href={'https://agence418.fr'}>
+                            Agence 418
+                        </Link>
                     </p>
                 </div>
             </div>
@@ -86,7 +95,7 @@ export const ParticipantApp = () => {
                     {[
                         {id: 'accueil', icon: Clock, label: 'Accueil'},
                         {id: 'calendrier', icon: Calendar, label: 'Calendrier'},
-                        {id: 'outils', icon: Link, label: 'Outils'}
+                        {id: 'outils', icon: LinkIcon, label: 'Outils'}
                     ].map(({id, icon: Icon, label}) => (
                         <button
                             key={id}
@@ -109,7 +118,7 @@ export const ParticipantApp = () => {
                     <>
                         <NowView/>
                         {status.votesAllowed && <VoteView/>}
-                        {getCurrentDayOffset(config.event_start_date ?? '2025-09-05T18:00:00') === 2 && currentEvent?.step < 17 && <SendFileComp/>}
+                        {getCurrentDayOffset(config.event_start_date ?? '2025-09-05T18:00:00') === 2 && currentEvent?.step < 21 && <SendFileComp/>}
                         {getCurrentDayOffset(config.event_start_date ?? '2025-09-05T18:00:00') === 1 && <ChooseCoachView/>}
                     </>
                 )}
