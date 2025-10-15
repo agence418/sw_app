@@ -15,11 +15,21 @@ export const VisitorApp = () => {
     const {currentEvent} = status;
     const {config} = useConfig((state) => state)
 
+    // Mettre à jour l'heure actuelle toutes les minutes
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 60000); // 60 secondes
+        return () => clearInterval(interval);
+    }, []);
+
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
         setEventEnded(false)
         const startTime = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
-        const endTime = new Date(config.event_start_date ?? '2025-09-07T15:00:00');
+        const endTime = new Date(startTime);
+        endTime.setDate(startTime.getDate() + 2);
+        endTime.setHours(15, 0, 0, 0); // Dimanche 15h
         const totalDuration = endTime.getTime() - startTime.getTime();
         const elapsed = currentTime.getTime() - startTime.getTime();
 
@@ -79,34 +89,20 @@ export const VisitorApp = () => {
                 {activeTab === 'accueil' && (
                     <>
                         {status.votesAllowed && config.who_can_vote.includes('visitor') ? <VoteView/> :
-                            status.currentEvent?.step < 4 ? (
-                                <div className="space-y-6">
-                                    <div
-                                        className="rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
-                                        <h2 className={`text-lg font-semibold flex items-center ${config.who_can_vote.includes('visitor') ? 'mb-4' : ''}`}>
-                                            <LinkIcon className="w-5 h-5 mr-2 text-green-600"/>
-                                            Restez connecté !
-                                        </h2>
-                                        {config.who_can_vote.includes('visitor') && (
-                                            <div className="text-gray-500">Vous pourrez bientôt
-                                                voter pour vos projets favoris
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>) : (
-                                <div className="space-y-6">
-                                    <div
-                                        className="rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
-                                        <h2 className={`text-lg font-semibold flex items-center ${config.who_can_vote.includes('visitor') ? 'mb-4' : ''}`}>
-                                            <LinkIcon className="w-5 h-5 mr-2 text-green-600"/>
-                                            Merci !
-                                        </h2>
-                                        {config.who_can_vote.includes('visitor') && (
-                                            <div className="text-gray-500">Merci pour votre participation
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>)
+                            <div className="space-y-6">
+                                <div
+                                    className="rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
+                                    <h2 className={`text-lg font-semibold flex items-center ${config.who_can_vote.includes('visitor') ? 'mb-4' : ''}`}>
+                                        <LinkIcon className="w-5 h-5 mr-2 text-green-600"/>
+                                        Restez connecté !
+                                    </h2>
+                                    {config.who_can_vote.includes('visitor') && (
+                                        <div className="text-gray-500">Vous pourrez bientôt
+                                            voter pour vos projets favoris
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         }
                     </>
                 )}
