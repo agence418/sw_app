@@ -39,18 +39,27 @@ export const StartupWeekendAdminApp = () => {
     const {currentEvent} = status;
     const [countTeams, setCountTeams] = useState(0);
 
+    // Mettre à jour l'heure actuelle toutes les minutes
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 60000); // 60 secondes
+        return () => clearInterval(interval);
+    }, []);
 
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
         const startTime = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
-        const endTime = new Date(config.event_start_date ?? '2025-09-07T15:00:00');
+        const endTime = new Date(startTime);
+        endTime.setDate(startTime.getDate() + 2);
+        endTime.setHours(15, 0, 0, 0); // Dimanche 15h
         const totalDuration = endTime.getTime() - startTime.getTime();
         const elapsed = currentTime.getTime() - startTime.getTime();
 
         if (elapsed < 0) return 0;
         if (elapsed > totalDuration) return 100;
         return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
-    }, [currentTime]);
+    }, [currentTime, config]);
 
     const handleNextEvent = () => {
         try {

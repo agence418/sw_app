@@ -5,6 +5,7 @@ import {ListTeamsView} from "./modules/user-managment/participants/ui/list-teams
 import {useConfig} from "@/app/modules/config/store/config.store";
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
 import {VoteView} from "@/app/modules/votes/ui/vote.view";
+import {Link as LinkIcon} from "lucide-react";
 
 export const StartupWeekendCoachApp = () => {
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -14,11 +15,21 @@ export const StartupWeekendCoachApp = () => {
     const {currentEvent} = status;
     const {config} = useConfig((state) => state)
 
+    // Mettre à jour l'heure actuelle toutes les minutes
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 60000); // 60 secondes
+        return () => clearInterval(interval);
+    }, []);
+
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
         setEventEnded(false)
         const startTime = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
-        const endTime = new Date(config.event_start_date ?? '2025-09-07T15:00:00');
+        const endTime = new Date(startTime);
+        endTime.setDate(startTime.getDate() + 2);
+        endTime.setHours(15, 0, 0, 0); // Dimanche 15h
         const totalDuration = endTime.getTime() - startTime.getTime();
         const elapsed = currentTime.getTime() - startTime.getTime();
 
@@ -67,7 +78,27 @@ export const StartupWeekendCoachApp = () => {
             <main className="p-4">
                 {/* Page d'accueil */}
                 {status.votesAllowed && config.who_can_vote.includes('coach') ? <VoteView/> :
-                    <ListTeamsView/>
+                    !status.currentEvent || status.currentEvent?.step < 3 ? (
+                        <div className="space-y-6">
+                            <div
+                                className="rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
+                                <h2 className={`text-lg font-semibold flex items-center ${config.who_can_vote.includes('visitor') ? 'mb-4' : ''}`}>
+                                    <LinkIcon className="w-5 h-5 mr-2 text-green-600"/>
+                                    Restez connecté !
+                                </h2>
+                                {config.who_can_vote.includes('coach') ? (
+                                    <div className="text-gray-500">Vous pourrez bientôt
+                                        voter pour vos projets favoris
+                                    </div>
+                                ) : (
+                                    <div className="text-gray-500">Vous pourrez bientôt
+                                        retrouver la liste des équipes à coacher
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    ) : (
+                        <ListTeamsView/>)
                 }
             </main>
 

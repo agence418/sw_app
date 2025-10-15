@@ -1,24 +1,8 @@
 import {CALENDAR} from "@/app/modules/calendar/values/calendar.const";
 import {getCurrentDateTime} from "@/app/modules/calendar/helpers/get-current-datetime.action";
 
-// Helper function to get the event stage based on start date and current date
-const getEventStage = (eventStartDate: string): number => {
-    const startDate = new Date(eventStartDate);
-    const currentDate = new Date();
-
-    // Calculate days from start
-    const daysDiff = Math.floor((currentDate.getDate() - startDate.getDate()) / (1000 * 60 * 60 * 24));
-
-    // Map days to stages
-    if (daysDiff < 0) return 1; // Before event start
-    if (daysDiff === 0) return 4; // Day 0 (Friday): stage 4 (contains Friday events)
-    if (daysDiff === 1) return 4; // Day 1 (Saturday): stage 4 (contains Saturday events)
-    if (daysDiff === 2) return 6; // Day 2 (Sunday): stage 6
-    return 7; // After event
-};
-
 // Helper function to get current day from eventStartDate
-const getCurrentDayOffset = (eventStartDate: string): number => {
+export const getCurrentDayOffset = (eventStartDate: string): number => {
     const startDate = new Date(eventStartDate).setHours(0, 0, 0, 0);
     const currentDate = new Date();
 
@@ -36,10 +20,9 @@ export const getEventFromStageID = (id: number, eventStartDate?: string) => {
     }
 
     const currentDayOffset = getCurrentDayOffset(eventStartDate || '2025-09-05T18:00:00');
+    console.log({currentDayOffset})
 
-    // Filter events for the current day based on dayOffset
     const eventsToday = calendarBlock.steps.filter(event => {
-        // If event has a specific day property, use it
         if (event.day) {
             if (event.day === 'Vendredi' && currentDayOffset === 0) return true;
             if (event.day === 'Samedi' && currentDayOffset === 1) return true;

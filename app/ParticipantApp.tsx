@@ -10,6 +10,7 @@ import {ChooseCoachView} from "./modules/user-managment/coach/ui/choose-coach.vi
 import {ToolsView} from "./modules/tools/ui/tools.view";
 import {useConfig} from "@/app/modules/config/store/config.store";
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
+import {getCurrentDayOffset} from "@/app/modules/calendar/helpers/get-event-from-stage-id.action";
 
 export const ParticipantApp = () => {
     const [activeTab, setActiveTab] = useState('accueil');
@@ -19,11 +20,21 @@ export const ParticipantApp = () => {
     const {status} = useCurrentStatus(state => state);
     const {currentEvent} = status;
 
+    // Mettre à jour l'heure actuelle toutes les minutes
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 60000); // 60 secondes
+        return () => clearInterval(interval);
+    }, []);
+
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
         setEventEnded(false)
         const startTime = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
-        const endTime = new Date(config.event_start_date ?? '2025-09-07T15:00:00');
+        const endTime = new Date(startTime);
+        endTime.setDate(startTime.getDate() + 2);
+        endTime.setHours(15, 0, 0, 0); // Dimanche 15h
         const totalDuration = endTime.getTime() - startTime.getTime();
         const elapsed = currentTime.getTime() - startTime.getTime();
 
@@ -97,20 +108,10 @@ export const ParticipantApp = () => {
                     <>
                         <NowView/>
                         {status.votesAllowed && <VoteView/>}
-                        {/* Afficher SendFileComp le jour de début +2 (dimanche) */}
-                        {(() => {
-                            const startDate = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
-                            const dayPlusTwo = new Date(startDate);
-                            dayPlusTwo.setDate(startDate.getDate() + 2);
-                            return currentTime.toDateString() === dayPlusTwo.toDateString() && currentEvent.step < 12;
-                        })() && <SendFileComp/>}
-                        {/* Afficher ChooseCoachView le jour de début +1 (samedi) */}
-                        {(() => {
-                            const startDate = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
-                            const dayPlusOne = new Date(startDate);
-                            dayPlusOne.setDate(startDate.getDate() + 1);
-                            return currentTime.toDateString() === dayPlusOne.toDateString();
-                        })() && <ChooseCoachView/>}
+                        {/* Afficher SendFileComp le dimanche (jour 2) avant step 12 */}
+                        {getCurrentDayOffset(config.event_start_date ?? '2025-09-05T18:00:00') === 2 && currentEvent?.step < 15 && <SendFileComp/>}
+                        {/* Afficher ChooseCoachView le samedi (jour 1) */}
+                        {getCurrentDayOffset(config.event_start_date ?? '2025-09-05T18:00:00') === 1 && <ChooseCoachView/>}
                     </>
                 )}
 
