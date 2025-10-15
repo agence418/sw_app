@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useEffect, useState} from 'react';
-import {BarChart3, RefreshCw, SkipForward, Trophy} from 'lucide-react';
+import {BarChart3, Minus, Plus, RefreshCw, SkipForward, Trophy} from 'lucide-react';
 import {useConfig} from "@/app/modules/config/store/config.store";
 
 interface VoteResult {
@@ -20,6 +20,7 @@ export const VoteResultsView = () => {
     const [error, setError] = useState<string | null>(null);
     const {config} = useConfig(state => state);
     const [countTeams, setCountTeams] = useState(0);
+    const [customProjectCount, setCustomProjectCount] = useState<number | null>(null);
 
     const loadVoteResults = async () => {
         try {
@@ -90,17 +91,15 @@ export const VoteResultsView = () => {
     const totalVotes = voteResults.reduce((sum, result) => sum + result.votes, 0);
     const maxPossibleVotes = (visitorVotes + coachVotes + participantVotes) || 1;
     const maxVotes = Math.max(...voteResults.map(r => r.votes), 1);
-    const projectsToCreate = Math.round(participantsCount / 7); // 7 participants par équipe
+    const defaultProjectCount = Math.round(participantsCount / 7); // 7 participants par équipe
+    const projectsToCreate = customProjectCount ?? defaultProjectCount;
 
     const createTeams = async () => {
         try {
             setLoading(true);
 
-            // Calculer le nombre d'équipes à créer (arrondi)
-            const numberOfTeams = Math.round(projectsToCreate);
-
             // Prendre les N meilleurs projets
-            const topIdeas = voteResults.slice(0, numberOfTeams);
+            const topIdeas = voteResults.slice(0, projectsToCreate);
 
             // Supprimer toutes les équipes existantes avant de créer de nouvelles
             await fetch('/api/teams', {method: 'DELETE'});
@@ -147,22 +146,40 @@ export const VoteResultsView = () => {
 
     return (
         <>
-            <button
-                onClick={createTeams}
-                className="mb-4 w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-            >
-                <>
-                    <div className="">
-                        <div>Créer les {projectsToCreate} projets</div>
-                        {countTeams > 0 && (
-                            <div className="text-sm mt-1">
-                                Supprimera les {countTeams} projets existants
-                            </div>
-                        )}
-                    </div>
-                    <SkipForward className="w-4 h-4 ml-4"/>
-                </>
-            </button>
+            <div className="mb-4 flex flex-row gap-2 items-center w-full">
+                <button
+                    onClick={() => setCustomProjectCount(Math.max(1, projectsToCreate - 1))}
+                    className="flex items-center justify-center text-white px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-400 transition-colors"
+                    title="Diminuer le nombre de projets"
+                >
+                    <Minus className="w-5 h-5"/>
+                </button>
+
+                <button
+                    onClick={createTeams}
+                    className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                >
+                    <>
+                        <div className="">
+                            <div>Créer les {projectsToCreate} projets</div>
+                            {countTeams > 0 && (
+                                <div className="text-sm mt-1">
+                                    Supprimera les {countTeams} projets existants
+                                </div>
+                            )}
+                        </div>
+                        <SkipForward className="w-4 h-4 ml-4"/>
+                    </>
+                </button>
+
+                <button
+                    onClick={() => setCustomProjectCount(projectsToCreate + 1)}
+                    className="flex items-center justify-center text-white px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-400 transition-colors"
+                    title="Augmenter le nombre de projets"
+                >
+                    <Plus className="w-5 h-5"/>
+                </button>
+            </div>
 
             <div className="w-full px-2 md:px-4 space-y-4">
                 {/* Statistiques globales */}
@@ -224,7 +241,7 @@ export const VoteResultsView = () => {
                             <div className="space-y-4">
                                 {voteResults.map((result, index) => (
                                     <div key={index}
-                                         className="border border-gray-200 dark:border-gray-800 rounded-lg p-3 bg-gray-50 dark:bg-gray-900">
+                                         className={`border border-gray-200 dark:border-gray-800 rounded-lg p-3 bg-gray-50 dark:bg-gray-900 ${index < projectsToCreate ? 'border-l-4 border-l-green-500' : ''}`}>
                                         <div className="flex items-start justify-between mb-2">
                                             <div className="flex-1 min-w-0">
                                                 {index < 10 && (

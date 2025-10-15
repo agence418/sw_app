@@ -31,14 +31,15 @@ export const VisitorApp = () => {
         return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
     }, [currentTime, config]);
 
-    if (status.currentEvent?.step > 7) {
+    if (status.currentEvent?.step > 3) {
         return (
             <div
                 className="min-h-screen text-white dark:text-gray-900 bg-green-600 to-cyan-500 flex items-center justify-center p-4">
                 <div className="backdrop-blur-sm rounded-3xl p-8 max-w-md w-full text-center">
                     <h1 className="text-3xl font-bold mb-4">Merci !</h1>
                     <p className="text-lg mb-6">
-                        Le Startup Weekend est terminé.
+                        Les votes sont terminés.<br/>
+                        Merci d'avoir participé !
                     </p>
                 </div>
                 <div className="absolute bottom-0 left-0 w-full p-4 text-sm">

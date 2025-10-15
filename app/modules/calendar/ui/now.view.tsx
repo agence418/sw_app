@@ -15,22 +15,22 @@ export const NowView = () => {
                 </h2>
                 {currentEvent ? (
                     <div className={'space-y-2'}>
-                        {/*{nextEvent && (*/}
-                        {/*    <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-2.5 w-3/4">*/}
-                        {/*        <div className="text-gray-600 text-xs">Suivant</div>*/}
-                        {/*        <div className="text-gray-800 dark:text-gray-200 text-sm">{nextEvent.title}</div>*/}
-                        {/*    </div>*/}
-                        {/*)}*/}
+                        {nextEvent && (
+                            <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-2.5 w-3/4">
+                                <div className="text-gray-600 text-xs">Suivant</div>
+                                <div className="text-gray-800 dark:text-gray-200 text-sm">{nextEvent.title}</div>
+                            </div>
+                        )}
                         <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 ms-4">
                             <div className="text-gray-600 text-sm">En cours</div>
                             <div className="text-gray-800 dark:text-gray-200 text-lg">{currentEvent.title}</div>
                         </div>
-                        {/*{previousEvent && (*/}
-                        {/*    <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-2.5 w-3/4">*/}
-                        {/*        <div className="text-gray-600 text-xs">Précédent</div>*/}
-                        {/*        <div className="text-gray-800 dark:text-gray-200 text-sm">{previousEvent.title}</div>*/}
-                        {/*    </div>*/}
-                        {/*)}*/}
+                        {previousEvent && (
+                            <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-2.5 w-3/4">
+                                <div className="text-gray-600 text-xs">Précédent</div>
+                                <div className="text-gray-800 dark:text-gray-200 text-sm">{previousEvent.title}</div>
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <div className="text-gray-500">Aucun événement en cours</div>

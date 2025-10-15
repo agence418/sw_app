@@ -1,5 +1,9 @@
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
-import {getEventFromStageID} from "@/app/modules/calendar/helpers/get-event-from-stage-id.action";
+import {
+    getEventFromStageID,
+    getNextEventFromStageID,
+    getPreviousEventFromStageID
+} from "@/app/modules/calendar/helpers/get-event-from-stage-id.action";
 import {useConfig} from "@/app/modules/config/store/config.store";
 import {getCTAFromStageID} from "@/app/modules/calendar/helpers/get-cta-from-id.action";
 
@@ -25,8 +29,8 @@ export const fetchEvent = async () => {
             status: {
                 ...status,
                 currentEvent: getEventFromStageID(data.currentStep, config?.event_start_date ?? '2025-09-05T18:00:00'),
-                nextEvent: getEventFromStageID(data.currentStep + 1, config?.event_start_date ?? '2025-09-05T18:00:00'),
-                previousEvent: getEventFromStageID(data.currentStep - 1, config?.event_start_date ?? '2025-09-05T18:00:00'),
+                nextEvent: getNextEventFromStageID(data.currentStep, config?.event_start_date ?? '2025-09-05T18:00:00'),
+                previousEvent: getPreviousEventFromStageID(data.currentStep, config?.event_start_date ?? '2025-09-05T18:00:00'),
                 nextCTA: getCTAFromStageID(data.currentStep)
             }
         });
