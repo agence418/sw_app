@@ -151,7 +151,7 @@ export const ChooseCoachView = () => {
                 <div className="flex items-center">
                     <Users className="w-5 h-5 text-yellow-600 mr-2"/>
                     <div>
-                        <div className="text-yellow-800 font-medium">Aucune équipe trouvée</div>
+                        <div className="text-yellow-800 font-medium">Sélection des coach</div>
                         <div className="text-yellow-700 text-sm mt-1">
                             Vous devez être leader d'une équipe pour sélectionner des coachs
                         </div>
@@ -226,7 +226,7 @@ export const ChooseCoachView = () => {
                         </label>
                     );
                 })}
-            </div>s
+            </div>
         </div>
     )
 }

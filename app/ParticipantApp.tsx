@@ -32,6 +32,7 @@ export const ParticipantApp = () => {
     const progress = useMemo(() => {
         setEventEnded(false)
         const startTime = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
+        startTime.setHours(18, 0, 0, 0); // Forcer à 18h00
         const endTime = new Date(startTime);
         endTime.setDate(startTime.getDate() + 2);
         endTime.setHours(15, 0, 0, 0); // Dimanche 15h
@@ -108,9 +109,7 @@ export const ParticipantApp = () => {
                     <>
                         <NowView/>
                         {status.votesAllowed && <VoteView/>}
-                        {/* Afficher SendFileComp le dimanche (jour 2) avant step 12 */}
-                        {getCurrentDayOffset(config.event_start_date ?? '2025-09-05T18:00:00') === 2 && currentEvent?.step < 15 && <SendFileComp/>}
-                        {/* Afficher ChooseCoachView le samedi (jour 1) */}
+                        {getCurrentDayOffset(config.event_start_date ?? '2025-09-05T18:00:00') === 2 && currentEvent?.step < 17 && <SendFileComp/>}
                         {getCurrentDayOffset(config.event_start_date ?? '2025-09-05T18:00:00') === 1 && <ChooseCoachView/>}
                     </>
                 )}

@@ -50,6 +50,7 @@ export const StartupWeekendAdminApp = () => {
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
         const startTime = new Date(config.event_start_date ?? '2025-09-05T18:00:00');
+        startTime.setHours(18, 0, 0, 0); // Forcer à 18h00
         const endTime = new Date(startTime);
         endTime.setDate(startTime.getDate() + 2);
         endTime.setHours(15, 0, 0, 0); // Dimanche 15h
