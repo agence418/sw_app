@@ -1,4 +1,6 @@
-export const CALENDAR = {
+import { Calendar } from "../types/event.type";
+
+export const CALENDAR: Calendar = {
     1: {
         day: 'Vendredi soir',
         dayOffset: 0,

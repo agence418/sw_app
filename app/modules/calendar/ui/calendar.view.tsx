@@ -1,14 +1,15 @@
 import React from "react";
 import { CALENDAR } from "../values/calendar.const";
+import { Event } from "../types/event.type";
 
 // Helper to generate calendar organized by day
-const generateCalendarByDay = () => {
-    const calendarByDay: Record<string, any[]> = {};
+const generateCalendarByDay = (): Record<string, Event[]> => {
+    const calendarByDay: Record<string, Event[]> = {};
 
     Object.values(CALENDAR).forEach((stage) => {
         stage.steps.forEach((event) => {
             // Use event.day if available, otherwise use stage.day
-            const dayLabel = event.day || stage.day;
+            const dayLabel = event.day ?? stage.day;
 
             if (!calendarByDay[dayLabel]) {
                 calendarByDay[dayLabel] = [];

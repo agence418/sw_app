@@ -33,7 +33,7 @@ export const StartupWeekendCoachApp = () => {
     if (status.currentEvent?.step > 7) {
         return (
             <div
-                className="min-h-screen text-white bg-green-600 to-cyan-500 flex items-center justify-center p-4">
+                className="min-h-screen text-white bg-green-600 flex items-center justify-center p-4">
                 <div className="backdrop-blur-sm rounded-3xl p-8 max-w-md w-full text-center">
                     <h1 className="text-3xl font-bold mb-4">Félicitations !</h1>
                     <p className="text-lg mb-6">
@@ -47,7 +47,7 @@ export const StartupWeekendCoachApp = () => {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Header */}
-            <header className="bg-purple-600 text-white p-4 shadow-lg">
+            <header className="bg-blue-600 text-white p-4 shadow-lg">
                 <h1 className="text-xl font-bold text-center">Startup Weekend</h1>
                 <div className="mt-2">
                     <div className="flex justify-between items-center text-sm mb-1">

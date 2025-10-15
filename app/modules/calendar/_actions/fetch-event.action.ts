@@ -19,12 +19,13 @@ export const fetchEvent = async () => {
 
         const {status} = useCurrentStatus.getState();
         const {config} = useConfig.getState();
+
         useCurrentStatus.setState({
             status: {
                 ...status,
-                currentEvent: getEventFromID(data.currentStep, config.event_start_date),
-                nextEvent: getEventFromID(data.currentStep + 1, config.event_start_date),
-                previousEvent: getEventFromID(data.currentStep - 1, config.event_start_date)
+                currentEvent: getEventFromID(data.currentStep, config?.event_start_date ?? '2025-09-05T18:00:00'),
+                nextEvent: getEventFromID(data.currentStep + 1, config?.event_start_date ?? '2025-09-05T18:00:00'),
+                previousEvent: getEventFromID(data.currentStep - 1, config?.event_start_date ?? '2025-09-05T18:00:00')
             }
         });
     } catch (error) {
