@@ -1,90 +1,90 @@
-import {NextRequest, NextResponse} from 'next/server';
-import {db} from '@/lib/db';
+import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/lib/db';
 import nodemailer from 'nodemailer';
-import {resetToken} from "@/app/modules/auth/lib/reset-token.lib";
+import { resetToken } from '@/app/modules/auth/lib/reset-token.lib';
 
 // Créer un transporteur email - À configurer avec vos paramètres SMTP
 const createTransporter = () => {
-    // Si les variables d'environnement pour l'email sont configurées
-    if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-        return nodemailer.createTransport({
-            host: process.env.SMTP_HOST,
-            port: parseInt(process.env.SMTP_PORT || '587'),
-            secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS,
-            },
-        });
-    }
+  // Si les variables d'environnement pour l'email sont configurées
+  if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+    return nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: parseInt(process.env.SMTP_PORT || '587'),
+      secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+  }
 
-    // Sinon, utiliser un compte de test Ethereal (pour le développement)
-    return null;
+  // Sinon, utiliser un compte de test Ethereal (pour le développement)
+  return null;
 };
 
-export async function POST(request: NextRequest) {
-    try {
-        const {email} = await request.json();
+export async function POST(_request: NextRequest) {
+  try {
+    const { email } = await _request.json();
 
-        if (!email || !email.trim()) {
-            return NextResponse.json(
-                {error: 'Email requis'},
-                {status: 400}
-            );
-        }
+    if (!email || !email.trim()) {
+      return NextResponse.json({ _error: 'Email requis' }, { status: 400 });
+    }
 
-        const admin = await db.getAdminByEmail(email.trim().toLowerCase());
-        const coach = await db.getCoachByEmail(email.trim().toLowerCase());
-        const participant = await db.getParticipantByEmail(email.trim().toLowerCase());
-        const visitor = await db.getVisitorByEmail(email.trim().toLowerCase());
+    const admin = await db.getAdminByEmail(email.trim().toLowerCase());
+    const coach = await db.getCoachByEmail(email.trim().toLowerCase());
+    const participant = await db.getParticipantByEmail(email.trim().toLowerCase());
+    const visitor = await db.getVisitorByEmail(email.trim().toLowerCase());
 
-        const user = admin || coach || participant || visitor;
+    const user = admin || coach || participant || visitor;
 
-        // Même si l'utilisateur n'existe pas, on retourne un succès pour des raisons de sécurité
-        if (!user) {
-            return NextResponse.json(
-                {success: true, message: 'Si cette adresse existe, un email de réinitialisation a été envoyé'},
-                {status: 200}
-            );
-        }
+    // Même si l'utilisateur n'existe pas, on retourne un succès pour des raisons de sécurité
+    if (!user) {
+      return NextResponse.json(
+        {
+          success: true,
+          message: 'Si cette adresse existe, un email de réinitialisation a été envoyé',
+        },
+        { status: 200 }
+      );
+    }
 
-        const token = resetToken(user);
-        const resetLink = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
+    const token = resetToken(user);
+    const resetLink = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
 
-        console.log({resetLink})
+    // eslint-disable-next-line no-console
+    console.log({ resetLink });
 
-        // Créer le transporteur email
-        let transporter = createTransporter();
-        let testAccount = null;
+    // Créer le transporteur email
+    let transporter = createTransporter();
+    let testAccount = null;
 
-        // Si aucune config SMTP, utiliser Ethereal pour les tests
-        if (!transporter) {
-            try {
-                testAccount = await nodemailer.createTestAccount();
-                transporter = nodemailer.createTransport({
-                    host: 'smtp.ethereal.email',
-                    port: 587,
-                    secure: false,
-                    auth: {
-                        user: testAccount.user,
-                        pass: testAccount.pass,
-                    },
-                });
-            } catch (error) {
-                console.error('Erreur création compte Ethereal:', error);
-                transporter = null;
-            }
-        }
+    // Si aucune config SMTP, utiliser Ethereal pour les tests
+    if (!transporter) {
+      try {
+        testAccount = await nodemailer.createTestAccount();
+        transporter = nodemailer.createTransport({
+          host: 'smtp.ethereal.email',
+          port: 587,
+          secure: false,
+          auth: {
+            user: testAccount.user,
+            pass: testAccount.pass,
+          },
+        });
+      } catch (_error) {
+        console.error('Erreur création compte Ethereal:', _error);
+        transporter = null;
+      }
+    }
 
-        if (transporter) {
-            // Si un transporteur est disponible, envoyer l'email
-            try {
-
-                const mailOptions = {
-                    from: process.env.SMTP_FROM || `"Startup Weekend" <${process.env.SMTP_USER}>`,
-                    to: user.email,
-                    subject: 'Réinitialisation de votre mot de passe - Startup Weekend',
-                    html: `
+    if (transporter) {
+      // Si un transporteur est disponible, envoyer l'email
+      try {
+        const mailOptions = {
+          from: process.env.SMTP_FROM || `"Startup Weekend" <${process.env.SMTP_USER}>`,
+          to: user.email,
+          subject: 'Réinitialisation de votre mot de passe - Startup Weekend',
+          html: `
                         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                             <h2 style="color: #333;">Bonjour ${user.name},</h2>
                             
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
                             </p>
                         </div>
                     `,
-                    text: `
+          text: `
                         Bonjour ${user.name},
                         
                         Vous avez demandé à réinitialiser votre mot de passe pour votre compte Startup Weekend.
@@ -129,42 +129,27 @@ export async function POST(request: NextRequest) {
                         vous pouvez ignorer cet email.
                         
                         Cet email a été envoyé automatiquement, merci de ne pas y répondre.
-                    `
-                };
+                    `,
+        };
 
-                const info = await transporter.sendMail(mailOptions);
-
-                console.log('✅ Email envoyé avec succès !');
-                console.log('📧 Message ID:', info.messageId);
-                console.log('👤 Destinataire:', user.email);
-
-                // Si c'est un compte de test Ethereal, afficher l'URL de prévisualisation
-                if (testAccount) {
-                    console.log('🔗 Prévisualiser l\'email:', nodemailer.getTestMessageUrl(info));
-                    console.log('💡 Ouvrez le lien ci-dessus pour voir l\'email dans Ethereal');
-                }
-            } catch (emailError) {
-                console.error('Erreur lors de l\'envoi de l\'email:', emailError);
-                // On continue quand même pour ne pas bloquer l'utilisateur
-            }
-        }
-
-        return NextResponse.json(
-            {
-                success: true,
-                message: 'Un email de réinitialisation a été envoyé',
-                // En développement uniquement, retourner le lien
-                resetLink: process.env.NODE_ENV === 'development' ? resetLink : undefined
-            },
-            {status: 200}
-        );
-
-    } catch
-        (error) {
-        console.error('Erreur lors de la demande de reset:', error);
-        return NextResponse.json(
-            {error: 'Erreur serveur'},
-            {status: 500}
-        );
+        await transporter.sendMail(mailOptions);
+      } catch (emailError) {
+        console.error("Erreur lors de l'envoi de l'email:", emailError);
+        // On continue quand même pour ne pas bloquer l'utilisateur
+      }
     }
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Un email de réinitialisation a été envoyé',
+        // En développement uniquement, retourner le lien
+        resetLink: process.env.NODE_ENV === 'development' ? resetLink : undefined,
+      },
+      { status: 200 }
+    );
+  } catch (_error) {
+    console.error('Erreur lors de la demande de reset:', _error);
+    return NextResponse.json({ _error: 'Erreur serveur' }, { status: 500 });
+  }
 }
