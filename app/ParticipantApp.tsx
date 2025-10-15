@@ -35,7 +35,7 @@ export const ParticipantApp = () => {
         return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
     }, [currentTime, config]);
 
-    if (status.currentEvent?.step > 7) {
+    if (status.currentEvent?.step > 16) {
         return (
             <div
                 className="min-h-screen text-white dark:text-gray-900 bg-green-600 to-cyan-500 flex items-center justify-center p-4">

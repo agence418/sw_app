@@ -2,13 +2,11 @@ export type Event = {
     step: number;
     title: string;
     time: string;
-    duration: number;
-    day?: string; // Optional: overrides the stage's day
+    day?: 'Vendredi' | 'Samedi' | 'Dimanche'; // Optional: overrides the stage's day
 };
 
 export type Stage = {
-    day: string;
-    dayOffset: number;
+    day: 'Vendredi' | 'Samedi' | 'Dimanche';
     steps: Event[];
     cta: string;
 };

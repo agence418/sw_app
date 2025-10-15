@@ -126,7 +126,6 @@ export const StartupWeekendAdminApp = () => {
             alert('Erreur lors du chargement des équipes');
         }
     };
-    console.log({countTeams})
 
     useEffect(() => {
         loadCountTeams();
