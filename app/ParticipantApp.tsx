@@ -101,7 +101,7 @@ export const ParticipantApp = () => {
                             key={id}
                             onClick={() => setActiveTab(id)}
                             className={`flex flex-col items-center p-2 rounded-lg min-w-0 flex-shrink-0 ${
-                                activeTab === id ? 'bg-orange-600 text-white' : 'text-gray-600'
+                                activeTab === id ? 'bg-orange-600 text-white' : 'text-gray-600 dark:text-gray-400'
                             }`}
                         >
                             <Icon className="w-5 h-5 mb-1"/>
