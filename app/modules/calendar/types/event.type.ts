@@ -4,7 +4,6 @@ export type Event = {
     time: string;
     duration: number;
     day?: string; // Optional: overrides the stage's day
-    nextCTA?: string;
 };
 
 export type Stage = {
