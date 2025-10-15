@@ -33,31 +33,32 @@ export const CALENDAR: Calendar = {
             {step: 12, time: '08:00', title: 'Petit-déjeuner', day: 'Dimanche'},
             {step: 12, time: '08:30', title: 'Mot du facilitateur', day: 'Dimanche'},
             {step: 13, time: '09:00', title: 'Finalisation des projets', day: 'Dimanche'},
-            {step: 13, time: '12:30', title: 'Déjeuner', day: 'Dimanche'},
-            {step: 13, time: '13:00', title: 'Envoi des présentations', day: 'Dimanche'}
+            {step: 14, time: '12:30', title: 'Déjeuner', day: 'Dimanche'},
+            {step: 15, time: '13:00', title: 'Envoi des présentations', day: 'Dimanche'}
         ],
         cta: 'Vérouiller l\'envoie des présentations'
     },
     5: {
         day: 'Dimanche',
         steps: [
-            {step: 13, time: '11:00', title: 'Présentations finales (3 min/équipe)'},
+            {step: 16, time: '11:00', title: 'Présentations finales (3 min/équipe)'},
         ],
         cta: 'Vérouiller l\'envoie des présentations'
     },
     6: {
         day: 'Dimanche',
         steps: [
-            {step: 14, time: '11:00', title: 'Présentations finales (3 min/équipe)'},
-            {step: 15, time: '13:00', title: 'Délibération du jury'},
-            {step: 16, time: '14:00', title: 'Remise des prix et clôture'},
+            {step: 17, time: '11:00', title: 'Présentations finales (3 min/équipe)'},
+            {step: 17, time: '11:00', title: 'Présentations finales (3 min/équipe)'},
+            {step: 18, time: '13:00', title: 'Délibération du jury'},
+            {step: 19, time: '14:00', title: 'Remise des prix et clôture'},
         ],
         cta: 'Fin'
     },
     7: {
         day: 'Dimanche',
         steps: [
-            {step: 17, time: '15:00', title: 'Fin du Startup Weekend'}
+            {step: 20, time: '15:00', title: 'Fin du Startup Weekend'}
         ],
         cta: 'Fin'
     }
