@@ -3,8 +3,6 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [main, v1]
-  pull_request:
-    branches: [main, v1]
 
 env:
   NODE_VERSION: '20'
