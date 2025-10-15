@@ -57,8 +57,20 @@ export const VisitorApp = () => {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Header */}
-            <header className="bg-red-600 text-white p-4 shadow-lg">
+            <header className="bg-pink-600 text-white p-4 shadow-lg">
                 <h1 className="text-xl font-bold text-center">Startup Weekend</h1>
+                <div className="mt-2">
+                    <div className="flex justify-between items-center text-sm mb-1">
+                        <span>Progression</span>
+                        <span>{Math.round(progress)}%</span>
+                    </div>
+                    <div className="w-full bg-white/20 rounded-full h-2">
+                        <div
+                            className="bg-white dark:bg-black rounded-full h-2 transition-all duration-500"
+                            style={{width: `${progress}%`}}
+                        />
+                    </div>
+                </div>
             </header>
 
             {/* Contenu principal */}
@@ -69,10 +81,13 @@ export const VisitorApp = () => {
                         {status.votesAllowed && config.who_can_vote.includes('visitor') ? <VoteView/> :
                             <div className="space-y-6">
                                 <div className="rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
-                                    <h2 className="text-lg font-semibold flex items-center">
-                                        <LinkIcon className="w-5 h-5 mr-2 text-blue-500"/>
-                                        Stay connected !
+                                    <h2 className="text-lg font-semibold flex items-center mb-4">
+                                        <LinkIcon className="w-5 h-5 mr-2 text-green-600"/>
+                                        Restez connecté !
                                     </h2>
+                                    <div className="text-gray-500">Vous pourrez bientôt
+                                        voter pour vos projets favoris
+                                    </div>
                                 </div>
                             </div>
                         }

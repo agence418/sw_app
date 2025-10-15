@@ -30,7 +30,10 @@ module.exports = {
     }
    },
    orange: {
-    600: '#EE6F2D',
+    600: '#FD7E28',
+   },
+   pink: {
+    600: '#FB046F',
    },
    screens: {
     'xs': '375px',
