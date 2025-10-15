@@ -58,11 +58,6 @@ export const CalendarView = () => {
                                 <div className="flex-1 text-gray-800 dark:text-gray-200">
                                     {event.title}
                                 </div>
-                                {event.duration > 0 && (
-                                    <div className="text-xs text-gray-500">
-                                        {Math.floor(event.duration / 60)}h{event.duration % 60 > 0 ? `${event.duration % 60}m` : ''}
-                                    </div>
-                                )}
                             </div>
                         ))}
                     </div>
