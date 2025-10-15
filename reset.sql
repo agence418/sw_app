@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS participants CASCADE;
 DROP TABLE IF EXISTS visitors CASCADE;
 DROP TABLE IF EXISTS event_state CASCADE;
 DROP TABLE IF EXISTS app_config CASCADE;
+DROP TABLE IF EXISTS tools CASCADE;
 
 -- Supprimer les séquences existantes pour les recréer proprement
 DROP SEQUENCE IF EXISTS ideas_id_seq CASCADE;
@@ -153,6 +154,15 @@ CREATE TABLE app_config
     updated_at            TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Table des outils pratiques
+CREATE TABLE tools
+(
+    id         SERIAL PRIMARY KEY,
+    name       VARCHAR(200) NOT NULL,
+    url        VARCHAR(500) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Initialisation des états des événements
 INSERT INTO event_state (var, val)
 VALUES ('current_step', 0);
@@ -160,6 +170,14 @@ VALUES ('current_step', 0);
 -- Initialisation de la configuration par défaut
 INSERT INTO app_config (event_start_date, allow_visitor_registration, allow_visitor_accounts, who_can_vote, votes_per_participant)
 VALUES ('2025-09-05T18:00:00', true, true, ARRAY['participant']::TEXT[], 3);
+
+-- Initialisation des outils par défaut
+INSERT INTO tools (name, url) VALUES
+('Site officiel Startup Weekend', 'https://startupweekend.org'),
+('Slack de l''événement', '#'),
+('Drive partagé', '#'),
+('Modèle de Business Canvas', '#'),
+('Template pitch deck', '#');
 
 -- Index pour optimiser les performances
 CREATE INDEX idx_votes_user ON votes (user_id, user_type);

@@ -8,6 +8,7 @@ import {
     GraduationCap,
     HardHat,
     HatGlasses,
+    Link as LinkIcon,
     Lock,
     LockOpen,
     Settings,
@@ -24,6 +25,7 @@ import {IdeaCreationView} from "./modules/user-managment/participants/ui/idea-cr
 import {ListTeamsView} from "./modules/user-managment/participants/ui/list-teams.view";
 import {ListVisitorsView} from "./modules/user-managment/visitors/ui/list-visitors.view";
 import {ConfigView} from "./modules/config/ui/config.view";
+import {ManageToolsView} from "./modules/tools/ui/manage-tools.view";
 import {useConfig} from "@/app/modules/config/store/config.store";
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
 import {backEvent} from "@/app/modules/calendar/_actions/back-event.action";
@@ -170,6 +172,7 @@ export const StartupWeekendAdminApp = () => {
                         {id: 'visitors', icon: HatGlasses, label: 'Visiteurs'},
                         {id: 'coaches', icon: GraduationCap, label: 'Coachs'},
                         {id: 'teams', icon: Users, label: 'Teams'},
+                        {id: 'outils', icon: LinkIcon, label: 'Outils'},
                         {id: 'calendrier', icon: Calendar, label: 'Calendrier'},
                         {id: 'config', icon: Settings, label: 'Config'},
                     ].map(({id, icon: Icon, label}) => (
@@ -275,6 +278,11 @@ export const StartupWeekendAdminApp = () => {
                 {/* Calendrier */}
                 {activeTab === 'calendrier' && (
                     <CalendarView/>
+                )}
+
+                {/* Gestion des outils */}
+                {activeTab === 'outils' && (
+                    <ManageToolsView/>
                 )}
 
                 {/* Configuration */}
