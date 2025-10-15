@@ -17,7 +17,7 @@ const getEventStage = (eventStartDate: string): number => {
     return 7; // After event
 };
 
-export const getEventFromID = (id: number, eventStartDate?: string) => {
+export const getEventFromStageID = (id: number, eventStartDate?: string) => {
     if (id < 0) {
         // set to auto, we should return event depending on date and time
         const currentTime = getCurrentDateTime();

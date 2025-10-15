@@ -36,7 +36,7 @@ export const StartupWeekendAdminApp = () => {
     const [currentTime, setCurrentTime] = useState(new Date());
     const {config} = useConfig((state) => state);
     const {status} = useCurrentStatus((state) => state);
-    const {currentEvent, defaultEvent} = status;
+    const {currentEvent} = status;
     const [countTeams, setCountTeams] = useState(0);
 
 
@@ -54,12 +54,12 @@ export const StartupWeekendAdminApp = () => {
 
     const handleNextEvent = () => {
         try {
-            if (currentEvent?.step === 2 && countTeams === 0) {
+            if (currentEvent?.step === 3 && countTeams === 0) {
                 alert('Vous devez créer au moins une équipe avant de passer à l\'événement suivant.');
                 return;
             }
 
-            if (currentEvent?.step === 2) {
+            if (currentEvent?.step === 3) {
                 lockVotes()
             }
 
@@ -193,15 +193,15 @@ export const StartupWeekendAdminApp = () => {
                         )}
                         <button
                             onClick={() => handleNextEvent()}
-                            className={`basis-[100%] flex items-center justify-center gap-2 text-white px-3 py-2 rounded-lg bg-green-600 hover:bg-green-400 transition-colors ${currentEvent?.step === 2 && countTeams === 0 ? 'opacity-50' : ''}`}
-                            disabled={currentEvent?.step === 2 && countTeams === 0}
+                            className={`basis-[100%] flex items-center justify-center gap-2 text-white px-3 py-2 rounded-lg bg-green-600 hover:bg-green-400 transition-colors ${currentEvent?.step === 3 && countTeams === 0 ? 'opacity-50' : ''}`}
+                            disabled={currentEvent?.step === 3 && countTeams === 0}
                         >
-                            {!currentEvent ? 'Start' : currentEvent?.nextCTA ?? 'Next'}
+                            {!currentEvent ? 'Start' : status?.nextCTA ?? 'Next'}
                             <SkipForward className="w-4 h-4"/>
                         </button>
                     </div>
 
-                    {currentEvent?.step > 0 && currentEvent?.step < 3 && (
+                    {currentEvent?.step > 0 && currentEvent?.step < 4 && (
                         <>
                             {!status.votesAllowed ? (
                                 <button
@@ -227,9 +227,9 @@ export const StartupWeekendAdminApp = () => {
                 {/* Page d'accueil */}
                 {activeTab === 'accueil' && (
                     <>
-                        {currentEvent?.title === 'Présentation des idées (60 secondes/idée)' ?
+                        {currentEvent?.step === 2 ?
                             <IdeaCreationView/> :
-                            currentEvent?.title === 'Votes' ? <VoteResultsView/> :
+                            currentEvent?.step === 3 ? <VoteResultsView/> :
                                 <>
                                     <NowView/>
                                 </>

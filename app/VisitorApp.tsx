@@ -14,7 +14,6 @@ export const VisitorApp = () => {
     const {status} = useCurrentStatus(state => state);
     const {currentEvent} = status;
     const {config} = useConfig((state) => state)
-    console.log({config})
 
     // Calcul de la progression du weekend
     const progress = useMemo(() => {
@@ -79,20 +78,34 @@ export const VisitorApp = () => {
                 {activeTab === 'accueil' && (
                     <>
                         {status.votesAllowed && config.who_can_vote.includes('visitor') ? <VoteView/> :
-                            <div className="space-y-6">
-                                <div className="rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
-                                    <h2 className={`text-lg font-semibold flex items-center ${config.who_can_vote.includes('visitor') ?  'mb-4' : ''}`}>
-                                        <LinkIcon className="w-5 h-5 mr-2 text-green-600"/>
-                                        Restez connecté !
-                                    </h2>
-                                    {config.who_can_vote.includes('visitor') && (
-
-                                        <div className="text-gray-500">Vous pourrez bientôt
-                                            voter pour vos projets favoris
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
+                            status.currentEvent?.step < 4 ? (
+                                <div className="space-y-6">
+                                    <div
+                                        className="rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
+                                        <h2 className={`text-lg font-semibold flex items-center ${config.who_can_vote.includes('visitor') ? 'mb-4' : ''}`}>
+                                            <LinkIcon className="w-5 h-5 mr-2 text-green-600"/>
+                                            Restez connecté !
+                                        </h2>
+                                        {config.who_can_vote.includes('visitor') && (
+                                            <div className="text-gray-500">Vous pourrez bientôt
+                                                voter pour vos projets favoris
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>) : (
+                                <div className="space-y-6">
+                                    <div
+                                        className="rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
+                                        <h2 className={`text-lg font-semibold flex items-center ${config.who_can_vote.includes('visitor') ? 'mb-4' : ''}`}>
+                                            <LinkIcon className="w-5 h-5 mr-2 text-green-600"/>
+                                            Merci !
+                                        </h2>
+                                        {config.who_can_vote.includes('visitor') && (
+                                            <div className="text-gray-500">Merci pour votre participation
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>)
                         }
                     </>
                 )}

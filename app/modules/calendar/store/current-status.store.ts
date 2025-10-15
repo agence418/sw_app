@@ -9,6 +9,7 @@ type CurrentStatus = {
         currentEvent?: Event;
         previousEvent?: Event;
         nextEvent?: Event;
+        nextCTA?: string;
         defaultEvent?: Event;
         autoAdvance?: boolean;
         votesAllowed: boolean;

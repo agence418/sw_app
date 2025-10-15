@@ -1,7 +1,8 @@
 import {useCurrentStatus} from "@/app/modules/calendar/store/current-status.store";
-import {getEventFromID} from "@/app/modules/calendar/helpers/get-event-from-id.action";
+import {getEventFromStageID} from "@/app/modules/calendar/helpers/get-event-from-stage-id.action";
 import {fetchEvent} from "@/app/modules/calendar/_actions/fetch-event.action";
 import {useConfig} from "@/app/modules/config/store/config.store";
+import {getCTAFromStageID} from "@/app/modules/calendar/helpers/get-cta-from-id.action";
 
 export const advanceEvent = async () => {
     try {
@@ -22,9 +23,10 @@ export const advanceEvent = async () => {
             status: {
                 ...status,
                 autoAdvance: false,
-                currentEvent: getEventFromID(Math.max((status.currentEvent?.step ?? -1) + 1, 1), config.event_start_date),
-                nextEvent: getEventFromID(Math.max((status.currentEvent?.step ?? -1) + 2, 1), config.event_start_date),
-                previousEvent: getEventFromID(Math.max((status.currentEvent?.step ?? -1), 1), config.event_start_date)
+                currentEvent: getEventFromStageID(Math.max((status.currentEvent?.step ?? -1) + 1, 1), config.event_start_date),
+                nextEvent: getEventFromStageID(Math.max((status.currentEvent?.step ?? -1) + 2, 1), config.event_start_date),
+                previousEvent: getEventFromStageID(Math.max((status.currentEvent?.step ?? -1), 1), config.event_start_date),
+                nextCTA: getCTAFromStageID(Math.max((status.currentEvent?.step ?? -1) + 1, 1))
             }
         });
 
