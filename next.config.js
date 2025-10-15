@@ -9,12 +9,12 @@ const nextConfig = {
 
   // TypeScript strict
   typescript: {
-    tsconfigPath: './tsconfig.json'
+    tsconfigPath: './tsconfig.json',
   },
 
   // ESLint pendant le build
   eslint: {
-    dirs: ['app', 'components', 'lib', 'utils']
+    dirs: ['app', 'components', 'lib', 'utils'],
   },
 
   // Images optimisées
@@ -37,20 +37,20 @@ const nextConfig = {
         headers: [
           {
             key: 'X-Frame-Options',
-            value: 'DENY'
+            value: 'DENY',
           },
           {
             key: 'X-Content-Type-Options',
-            value: 'nosniff'
+            value: 'nosniff',
           },
           {
             key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin'
-          }
-        ]
-      }
-    ]
-  }
+            value: 'origin-when-cross-origin',
+          },
+        ],
+      },
+    ];
+  },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
