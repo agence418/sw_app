@@ -53,7 +53,7 @@ export const StartupWeekendAdminApp = () => {
         startTime.setHours(18, 0, 0, 0); // Forcer à 18h00
         const endTime = new Date(startTime);
         endTime.setDate(startTime.getDate() + 2);
-        endTime.setHours(15, 0, 0, 0); // Dimanche 15h
+        endTime.setHours(20, 0, 0, 0); // Dimanche 15h
         const totalDuration = endTime.getTime() - startTime.getTime();
         const elapsed = currentTime.getTime() - startTime.getTime();
 
