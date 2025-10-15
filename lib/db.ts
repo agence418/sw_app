@@ -60,6 +60,13 @@ interface DbIdea {
     created_at?: Date;
 }
 
+interface DbTool {
+    id: number;
+    name: string;
+    url: string;
+    created_at?: Date;
+}
+
 // Fonctions de base de données avec vraies requêtes SQL
 export const db = {
     // Participants
@@ -1078,6 +1085,58 @@ export const db = {
         } catch (error) {
             console.error('Erreur updateAppConfig:', error);
             throw error;
+        }
+    },
+
+    // Outils
+    async getTools(): Promise<DbTool[]> {
+        try {
+            const {rows} = await pool.query(
+                'SELECT * FROM tools ORDER BY id'
+            );
+            return rows;
+        } catch (error) {
+            console.error('Erreur getTools:', error);
+            return [];
+        }
+    },
+
+    async createTool(data: Omit<DbTool, 'id'>): Promise<DbTool> {
+        try {
+            const {rows} = await pool.query(
+                'INSERT INTO tools (name, url) VALUES ($1, $2) RETURNING *',
+                [data.name, data.url]
+            );
+            return rows[0];
+        } catch (error) {
+            console.error('Erreur createTool:', error);
+            throw error;
+        }
+    },
+
+    async updateTool(id: number, data: Partial<DbTool>): Promise<DbTool | null> {
+        try {
+            const {rows} = await pool.query(
+                'UPDATE tools SET name = COALESCE($2, name), url = COALESCE($3, url) WHERE id = $1 RETURNING *',
+                [id, data.name, data.url]
+            );
+            return rows[0] || null;
+        } catch (error) {
+            console.error('Erreur updateTool:', error);
+            return null;
+        }
+    },
+
+    async deleteTool(id: number): Promise<boolean> {
+        try {
+            const result = await pool.query(
+                'DELETE FROM tools WHERE id = $1',
+                [id]
+            );
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Erreur deleteTool:', error);
+            return false;
         }
     },
 };
