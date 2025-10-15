@@ -201,7 +201,7 @@ export const SendFileComp = () => {
                     <button
                         onClick={handleUpload}
                         disabled={isUploading}
-                        className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-3 rounded-lg font-semibold hover:from-green-700 hover:to-green-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
+                        className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                         {isUploading ? (
                             <>
                                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -242,10 +242,10 @@ export const SendFileComp = () => {
             </div>
 
             {/* Bouton pour obtenir le lien */}
-            <div className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-5 border-2 border-purple-200 dark:border-purple-800">
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-5 border border-gray-200 dark:border-gray-800">
                 <div className="flex items-center gap-3 mb-3">
-                    <div className="bg-purple-100 dark:bg-purple-900 p-2 rounded-lg">
-                        <Laptop className="w-5 h-5 text-purple-600 dark:text-purple-400"/>
+                    <div className="bg-blue-100 dark:bg-blue-900 p-2 rounded-lg">
+                        <Laptop className="w-5 h-5 text-blue-600 dark:text-blue-400"/>
                     </div>
                     <h3 className="font-semibold text-gray-900 dark:text-white">Envoyer depuis un ordinateur</h3>
                 </div>
@@ -257,7 +257,7 @@ export const SendFileComp = () => {
                     <button
                         onClick={handleGenerateLink}
                         disabled={isGeneratingLink}
-                        className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
+                        className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                         {isGeneratingLink ? (
                             <>
                                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -272,7 +272,7 @@ export const SendFileComp = () => {
                     </button>
                 ) : (
                     <div className="space-y-3">
-                        <div className="bg-white dark:bg-gray-800 rounded-lg p-3 border border-purple-300 dark:border-purple-700">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-300 dark:border-gray-700">
                             <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 block">
                                 Lien d'envoi sécurisé
                             </label>
@@ -285,7 +285,7 @@ export const SendFileComp = () => {
                                 />
                                 <button
                                     onClick={handleCopyLink}
-                                    className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center gap-2 font-medium">
+                                    className="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-colors flex items-center gap-2 font-medium shadow-lg hover:shadow-xl">
                                     <Copy className="w-4 h-4"/>
                                     <span className="hidden sm:inline">Copier</span>
                                 </button>
@@ -295,7 +295,7 @@ export const SendFileComp = () => {
                             href={uploadUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl">
+                            className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-3 rounded-lg font-semibold hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl">
                             <ExternalLink className="w-5 h-5"/>
                             Ouvrir le lien dans un nouvel onglet
                         </a>
