@@ -35,12 +35,8 @@ export const CalendarView = () => {
     const calendarByDay = generateCalendarByDay();
 
     // Define day order for display
-    const dayOrder = ['Vendredi soir', 'Samedi', 'Dimanche', 'Dimanche matin', 'Dimanche après-midi', 'Samedi & Dimanche matin', 'Après l\'événement'];
-    const sortedDays = Object.keys(calendarByDay).sort((a, b) => {
-        const indexA = dayOrder.indexOf(a);
-        const indexB = dayOrder.indexOf(b);
-        return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
-    });
+    const dayOrder = ['Vendredi', 'Samedi', 'Dimanche'];
+    const sortedDays = dayOrder.filter(day => calendarByDay[day]);
 
     return (
         <div className="space-y-4">
