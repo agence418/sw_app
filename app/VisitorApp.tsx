@@ -81,13 +81,16 @@ export const VisitorApp = () => {
                         {status.votesAllowed && config.who_can_vote.includes('visitor') ? <VoteView/> :
                             <div className="space-y-6">
                                 <div className="rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
-                                    <h2 className="text-lg font-semibold flex items-center mb-4">
+                                    <h2 className={`text-lg font-semibold flex items-center ${config.who_can_vote.includes('visitor') ?  'mb-4' : ''}`}>
                                         <LinkIcon className="w-5 h-5 mr-2 text-green-600"/>
                                         Restez connecté !
                                     </h2>
-                                    <div className="text-gray-500">Vous pourrez bientôt
-                                        voter pour vos projets favoris
-                                    </div>
+                                    {config.who_can_vote.includes('visitor') && (
+
+                                        <div className="text-gray-500">Vous pourrez bientôt
+                                            voter pour vos projets favoris
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         }
