@@ -9,7 +9,7 @@ dist
 !.env.example
 npm-debug.log*
 yarn-debug.log*
-yarn-_error.log*
+yarn-error.log*
 .DS_Store
 coverage
 .vscode
