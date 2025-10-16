@@ -1,6 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+
+import { useSession } from 'next-auth/react';
+
 import {
   CheckCircle,
   Crown,
@@ -16,7 +19,6 @@ import {
   X,
   XCircle,
 } from 'lucide-react';
-import { useSession } from 'next-auth/react';
 
 interface Team {
   id: number;
@@ -211,43 +213,43 @@ export const ListTeamsView = () => {
     return (
       <>
         {teamsForThisCoach.length > 0 && (
-          <div className="mb-6">
-            <h3 className="font-medium text-gray-700 dark:text-gray-300 text-sm mb-4 flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-600" />
+          <div className='mb-6'>
+            <h3 className='mb-4 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <CheckCircle className='h-4 w-4 text-green-600' />
               Équipes qui souhaitent vous rencontrer ({teamsForThisCoach.length})
             </h3>
-            <div className="space-y-4">
+            <div className='space-y-4'>
               {teamsForThisCoach.map((team) => (
                 <div
                   key={team.id}
-                  className="border border-green-200 rounded-lg p-4 bg-green-50 dark:bg-green-800 dark:border-green-700"
+                  className='rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-700 dark:bg-green-800'
                 >
-                  <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-lg flex items-center gap-2 mb-2">
-                    <Users className="w-5 h-5 text-green-600" />
+                  <h3 className='mb-2 flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-gray-200'>
+                    <Users className='h-5 w-5 text-green-600' />
                     {team.name}
                   </h3>
                   {team.idea_description && (
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
+                    <p className='mb-3 text-sm text-gray-600 dark:text-gray-400'>
                       {team.idea_description}
                     </p>
                   )}
                   {team.position && (
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-red-600" />
-                      <div className="text-gray-700 dark:text-gray-300 py-2">{team.position}</div>
+                    <div className='flex items-center gap-2'>
+                      <MapPin className='h-4 w-4 text-red-600' />
+                      <div className='py-2 text-gray-700 dark:text-gray-300'>{team.position}</div>
                     </div>
                   )}
                   {team.leader_name && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Crown className="w-4 h-4 text-yellow-500" />
-                      <div className="">
-                        <div className="text-gray-600 dark:text-gray-400">
-                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                    <div className='flex items-center gap-2 text-sm'>
+                      <Crown className='h-4 w-4 text-yellow-500' />
+                      <div className=''>
+                        <div className='text-gray-600 dark:text-gray-400'>
+                          <span className='font-medium text-gray-700 dark:text-gray-300'>
                             Leader:
                           </span>{' '}
                           {team.leader_name}
                         </div>
-                        <div className="text-gray-600 dark:text-gray-400">
+                        <div className='text-gray-600 dark:text-gray-400'>
                           ({team.leader_email})
                         </div>
                       </div>
@@ -260,43 +262,43 @@ export const ListTeamsView = () => {
         )}
 
         {assignedTeams.length > 0 && (
-          <div className="mb-6">
-            <h3 className="font-medium text-gray-700 dark:text-gray-300 text-sm mb-4 flex items-center gap-2">
-              <GraduationCap className="w-4 h-4 text-purple-600" />
+          <div className='mb-6'>
+            <h3 className='mb-4 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <GraduationCap className='h-4 w-4 text-purple-600' />
               Équipes affecté ({assignedTeams.length})
             </h3>
-            <div className="space-y-4">
+            <div className='space-y-4'>
               {assignedTeams.map((team) => (
                 <div
                   key={team.id}
-                  className="border border-purple-200 rounded-lg p-4 bg-purple-50 dark:bg-purple-900 dark:border-purple-700"
+                  className='rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-700 dark:bg-purple-900'
                 >
-                  <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-lg flex items-center gap-2 mb-2">
-                    <Users className="w-5 h-5 text-purple-600" />
+                  <h3 className='mb-2 flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-gray-200'>
+                    <Users className='h-5 w-5 text-purple-600' />
                     {team.name}
                   </h3>
                   {team.idea_description && (
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
+                    <p className='mb-3 text-sm text-gray-600 dark:text-gray-400'>
                       {team.idea_description}
                     </p>
                   )}
                   {team.position && (
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-red-600" />
-                      <div className="text-gray-700 dark:text-gray-300 py-2">{team.position}</div>
+                    <div className='flex items-center gap-2'>
+                      <MapPin className='h-4 w-4 text-red-600' />
+                      <div className='py-2 text-gray-700 dark:text-gray-300'>{team.position}</div>
                     </div>
                   )}
                   {team.leader_name && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Crown className="w-4 h-4 text-yellow-500" />
-                      <div className="">
-                        <div className="text-gray-600 dark:text-gray-400">
-                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                    <div className='flex items-center gap-2 text-sm'>
+                      <Crown className='h-4 w-4 text-yellow-500' />
+                      <div className=''>
+                        <div className='text-gray-600 dark:text-gray-400'>
+                          <span className='font-medium text-gray-700 dark:text-gray-300'>
                             Leader:
                           </span>{' '}
                           {team.leader_name}
                         </div>
-                        <div className="text-gray-600 dark:text-gray-400">
+                        <div className='text-gray-600 dark:text-gray-400'>
                           ({team.leader_email})
                         </div>
                       </div>
@@ -310,42 +312,42 @@ export const ListTeamsView = () => {
 
         {otherTeams.length > 0 && (
           <div>
-            <h3 className="font-medium text-gray-700 dark:text-gray-300 text-sm mb-4 flex items-center gap-2">
-              <XCircle className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+            <h3 className='mb-4 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <XCircle className='h-4 w-4 text-gray-600 dark:text-gray-400' />
               Autres équipes ({otherTeams.length})
             </h3>
-            <div className="space-y-4">
+            <div className='space-y-4'>
               {otherTeams.map((team) => (
                 <div
                   key={team.id}
-                  className="border border-green-200 rounded-lg p-4 bg-green-50 dark:bg-gray-800 dark:border-gray-700"
+                  className='rounded-lg border border-green-200 bg-green-50 p-4 dark:border-gray-700 dark:bg-gray-800'
                 >
-                  <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-lg flex items-center gap-2 mb-2">
-                    <Users className="w-5 h-5 text-green-600" />
+                  <h3 className='mb-2 flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-gray-200'>
+                    <Users className='h-5 w-5 text-green-600' />
                     {team.name}
                   </h3>
                   {team.idea_description && (
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
+                    <p className='mb-3 text-sm text-gray-600 dark:text-gray-400'>
                       {team.idea_description}
                     </p>
                   )}
                   {team.position && (
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-red-600" />
-                      <div className="text-gray-700 dark:text-gray-300 py-2">{team.position}</div>
+                    <div className='flex items-center gap-2'>
+                      <MapPin className='h-4 w-4 text-red-600' />
+                      <div className='py-2 text-gray-700 dark:text-gray-300'>{team.position}</div>
                     </div>
                   )}
                   {team.leader_name && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Crown className="w-4 h-4 text-yellow-500" />
-                      <div className="">
-                        <div className="text-gray-600 dark:text-gray-400">
-                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                    <div className='flex items-center gap-2 text-sm'>
+                      <Crown className='h-4 w-4 text-yellow-500' />
+                      <div className=''>
+                        <div className='text-gray-600 dark:text-gray-400'>
+                          <span className='font-medium text-gray-700 dark:text-gray-300'>
                             Leader:
                           </span>{' '}
                           {team.leader_name}
                         </div>
-                        <div className="text-gray-600 dark:text-gray-400">
+                        <div className='text-gray-600 dark:text-gray-400'>
                           ({team.leader_email})
                         </div>
                       </div>
@@ -371,25 +373,25 @@ export const ListTeamsView = () => {
     return (
       <>
         {teamsWithCoaches.length > 0 && (
-          <div className="mb-6">
-            <h3 className="font-medium text-gray-700 dark:text-gray-300 text-sm mb-4 flex items-center gap-2">
-              <MessageSquare className="w-4 h-4 text-green-600" />
+          <div className='mb-6'>
+            <h3 className='mb-4 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <MessageSquare className='h-4 w-4 text-green-600' />
               Équipes avec demandes de coaching ({teamsWithCoaches.length})
             </h3>
-            <div className="space-y-4">
+            <div className='space-y-4'>
               {teamsWithCoaches.map((team) => (
                 <div
                   key={team.id}
-                  className="border border-green-200 rounded-lg p-4 bg-green-50 dark:bg-gray-800 dark:border-green-700"
+                  className='rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-700 dark:bg-gray-800'
                 >
-                  <div className="flex items-start justify-between mb-3">
+                  <div className='mb-3 flex items-start justify-between'>
                     <div>
-                      <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-lg flex items-center gap-2">
-                        <Users className="w-5 h-5 text-blue-500" />
+                      <h3 className='flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-gray-200'>
+                        <Users className='h-5 w-5 text-blue-500' />
                         {team.name}
                       </h3>
                       {team.idea_description && (
-                        <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                        <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
                           {team.idea_description}
                         </p>
                       )}
@@ -398,53 +400,53 @@ export const ListTeamsView = () => {
 
                   {/* Position - Éditable pour admin */}
                   {editingPosition === team.id ? (
-                    <div className="flex items-center gap-2 mb-2 w-full">
-                      <MapPin className="w-4 h-4 text-red-600" />
+                    <div className='mb-2 flex w-full items-center gap-2'>
+                      <MapPin className='h-4 w-4 text-red-600' />
                       <input
-                        type="text"
+                        type='text'
                         value={positionValue}
                         onChange={(e) => setPositionValue(e.target.value)}
-                        className="flex-1 px-2 py-1 border rounded dark:bg-gray-900 dark:border-gray-700 dark:text-gray-200 w-full"
+                        className='w-full flex-1 rounded border px-2 py-1 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200'
                       />
                       <button
                         onClick={() => handleSavePosition(team.id)}
-                        className="p-1 text-green-600 hover:bg-green-50 dark:hover:bg-green-900 rounded"
+                        className='rounded p-1 text-green-600 hover:bg-green-50 dark:hover:bg-green-900'
                       >
-                        <Save className="w-4 h-4" />
+                        <Save className='h-4 w-4' />
                       </button>
                       <button
                         onClick={() => setEditingPosition(null)}
-                        className="p-1 text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+                        className='rounded p-1 text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'
                       >
-                        <X className="w-4 h-4" />
+                        <X className='h-4 w-4' />
                       </button>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2 mb-2">
-                      <MapPin className="w-4 h-4 text-red-600" />
-                      <div className="text-gray-700 dark:text-gray-300 py-2">
+                    <div className='mb-2 flex items-center gap-2'>
+                      <MapPin className='h-4 w-4 text-red-600' />
+                      <div className='py-2 text-gray-700 dark:text-gray-300'>
                         {team.position || 'Non définie'}
                       </div>
                       <button
                         onClick={() => handleEditPosition(team.id, team.position)}
-                        className="p-1 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900 rounded"
+                        className='rounded p-1 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900'
                       >
-                        <Edit2 className="w-4 h-4" />
+                        <Edit2 className='h-4 w-4' />
                       </button>
                     </div>
                   )}
 
                   {team.leader_name && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Crown className="w-4 h-4 text-yellow-500" />
-                      <div className="">
-                        <div className="text-gray-600 dark:text-gray-400">
-                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                    <div className='flex items-center gap-2 text-sm'>
+                      <Crown className='h-4 w-4 text-yellow-500' />
+                      <div className=''>
+                        <div className='text-gray-600 dark:text-gray-400'>
+                          <span className='font-medium text-gray-700 dark:text-gray-300'>
                             Leader:
                           </span>{' '}
                           {team.leader_name}
                         </div>
-                        <div className="text-gray-600 dark:text-gray-400">
+                        <div className='text-gray-600 dark:text-gray-400'>
                           ({team.leader_email})
                         </div>
                       </div>
@@ -452,31 +454,31 @@ export const ListTeamsView = () => {
                   )}
 
                   {/* Coaches affectés - NOUVEAU */}
-                  <div className="mb-3 mt-2">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2 text-sm">
-                        <GraduationCap className="w-4 h-4 text-purple-600" />
-                        <span className="font-medium text-gray-700 dark:text-gray-300">
+                  <div className='mb-3 mt-2'>
+                    <div className='mb-2 flex items-center justify-between'>
+                      <div className='flex items-center gap-2 text-sm'>
+                        <GraduationCap className='h-4 w-4 text-purple-600' />
+                        <span className='font-medium text-gray-700 dark:text-gray-300'>
                           Coaches affectés:
                         </span>
                       </div>
                       <button
                         onClick={() => setAddingCoach(team.id)}
-                        className="px-2 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 text-xs flex items-center gap-1"
+                        className='flex items-center gap-1 rounded bg-purple-600 px-2 py-1 text-xs text-white hover:bg-purple-700'
                       >
-                        <Plus className="w-3 h-3" /> Affecter
+                        <Plus className='h-3 w-3' /> Affecter
                       </button>
                     </div>
 
                     {addingCoach === team.id && (
-                      <div className="mb-2 p-2 bg-gray-100 dark:bg-gray-900 rounded border dark:border-gray-700 flex gap-2">
+                      <div className='mb-2 flex gap-2 rounded border bg-gray-100 p-2 dark:border-gray-700 dark:bg-gray-900'>
                         <select
                           onChange={(e) => {
                             if (e.target.value) handleAddCoach(team.id, parseInt(e.target.value));
                           }}
-                          className="flex-1 px-2 py-1 border rounded text-xs dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
+                          className='flex-1 rounded border px-2 py-1 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200'
                         >
-                          <option value="">Sélectionner un coach...</option>
+                          <option value=''>Sélectionner un coach...</option>
                           {coaches
                             .filter((c) => !team.assigned_coaches?.includes(c.name))
                             .map((coach) => (
@@ -487,50 +489,50 @@ export const ListTeamsView = () => {
                         </select>
                         <button
                           onClick={() => setAddingCoach(null)}
-                          className="p-1 bg-gray-500 text-white rounded hover:bg-gray-600"
+                          className='rounded bg-gray-500 p-1 text-white hover:bg-gray-600'
                         >
-                          <X className="w-4 h-4" />
+                          <X className='h-4 w-4' />
                         </button>
                       </div>
                     )}
 
                     {team.assigned_coaches && team.assigned_coaches.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
+                      <div className='flex flex-wrap gap-2'>
                         {team.assigned_coaches.map((coachName, index) => (
                           <div
                             key={index}
-                            className="flex items-center gap-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-1 rounded text-xs font-medium"
+                            className='flex items-center gap-1 rounded bg-purple-100 px-2 py-1 text-xs font-medium text-purple-800 dark:bg-purple-900 dark:text-purple-200'
                           >
                             <span>{coachName}</span>
                             <button
                               onClick={() => handleRemoveCoach(team.id, coachName)}
-                              className="ml-1 hover:text-red-600"
+                              className='ml-1 hover:text-red-600'
                             >
-                              <Trash2 className="w-3 h-3" />
+                              <Trash2 className='h-3 w-3' />
                             </button>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-gray-500 dark:text-gray-400 text-xs italic">
+                      <p className='text-xs italic text-gray-500 dark:text-gray-400'>
                         Aucun coach affecté
                       </p>
                     )}
                   </div>
 
                   {team.coach_requests && team.coach_requests.length > 0 && (
-                    <div className="mb-3 mt-2">
-                      <div className="flex items-center gap-2 text-sm mb-2">
-                        <MessageSquare className="w-4 h-4 text-green-600" />
-                        <span className="font-medium text-gray-700 dark:text-gray-300">
+                    <div className='mb-3 mt-2'>
+                      <div className='mb-2 flex items-center gap-2 text-sm'>
+                        <MessageSquare className='h-4 w-4 text-green-600' />
+                        <span className='font-medium text-gray-700 dark:text-gray-300'>
                           Coaches demandés ({team.coach_requests.length}/3):
                         </span>
                       </div>
-                      <div className="flex flex-wrap gap-2">
+                      <div className='flex flex-wrap gap-2'>
                         {team.coach_requests.map((coach, index) => (
                           <span
                             key={index}
-                            className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium"
+                            className='rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800'
                           >
                             {coach}
                           </span>
@@ -541,27 +543,27 @@ export const ListTeamsView = () => {
 
                   {/* Membres - Avec gestion */}
                   <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-medium text-gray-700 dark:text-gray-300 text-sm">
+                    <div className='mb-2 flex items-center justify-between'>
+                      <h4 className='text-sm font-medium text-gray-700 dark:text-gray-300'>
                         Membres ({team.members?.length || 0})
                       </h4>
                       <button
                         onClick={() => setAddingMember(team.id)}
-                        className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs flex items-center gap-1"
+                        className='flex items-center gap-1 rounded bg-blue-600 px-2 py-1 text-xs text-white hover:bg-blue-700'
                       >
-                        <Plus className="w-3 h-3" /> Ajouter
+                        <Plus className='h-3 w-3' /> Ajouter
                       </button>
                     </div>
 
                     {addingMember === team.id && (
-                      <div className="mb-2 p-2 bg-gray-100 dark:bg-gray-900 rounded border dark:border-gray-700 flex gap-2">
+                      <div className='mb-2 flex gap-2 rounded border bg-gray-100 p-2 dark:border-gray-700 dark:bg-gray-900'>
                         <select
                           onChange={(e) => {
                             if (e.target.value) handleAddMember(team.id, parseInt(e.target.value));
                           }}
-                          className="flex-1 px-2 py-1 border rounded text-xs dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
+                          className='flex-1 rounded border px-2 py-1 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200'
                         >
-                          <option value="">Sélectionner un participant...</option>
+                          <option value=''>Sélectionner un participant...</option>
                           {participants
                             .filter((p) => !team.members?.some((m) => m.id === p.id))
                             .map((participant) => (
@@ -572,44 +574,44 @@ export const ListTeamsView = () => {
                         </select>
                         <button
                           onClick={() => setAddingMember(null)}
-                          className="p-1 bg-gray-500 text-white rounded hover:bg-gray-600"
+                          className='rounded bg-gray-500 p-1 text-white hover:bg-gray-600'
                         >
-                          <X className="w-4 h-4" />
+                          <X className='h-4 w-4' />
                         </button>
                       </div>
                     )}
 
                     {team.members && team.members.length > 0 ? (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <div className='grid grid-cols-1 gap-2 sm:grid-cols-2'>
                         {team.members.map((member) => (
                           <div
                             key={member.id}
-                            className="bg-white dark:bg-black rounded p-2 text-sm flex items-center justify-between"
+                            className='flex items-center justify-between rounded bg-white p-2 text-sm dark:bg-black'
                           >
                             <div>
-                              <div className="font-medium text-gray-800 dark:text-gray-200">
+                              <div className='font-medium text-gray-800 dark:text-gray-200'>
                                 {member.name}
                               </div>
-                              <div className="text-gray-600 dark:text-gray-400 text-xs">
+                              <div className='text-xs text-gray-600 dark:text-gray-400'>
                                 {member.email}
                               </div>
                               {member.role && (
-                                <div className="text-blue-500 text-xs font-medium mt-1">
+                                <div className='mt-1 text-xs font-medium text-blue-500'>
                                   {member.role}
                                 </div>
                               )}
                             </div>
                             <button
                               onClick={() => handleRemoveMember(team.id, member.id, member.name)}
-                              className="p-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-900 rounded"
+                              className='rounded p-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-900'
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <Trash2 className='h-4 w-4' />
                             </button>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-gray-500 dark:text-gray-400 text-xs italic">
+                      <p className='text-xs italic text-gray-500 dark:text-gray-400'>
                         Aucun membre
                       </p>
                     )}
@@ -622,82 +624,234 @@ export const ListTeamsView = () => {
 
         {teamsWithoutCoaches.length > 0 && (
           <div>
-            <h3 className="font-medium text-gray-700 dark:text-gray-300 text-sm mb-4 flex items-center gap-2">
-              <Users className="w-4 h-4 text-orange-600" />
+            <h3 className='mb-4 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <Users className='h-4 w-4 text-orange-600' />
               Équipes sans demandes de coaching ({teamsWithoutCoaches.length})
             </h3>
-            <div className="space-y-4">
+            <div className='space-y-4'>
               {teamsWithoutCoaches.map((team) => (
                 <div
                   key={team.id}
-                  className="border border-orange-200 dark:border-orange-800 rounded-lg p-4 bg-orange-50 dark:bg-gray-800"
+                  className='rounded-lg border border-orange-200 bg-orange-50 p-4 dark:border-orange-800 dark:bg-gray-800'
                 >
-                  <div className="flex items-start justify-between mb-3">
+                  <div className='mb-3 flex items-start justify-between'>
                     <div>
-                      <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-lg flex items-center gap-2">
-                        <Users className="w-5 h-5 text-blue-500" />
+                      <h3 className='flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-gray-200'>
+                        <Users className='h-5 w-5 text-blue-500' />
                         {team.name}
                       </h3>
                       {team.idea_description && (
-                        <p className="text-gray-600 text-sm mt-1">{team.idea_description}</p>
+                        <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
+                          {team.idea_description}
+                        </p>
                       )}
                     </div>
                   </div>
 
-                  {team.position && (
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-red-600" />
-                      <div className="text-gray-700 dark:text-gray-300 py-2">{team.position}</div>
+                  {/* Position - Éditable pour admin */}
+                  {editingPosition === team.id ? (
+                    <div className='mb-2 flex w-full items-center gap-2'>
+                      <MapPin className='h-4 w-4 text-red-600' />
+                      <input
+                        type='text'
+                        value={positionValue}
+                        onChange={(e) => setPositionValue(e.target.value)}
+                        className='w-full flex-1 rounded border px-2 py-1 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200'
+                      />
+                      <button
+                        onClick={() => handleSavePosition(team.id)}
+                        className='rounded p-1 text-green-600 hover:bg-green-50 dark:hover:bg-green-900'
+                      >
+                        <Save className='h-4 w-4' />
+                      </button>
+                      <button
+                        onClick={() => setEditingPosition(null)}
+                        className='rounded p-1 text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'
+                      >
+                        <X className='h-4 w-4' />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className='mb-2 flex items-center gap-2'>
+                      <MapPin className='h-4 w-4 text-red-600' />
+                      <div className='py-2 text-gray-700 dark:text-gray-300'>
+                        {team.position || 'Non définie'}
+                      </div>
+                      <button
+                        onClick={() => handleEditPosition(team.id, team.position)}
+                        className='rounded p-1 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900'
+                      >
+                        <Edit2 className='h-4 w-4' />
+                      </button>
                     </div>
                   )}
 
                   {team.leader_name && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Crown className="w-4 h-4 text-yellow-500" />
-                      <div className="">
-                        <div className="text-gray-600 dark:text-gray-400">
-                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                    <div className='flex items-center gap-2 text-sm'>
+                      <Crown className='h-4 w-4 text-yellow-500' />
+                      <div className=''>
+                        <div className='text-gray-600 dark:text-gray-400'>
+                          <span className='font-medium text-gray-700 dark:text-gray-300'>
                             Leader:
                           </span>{' '}
                           {team.leader_name}
                         </div>
-                        <div className="text-gray-600 dark:text-gray-400">
+                        <div className='text-gray-600 dark:text-gray-400'>
                           ({team.leader_email})
                         </div>
                       </div>
                     </div>
                   )}
 
-                  <div className="mb-3 text-sm mt-2">
-                    <div className="flex items-center gap-2 text-orange-600">
-                      <MessageSquare className="w-4 h-4" />
-                      <span className="italic">Aucune demande de coaching pour le moment</span>
+                  {/* Coaches affectés - NOUVEAU (même section que pour les équipes avec demandes) */}
+                  <div className='mb-3 mt-2'>
+                    <div className='mb-2 flex items-center justify-between'>
+                      <div className='flex items-center gap-2 text-sm'>
+                        <GraduationCap className='h-4 w-4 text-purple-600' />
+                        <span className='font-medium text-gray-700 dark:text-gray-300'>
+                          Coaches affectés:
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => setAddingCoach(team.id)}
+                        className='flex items-center gap-1 rounded bg-purple-600 px-2 py-1 text-xs text-white hover:bg-purple-700'
+                      >
+                        <Plus className='h-3 w-3' /> Affecter
+                      </button>
                     </div>
-                  </div>
 
-                  {team.members && team.members.length > 0 && (
-                    <div>
-                      <h4 className="font-medium text-gray-700 text-sm mb-2">
-                        Membres ({team.members.length})
-                      </h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {team.members.map((member) => (
+                    {addingCoach === team.id && (
+                      <div className='mb-2 flex gap-2 rounded border bg-gray-100 p-2 dark:border-gray-700 dark:bg-gray-900'>
+                        <select
+                          onChange={(e) => {
+                            if (e.target.value) handleAddCoach(team.id, parseInt(e.target.value));
+                          }}
+                          className='flex-1 rounded border px-2 py-1 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200'
+                        >
+                          <option value=''>Sélectionner un coach...</option>
+                          {coaches
+                            .filter((c) => !team.assigned_coaches?.includes(c.name))
+                            .map((coach) => (
+                              <option key={coach.id} value={coach.id}>
+                                {coach.name}
+                              </option>
+                            ))}
+                        </select>
+                        <button
+                          onClick={() => setAddingCoach(null)}
+                          className='rounded bg-gray-500 p-1 text-white hover:bg-gray-600'
+                        >
+                          <X className='h-4 w-4' />
+                        </button>
+                      </div>
+                    )}
+
+                    {team.assigned_coaches && team.assigned_coaches.length > 0 ? (
+                      <div className='flex flex-wrap gap-2'>
+                        {team.assigned_coaches.map((coachName, index) => (
                           <div
-                            key={member.id}
-                            className="bg-white dark:bg-black rounded p-2 text-sm"
+                            key={index}
+                            className='flex items-center gap-1 rounded bg-purple-100 px-2 py-1 text-xs font-medium text-purple-800 dark:bg-purple-900 dark:text-purple-200'
                           >
-                            <div className="font-medium text-gray-800">{member.name}</div>
-                            <div className="text-gray-600 text-xs">{member.email}</div>
-                            {member.role && (
-                              <div className="text-blue-500 text-xs font-medium mt-1">
-                                {member.role}
-                              </div>
-                            )}
+                            <span>{coachName}</span>
+                            <button
+                              onClick={() => handleRemoveCoach(team.id, coachName)}
+                              className='ml-1 hover:text-red-600'
+                            >
+                              <Trash2 className='h-3 w-3' />
+                            </button>
                           </div>
                         ))}
                       </div>
+                    ) : (
+                      <p className='text-xs italic text-gray-500 dark:text-gray-400'>
+                        Aucun coach affecté
+                      </p>
+                    )}
+                  </div>
+
+                  <div className='mb-3 mt-2 text-sm'>
+                    <div className='flex items-center gap-2 text-orange-600'>
+                      <MessageSquare className='h-4 w-4' />
+                      <span className='italic'>Aucune demande de coaching pour le moment</span>
                     </div>
-                  )}
+                  </div>
+
+                  {/* Membres - Avec gestion */}
+                  <div>
+                    <div className='mb-2 flex items-center justify-between'>
+                      <h4 className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                        Membres ({team.members?.length || 0})
+                      </h4>
+                      <button
+                        onClick={() => setAddingMember(team.id)}
+                        className='flex items-center gap-1 rounded bg-blue-600 px-2 py-1 text-xs text-white hover:bg-blue-700'
+                      >
+                        <Plus className='h-3 w-3' /> Ajouter
+                      </button>
+                    </div>
+
+                    {addingMember === team.id && (
+                      <div className='mb-2 flex gap-2 rounded border bg-gray-100 p-2 dark:border-gray-700 dark:bg-gray-900'>
+                        <select
+                          onChange={(e) => {
+                            if (e.target.value) handleAddMember(team.id, parseInt(e.target.value));
+                          }}
+                          className='flex-1 rounded border px-2 py-1 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200'
+                        >
+                          <option value=''>Sélectionner un participant...</option>
+                          {participants
+                            .filter((p) => !team.members?.some((m) => m.id === p.id))
+                            .map((participant) => (
+                              <option key={participant.id} value={participant.id}>
+                                {participant.name} ({participant.email})
+                              </option>
+                            ))}
+                        </select>
+                        <button
+                          onClick={() => setAddingMember(null)}
+                          className='rounded bg-gray-500 p-1 text-white hover:bg-gray-600'
+                        >
+                          <X className='h-4 w-4' />
+                        </button>
+                      </div>
+                    )}
+
+                    {team.members && team.members.length > 0 ? (
+                      <div className='grid grid-cols-1 gap-2 sm:grid-cols-2'>
+                        {team.members.map((member) => (
+                          <div
+                            key={member.id}
+                            className='flex items-center justify-between rounded bg-white p-2 text-sm dark:bg-black'
+                          >
+                            <div>
+                              <div className='font-medium text-gray-800 dark:text-gray-200'>
+                                {member.name}
+                              </div>
+                              <div className='text-xs text-gray-600 dark:text-gray-400'>
+                                {member.email}
+                              </div>
+                              {member.role && (
+                                <div className='mt-1 text-xs font-medium text-blue-500'>
+                                  {member.role}
+                                </div>
+                              )}
+                            </div>
+                            <button
+                              onClick={() => handleRemoveMember(team.id, member.id, member.name)}
+                              className='rounded p-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-900'
+                            >
+                              <Trash2 className='h-4 w-4' />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className='text-xs italic text-gray-500 dark:text-gray-400'>
+                        Aucun membre
+                      </p>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -708,33 +862,33 @@ export const ListTeamsView = () => {
   };
 
   return (
-    <div className="w-full px-2 md:px-4">
-      <div className="bg-white dark:bg-black rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
-        <div className="p-4 border-b border-gray-200 dark:border-gray-800">
-          <h2 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2 dark:text-gray-200">
-            <Users className="w-5 h-5 text-green-600 " />
+    <div className='w-full px-2 md:px-4'>
+      <div className='rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-black'>
+        <div className='border-b border-gray-200 p-4 dark:border-gray-800'>
+          <h2 className='mb-3 flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-gray-200'>
+            <Users className='h-5 w-5 text-green-600' />
             Liste des Équipes
           </h2>
           <button
             onClick={loadTeams}
-            className="flex items-center justify-center gap-2 bg-gray-600 text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
+            className='flex items-center justify-center gap-2 rounded-lg bg-gray-600 px-3 py-2 text-sm text-white transition-colors hover:bg-gray-700'
             disabled={loading}
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             Rafraîchir
           </button>
         </div>
 
-        <div className="p-4">
+        <div className='p-4'>
           {loading ? (
-            <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gren-600 mx-auto"></div>
-              <p className="mt-2 text-gray-600 text-sm">Chargement des équipes...</p>
+            <div className='py-8 text-center'>
+              <div className='border-gren-600 mx-auto h-8 w-8 animate-spin rounded-full border-b-2'></div>
+              <p className='mt-2 text-sm text-gray-600'>Chargement des équipes...</p>
             </div>
           ) : _error ? (
-            <div className="text-center py-8 text-red-600 text-sm">{_error}</div>
+            <div className='py-8 text-center text-sm text-red-600'>{_error}</div>
           ) : teams.length === 0 ? (
-            <div className="text-center py-8 text-gray-500 text-sm">Aucune équipe trouvée</div>
+            <div className='py-8 text-center text-sm text-gray-500'>Aucune équipe trouvée</div>
           ) : isCoach ? (
             renderCoachView()
           ) : (
