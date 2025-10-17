@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+
 import { BarChart3, Minus, Plus, RefreshCw, SkipForward, Trophy } from 'lucide-react';
+
 import { useConfig } from '@/app/modules/config/store/config.store';
 
 interface VoteResult {
@@ -155,57 +157,57 @@ export const VoteResultsView = () => {
 
   return (
     <>
-      <div className="mb-4 flex flex-row gap-2 items-center w-full">
+      <div className='mb-4 flex w-full flex-row items-center gap-2'>
         <button
           onClick={() => setCustomProjectCount(Math.max(1, projectsToCreate - 1))}
-          className="flex items-center justify-center text-white px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-400 transition-colors"
-          title="Diminuer le nombre de projets"
+          className='flex items-center justify-center rounded-lg bg-blue-600 px-3 py-2 text-white transition-colors hover:bg-blue-400'
+          title='Diminuer le nombre de projets'
         >
-          <Minus className="w-5 h-5" />
+          <Minus className='h-5 w-5' />
         </button>
 
         <button
           onClick={createTeams}
-          className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          className='flex flex-1 items-center justify-center rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-50'
         >
           <>
-            <div className="">
+            <div className=''>
               <div>Créer les {projectsToCreate} projets</div>
               {countTeams > 0 && (
-                <div className="text-sm mt-1">Supprimera les {countTeams} projets existants</div>
+                <div className='mt-1 text-sm'>Supprimera les {countTeams} projets existants</div>
               )}
             </div>
-            <SkipForward className="w-4 h-4 ml-4" />
+            <SkipForward className='ml-4 h-4 w-4' />
           </>
         </button>
 
         <button
           onClick={() => setCustomProjectCount(projectsToCreate + 1)}
-          className="flex items-center justify-center text-white px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-400 transition-colors"
-          title="Augmenter le nombre de projets"
+          className='flex items-center justify-center rounded-lg bg-blue-600 px-3 py-2 text-white transition-colors hover:bg-blue-400'
+          title='Augmenter le nombre de projets'
         >
-          <Plus className="w-5 h-5" />
+          <Plus className='h-5 w-5' />
         </button>
       </div>
 
-      <div className="w-full px-2 md:px-4 space-y-4">
+      <div className='w-full space-y-4 px-2 md:px-4'>
         {/* Statistiques globales */}
-        <div className="grid grid-cols-1 gap-3">
-          <div className="bg-white dark:bg-black rounded-lg p-3 border border-gray-200 dark:border-gray-800">
-            <div className="flex items-center justify-between">
+        <div className='grid grid-cols-1 gap-3'>
+          <div className='rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-800 dark:bg-black'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Total votes</p>
-                <div className="flex flex-row gap-2 items-center">
-                  <p className="text-lg font-bold text-gray-800 dark:text-gray-200">
+                <p className='text-xs text-gray-600 dark:text-gray-400'>Total votes</p>
+                <div className='flex flex-row items-center gap-2'>
+                  <p className='text-lg font-bold text-gray-800 dark:text-gray-200'>
                     {totalVotes}/{maxPossibleVotes}
                   </p>
-                  <span className="text-xs text-gray-500 ps-3 pe-8">
+                  <span className='pe-8 ps-3 text-xs text-gray-500'>
                     ({participantsCount} participants
                     {canVisitorsVote ? ' + ' + visitorCount + ' visiteurs' : ''}
                     {canCoachesVote ? ' + ' + coachVotes + ' coach' : ''} × 3 votes)
                   </span>
 
-                  <BarChart3 className="w-6 h-6 text-blue-500" />
+                  <BarChart3 className='h-6 w-6 text-blue-500' />
                 </div>
               </div>
             </div>
@@ -213,52 +215,52 @@ export const VoteResultsView = () => {
         </div>
 
         {/* Résultats détaillés */}
-        <div className="bg-white dark:bg-black rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
-          <div className="p-4 border-b border-gray-200 dark:border-gray-800">
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                <Trophy className="w-4 h-4 text-yellow-500" />
+        <div className='rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-black'>
+          <div className='border-b border-gray-200 p-4 dark:border-gray-800'>
+            <div className='flex items-center justify-between'>
+              <h2 className='flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-gray-200'>
+                <Trophy className='h-4 w-4 text-yellow-500' />
                 Résultats des votes
               </h2>
               <button
                 onClick={loadVoteResults}
-                className="flex items-center gap-1 bg-gray-600 text-white  px-2 py-1 rounded hover:bg-gray-700 transition-colors text-xs"
+                className='flex items-center gap-1 rounded bg-gray-600 px-2 py-1 text-xs text-white transition-colors hover:bg-gray-700'
                 disabled={loading}
               >
-                <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`h-3 w-3 ${loading ? 'animate-spin' : ''}`} />
                 Rafraîchir
               </button>
             </div>
           </div>
 
-          <div className="p-4">
+          <div className='p-4'>
             {loading ? (
-              <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
-                <p className="mt-2 text-gray-600 dark:text-gray-400 text-sm">Chargement...</p>
+              <div className='py-8 text-center'>
+                <div className='mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-blue-500'></div>
+                <p className='mt-2 text-sm text-gray-600 dark:text-gray-400'>Chargement...</p>
               </div>
             ) : _error ? (
-              <div className="text-center py-8 text-red-600 text-sm">{_error}</div>
+              <div className='py-8 text-center text-sm text-red-600'>{_error}</div>
             ) : voteResults.length === 0 ? (
-              <div className="text-center py-8 text-gray-600 dark:text-gray-400 text-sm">
+              <div className='py-8 text-center text-sm text-gray-600 dark:text-gray-400'>
                 Aucun vote enregistré pour le moment
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className='space-y-4'>
                 {voteResults.map((result, index) => (
                   <div
                     key={index}
-                    className={`border border-gray-200 dark:border-gray-800 rounded-lg p-3 bg-gray-50 dark:bg-gray-900 ${index < projectsToCreate ? 'border-l-4 border-l-green-500' : ''}`}
+                    className={`rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-800 dark:bg-gray-900 ${index < projectsToCreate ? 'border-l-4 border-l-green-500' : ''}`}
                   >
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1 min-w-0">
-                        {index < 10 && (
+                    <div className='mb-2 flex items-start justify-between'>
+                      <div className='min-w-0 flex-1'>
+                        {index < 20 && (
                           <>
-                            <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-sm leading-tight mb-2">
+                            <h3 className='mb-2 text-sm font-semibold leading-tight text-gray-800 dark:text-gray-200'>
                               {result.ideaName}
                             </h3>
-                            <div className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400 mb-2">
-                              <span className="font-medium">{result.votes} votes</span>
+                            <div className='mb-2 flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400'>
+                              <span className='font-medium'>{result.votes} votes</span>
                               <span>({result.percentage}%)</span>
                             </div>
                           </>
@@ -267,9 +269,9 @@ export const VoteResultsView = () => {
                     </div>
 
                     {/* Barre de progression */}
-                    <div className="w-full bg-gray-200 rounded-full h-6 mb-3">
+                    <div className='mb-3 h-6 w-full rounded-full bg-gray-200'>
                       <div
-                        className={`h-6 rounded-full flex items-center justify-center text-white dark:text-gray-900 text-xs font-medium transition-all duration-500 ${
+                        className={`flex h-6 items-center justify-center rounded-full text-xs font-medium text-white transition-all duration-500 dark:text-gray-900 ${
                           index === 0
                             ? 'bg-gradient-to-r from-yellow-400 to-yellow-600'
                             : index === 1
